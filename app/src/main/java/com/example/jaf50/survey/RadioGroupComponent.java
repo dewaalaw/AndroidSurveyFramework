@@ -1,0 +1,37 @@
+package com.example.jaf50.survey;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
+public class RadioGroupComponent extends RadioGroup implements ISurveyComponent {
+
+  public RadioGroupComponent(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
+
+  public ViewGroup getView() {
+    return this;
+  }
+
+  public void addComponent(RadioButton radioButton) {
+    addView(radioButton);
+  }
+
+  @Override
+  public boolean acceptsResponse() {
+    return true;
+  }
+
+  public Response getResponse() {
+    Response response = new Response();
+    int checkedId = getCheckedRadioButtonId();
+    if (checkedId != -1) {
+      RadioButton radioButton = (RadioButton) findViewById(checkedId);
+      response.addValue(radioButton.getText().toString());
+    }
+    return response;
+  }
+}
