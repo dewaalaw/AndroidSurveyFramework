@@ -621,7 +621,7 @@ public class DiscreteSeekBar extends View {
         switch (actionMasked) {
             case MotionEvent.ACTION_DOWN:
                 mDownX = event.getX();
-                startDragging(event, isInScrollingContainer());
+                startDragging(event, false);
                 updateDragging(event);
                 break;
             case MotionEvent.ACTION_MOVE:
