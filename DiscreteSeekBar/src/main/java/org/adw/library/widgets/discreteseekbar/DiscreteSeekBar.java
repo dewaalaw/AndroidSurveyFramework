@@ -123,8 +123,8 @@ public class DiscreteSeekBar extends View {
 
     private static final int PRESSED_STATE = android.R.attr.state_pressed;
     private static final int FOCUSED_STATE = android.R.attr.state_focused;
-    private static final int PROGRESS_ANIMATION_DURATION = 250;
-    private static final int INDICATOR_DELAY_FOR_TAPS = 150;
+    private static final int PROGRESS_ANIMATION_DURATION = 75;
+    private static final int INDICATOR_DELAY_FOR_TAPS = 75;
     private ThumbDrawable mThumb;
     private Drawable mTrack;
     private Drawable mScrubber;
@@ -622,6 +622,7 @@ public class DiscreteSeekBar extends View {
             case MotionEvent.ACTION_DOWN:
                 mDownX = event.getX();
                 startDragging(event, isInScrollingContainer());
+                updateDragging(event);
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (isDragging()) {
