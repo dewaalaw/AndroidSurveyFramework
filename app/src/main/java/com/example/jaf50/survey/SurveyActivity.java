@@ -54,12 +54,13 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     checkboxGroupComponent.addComponent(checkBox5);
     checkboxGroupComponent.addComponent(checkBox6);
 
-    //CalendarComponent calendarComponent = (CalendarComponent) inflator.inflate(R.layout.calendar, null);
+    SeekBarComponent seekBarComponent = (SeekBarComponent) inflator.inflate(R.layout.seekbar, null);
 
     SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
     fragment.addSurveyComponent(questionTextComponent);
     fragment.addSurveyComponent(radioGroupComponent);
     fragment.addSurveyComponent(checkboxGroupComponent);
+    fragment.addSurveyComponent(seekBarComponent);
   }
 
   @Override
