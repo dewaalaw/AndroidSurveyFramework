@@ -5,13 +5,13 @@ import java.util.List;
 
 public class Response {
 
-  private List<String> values = new ArrayList<String>();
+  private List<Object> values = new ArrayList<Object>();
 
-  public void addValue(String value) {
+  public void addValue(Object value) {
     values.add(value);
   }
 
-  public List<String> getValues() {
+  public List<Object> getValues() {
     return values;
   }
 }

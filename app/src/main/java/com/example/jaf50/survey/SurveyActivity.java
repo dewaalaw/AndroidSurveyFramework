@@ -55,12 +55,14 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     checkboxGroupComponent.addComponent(checkBox6);
 
     SeekBarComponent seekBarComponent = (SeekBarComponent) inflator.inflate(R.layout.seekbar, null);
+    DatePickerComponent datePickerTextView = (DatePickerComponent) inflator.inflate(R.layout.date_picker, null);
 
     SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
     fragment.addSurveyComponent(questionTextComponent);
     fragment.addSurveyComponent(radioGroupComponent);
     fragment.addSurveyComponent(checkboxGroupComponent);
     fragment.addSurveyComponent(seekBarComponent);
+    fragment.addSurveyComponent(datePickerTextView);
   }
 
   @Override

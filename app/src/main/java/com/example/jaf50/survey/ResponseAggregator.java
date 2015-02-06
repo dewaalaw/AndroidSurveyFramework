@@ -9,7 +9,7 @@ public class ResponseAggregator {
     for (ISurveyComponent surveyComponent : surveyComponents) {
       if (surveyComponent.acceptsResponse()) {
         Response response = surveyComponent.getResponse();
-        for (String value : response.getValues()) {
+        for (Object value : response.getValues()) {
           builder.append(value).append(",");
         }
       }

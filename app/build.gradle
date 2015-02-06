@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.jaf50.survey"
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -26,5 +26,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.google.code.gson:gson:1.7.2'
     compile 'com.beardedhen:androidbootstrap:+'
+    compile 'com.wdullaer:materialdatetimepicker:1.0.0'
     compile project(':DiscreteSeekBar')
 }
