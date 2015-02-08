@@ -15,6 +15,22 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey);
 
+    SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
+    fragment.addSurveyScreen(buildScreen1());
+    fragment.addSurveyScreen(buildScreen2());
+
+    ContentTransition transition1 = new ContentTransition();
+    transition1.setFromId("screen1");
+    transition1.setToId("screen2");
+
+    ContentTransitioner contentTransitioner = new ContentTransitioner();
+    contentTransitioner.addTransition(transition1);
+
+    fragment.setContentTransitioner(contentTransitioner);
+    fragment.startSurvey("screen1");
+  }
+
+  private SurveyScreen buildScreen1() {
     LayoutInflater inflator = LayoutInflater.from(this);
     TextComponent questionTextComponent = (TextComponent) inflator.inflate(R.layout.text_view, null);
     questionTextComponent.setText("Nice text!");
@@ -58,13 +74,34 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     DatePickerComponent datePickerTextView = (DatePickerComponent) inflator.inflate(R.layout.date_picker, null);
     TimePickerComponent timePickerTextView = (TimePickerComponent) inflator.inflate(R.layout.time_picker, null);
 
-    SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
-    fragment.addSurveyComponent(questionTextComponent);
-    fragment.addSurveyComponent(radioGroupComponent);
-    fragment.addSurveyComponent(checkboxGroupComponent);
-    fragment.addSurveyComponent(seekBarComponent);
-    fragment.addSurveyComponent(datePickerTextView);
-    fragment.addSurveyComponent(timePickerTextView);
+    SurveyScreen screen1 = (SurveyScreen) inflator.inflate(R.layout.survey_content, null);
+    screen1.setScreenId("screen1");
+    screen1.addSurveyComponent(questionTextComponent);
+    screen1.addSurveyComponent(radioGroupComponent);
+    screen1.addSurveyComponent(checkboxGroupComponent);
+    screen1.addSurveyComponent(seekBarComponent);
+    screen1.addSurveyComponent(datePickerTextView);
+    screen1.addSurveyComponent(timePickerTextView);
+
+    return screen1;
+  }
+
+  private SurveyScreen buildScreen2() {
+    LayoutInflater inflator = LayoutInflater.from(this);
+    TextComponent questionTextComponent = (TextComponent) inflator.inflate(R.layout.text_view, null);
+    questionTextComponent.setText("Screen two text...");
+
+    DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+    questionTextComponent.setPadding(0, 0, 0, (int)(15 * displayMetrics.density));
+
+    SeekBarComponent seekBarComponent = (SeekBarComponent) inflator.inflate(R.layout.seekbar, null);
+
+    SurveyScreen screen = (SurveyScreen) inflator.inflate(R.layout.survey_content, null);
+    screen.setScreenId("screen2");
+    screen.addSurveyComponent(questionTextComponent);
+    screen.addSurveyComponent(seekBarComponent);
+
+    return screen;
   }
 
   @Override

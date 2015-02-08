@@ -21,19 +21,15 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
   private TimePickerDialog timePickerDialog;
   private Button selectButton;
   private TextView selectionTextView;
-  private String selectedTime;
+  private TimeWrapper selectedTime;
 
   private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
     @Override
     public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
-      selectedTime = padZeroes(hourOfDay) + ":" + padZeroes(minute);
-      selectionTextView.setText(selectedTime);
+      selectedTime = new TimeWrapper(hourOfDay, minute);
+      selectionTextView.setText(selectedTime.toString());
     }
   };
-
-  private String padZeroes(int value) {
-    return String.format("%2s", value + "").replace(' ', '0');
-  }
 
   @Override
   protected void onAttachedToWindow() {

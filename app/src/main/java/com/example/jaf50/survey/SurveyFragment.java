@@ -9,15 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class SurveyFragment extends Fragment {
+public class SurveyFragment extends Fragment implements ContentTransitionListener {
 
   @InjectView(R.id.contentPanel)
   LinearLayout contentPanel;
@@ -26,10 +25,11 @@ public class SurveyFragment extends Fragment {
   Button nextButton;
 
   private OnFragmentInteractionListener mListener;
-  private List<ISurveyComponent> surveyComponents = new ArrayList<ISurveyComponent>();
+  private HashMap<String, SurveyScreen> surveyScreens = new HashMap<String, SurveyScreen>();
+  private ContentTransitioner contentTransitioner;
+  private SurveyScreen currentScreen;
 
   public SurveyFragment() {
-    // Required empty public constructor
   }
 
   @Override
@@ -46,7 +46,8 @@ public class SurveyFragment extends Fragment {
     nextButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Toast.makeText(getActivity(), new ResponseAggregator().collectResponses(surveyComponents), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), new ResponseAggregator().collectResponses(surveyComponents), Toast.LENGTH_SHORT).show();
+        contentTransitioner.executeNextTransition(currentScreen);
       }
     });
     return view;
@@ -73,9 +74,35 @@ public class SurveyFragment extends Fragment {
     return null;
   }
 
-  public void addSurveyComponent(ISurveyComponent surveyComponent) {
-    contentPanel.addView(surveyComponent.getView());
-    surveyComponents.add(surveyComponent);
+  public void addSurveyScreen(SurveyScreen surveyScreen) {
+    // TODO - throw exception if this has already been added as a warning of possible duplicate ids.
+    surveyScreens.put(surveyScreen.getScreenId(), surveyScreen);
+  }
+
+  public void setContentTransitioner(ContentTransitioner contentTransitioner) {
+    this.contentTransitioner = contentTransitioner;
+    contentTransitioner.setContentTransitionListener(this);
+  }
+
+  public void startSurvey(String startScreenId) {
+    // TODO - any other setup upon survey start (e.g. capture start timestamp).
+    setCurrentScreen(startScreenId);
+  }
+
+  public void setCurrentScreen(String screenId) {
+    SurveyScreen screen = surveyScreens.get(screenId);
+    if (screen == null) {
+      throw new IllegalArgumentException("Invalid screen id specified: '" + screenId + "'.");
+    }
+    currentScreen = screen;
+    contentPanel.removeAllViews();
+    contentPanel.addView(screen);
+  }
+
+  @Override
+  public void onTransition(ContentTransition contentTransition) {
+    String toScreenId = contentTransition.getToId();
+    setCurrentScreen(toScreenId);
   }
 
   public interface OnFragmentInteractionListener {
