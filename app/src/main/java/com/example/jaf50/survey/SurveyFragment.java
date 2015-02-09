@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -24,10 +25,14 @@ public class SurveyFragment extends Fragment implements ContentTransitionListene
   @InjectView(R.id.nextButton)
   Button nextButton;
 
+  @InjectView(R.id.previousButton)
+  Button previousButton;
+
   private OnFragmentInteractionListener mListener;
   private HashMap<String, SurveyScreen> surveyScreens = new HashMap<String, SurveyScreen>();
   private ContentTransitioner contentTransitioner;
   private SurveyScreen currentScreen;
+  private Stack<SurveyScreen> screenStack = new Stack<SurveyScreen>();
 
   public SurveyFragment() {
   }
@@ -50,6 +55,20 @@ public class SurveyFragment extends Fragment implements ContentTransitionListene
         contentTransitioner.executeNextTransition(currentScreen);
       }
     });
+
+    previousButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (screenStack.size() >= 2) {
+          // Remove the current screen from the top of the stack.
+          screenStack.pop();
+          // Then peek to get the previous screen.
+          SurveyScreen previousSurveyScreen = screenStack.peek();
+          setCurrentScreen(previousSurveyScreen.getScreenId());
+        }
+      }
+    });
+
     return view;
   }
 
@@ -87,22 +106,26 @@ public class SurveyFragment extends Fragment implements ContentTransitionListene
   public void startSurvey(String startScreenId) {
     // TODO - any other setup upon survey start (e.g. capture start timestamp).
     setCurrentScreen(startScreenId);
+    SurveyScreen startSurveyScreen = surveyScreens.get(startScreenId);
+    screenStack.push(startSurveyScreen);
   }
 
   public void setCurrentScreen(String screenId) {
-    SurveyScreen screen = surveyScreens.get(screenId);
-    if (screen == null) {
-      throw new IllegalArgumentException("Invalid screen id specified: '" + screenId + "'.");
+    SurveyScreen surveyScreen = surveyScreens.get(screenId);
+    if (surveyScreen == null) {
+      throw new IllegalArgumentException("Invalid survey screen id specified: '" + screenId + "'.");
     }
-    currentScreen = screen;
+    currentScreen = surveyScreen;
     contentPanel.removeAllViews();
-    contentPanel.addView(screen);
+    contentPanel.addView(surveyScreen);
   }
 
   @Override
   public void onTransition(ContentTransition contentTransition) {
     String toScreenId = contentTransition.getToId();
     setCurrentScreen(toScreenId);
+    SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
+    screenStack.push(surveyScreen);
   }
 
   public interface OnFragmentInteractionListener {
