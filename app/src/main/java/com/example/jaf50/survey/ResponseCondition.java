@@ -18,15 +18,20 @@ public class ResponseCondition {
     this.expectedResponses = expectedResponses;
   }
 
+  public List<Response> getExpectedResponses() {
+    return expectedResponses;
+  }
+
   /*
-   * example response list:
-   *
-   * 1, 2, 5 selected in checkboxes.
-   *
-   * If response contains 1 and 5 then perform a given action.
-   * else if response equals 2 then perform a different action.
-   */
+     * example response list:
+     *
+     * 1, 2, 5 selected in checkboxes.
+     *
+     * If response contains 1 and 5 then perform a given action.
+     * else if response equals 2 then perform a different action.
+     */
   public boolean isSatisfied(List<Response> actualResponses) {
+    // Filter out any "null" Response objects.
     List <Response> filteredResponses = new ArrayList<>();
     for (Response response : actualResponses) {
       if (!response.isEmpty()) {

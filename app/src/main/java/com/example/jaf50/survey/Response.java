@@ -12,6 +12,10 @@ public class Response {
     this.id = id;
   }
 
+  public String getId() {
+    return id;
+  }
+
   public Response addValue(Object value) {
     values.add(value);
     return this;
