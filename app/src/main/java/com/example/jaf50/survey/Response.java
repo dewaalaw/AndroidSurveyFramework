@@ -29,6 +29,13 @@ public class Response {
     return values.isEmpty();
   }
 
+  public boolean contains(Response otherResponse) {
+    if (otherResponse == null) {
+      return false;
+    }
+    return values.containsAll(otherResponse.getValues());
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -47,5 +54,13 @@ public class Response {
     int result = id != null ? id.hashCode() : 0;
     result = 31 * result + (values != null ? values.hashCode() : 0);
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "Response{" +
+        "id='" + id + '\'' +
+        ", values=" + values +
+        '}';
   }
 }
