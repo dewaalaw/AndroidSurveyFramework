@@ -20,6 +20,8 @@ import butterknife.ButterKnife;
 
 public class DatePickerComponent extends LinearLayout implements ISurveyComponent {
 
+  private String responseId;
+
   private DatePickerDialog datePickerDialog;
   private Button selectButton;
   private TextView selectionTextView;
@@ -84,7 +86,7 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
 
   @Override
   public Response getResponse() {
-    Response response = new Response();
+    Response response = new Response(responseId);
     if (selectedDate != null) {
       response.addValue(selectedDate);
     }
@@ -94,5 +96,9 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
   @Override
   public View getView() {
     return this;
+  }
+
+  public void setResponseId(String responseId) {
+    this.responseId = responseId;
   }
 }

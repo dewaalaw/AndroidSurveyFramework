@@ -18,6 +18,8 @@ import butterknife.ButterKnife;
 
 public class TimePickerComponent extends LinearLayout implements ISurveyComponent {
 
+  private String responseId;
+
   private TimePickerDialog timePickerDialog;
   private Button selectButton;
   private TextView selectionTextView;
@@ -69,7 +71,7 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
 
   @Override
   public Response getResponse() {
-    Response response = new Response();
+    Response response = new Response(responseId);
     if (selectedTime != null) {
       response.addValue(selectedTime);
     }
@@ -79,5 +81,13 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
   @Override
   public View getView() {
     return this;
+  }
+
+  public void setResponseId(String responseId) {
+    this.responseId = responseId;
+  }
+
+  public String getResponseId() {
+    return responseId;
   }
 }

@@ -18,15 +18,8 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
     fragment.addSurveyScreen(buildScreen1());
     fragment.addSurveyScreen(buildScreen2());
+    fragment.addSurveyScreen(buildTestScreen("screen3", "Screen 3", new String[]{"check 1", "check 2", "check 3"}));
 
-    ContentTransition transition1 = new ContentTransition();
-    transition1.setFromId("screen1");
-    transition1.setToId("screen2");
-
-    ContentTransitioner contentTransitioner = new ContentTransitioner();
-    contentTransitioner.addTransition(transition1);
-
-    fragment.setContentTransitioner(contentTransitioner);
     fragment.startSurvey("screen1");
   }
 
@@ -46,6 +39,8 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     radioButton2.setText("two");
     radioGroupComponent.addComponent(radioButton1);
     radioGroupComponent.addComponent(radioButton2);
+
+    radioGroupComponent.setResponseId("var5");
 
     CheckboxGroupComponent checkboxGroupComponent = (CheckboxGroupComponent) inflator.inflate(R.layout.checkbox_group, null);
 
@@ -70,18 +65,30 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     checkboxGroupComponent.addComponent(checkBox5);
     checkboxGroupComponent.addComponent(checkBox6);
 
-    SeekBarComponent seekBarComponent = (SeekBarComponent) inflator.inflate(R.layout.seekbar, null);
+    checkboxGroupComponent.setResponseId("var1");
+
+//    SeekBarComponent seekBarComponent = (SeekBarComponent) inflator.inflate(R.layout.seekbar, null);
+//    seekBarComponent.setResponseId("var2");
+
     DatePickerComponent datePickerTextView = (DatePickerComponent) inflator.inflate(R.layout.date_picker, null);
+    datePickerTextView.setResponseId("var3");
+
     TimePickerComponent timePickerTextView = (TimePickerComponent) inflator.inflate(R.layout.time_picker, null);
+    timePickerTextView.setResponseId("var4");
 
     SurveyScreen screen1 = (SurveyScreen) inflator.inflate(R.layout.survey_content, null);
     screen1.setScreenId("screen1");
     screen1.addSurveyComponent(questionTextComponent);
     screen1.addSurveyComponent(radioGroupComponent);
     screen1.addSurveyComponent(checkboxGroupComponent);
-    screen1.addSurveyComponent(seekBarComponent);
+//    screen1.addSurveyComponent(seekBarComponent);
     screen1.addSurveyComponent(datePickerTextView);
     screen1.addSurveyComponent(timePickerTextView);
+
+    ResponseCriteria responseCriteria = new ResponseCriteria();
+    DirectContentTransition transition = new DirectContentTransition("screen1", "screen2");
+    responseCriteria.addCondition(new ResponseCondition("=", new Response("var5").addValue("one")));
+    screen1.addResponseCriteria(responseCriteria, transition);
 
     return screen1;
   }
@@ -100,6 +107,29 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     screen.setScreenId("screen2");
     screen.addSurveyComponent(questionTextComponent);
     screen.addSurveyComponent(seekBarComponent);
+
+    return screen;
+  }
+
+  private SurveyScreen buildTestScreen(String screenId, String questionText, String [] checkBoxTexts) {
+    LayoutInflater inflator = LayoutInflater.from(this);
+    TextComponent questionTextComponent = (TextComponent) inflator.inflate(R.layout.text_view, null);
+    questionTextComponent.setText(questionText);
+
+    DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+    questionTextComponent.setPadding(0, 0, 0, (int)(15 * displayMetrics.density));
+
+    CheckboxGroupComponent checkboxGroupComponent = (CheckboxGroupComponent) inflator.inflate(R.layout.checkbox_group, null);
+    for (String checkBoxText : checkBoxTexts) {
+      CheckBox checkBox = (CheckBox) inflator.inflate(R.layout.checkbox, null);
+      checkBox.setText(checkBoxText);
+      checkboxGroupComponent.addComponent(checkBox);
+    }
+
+    SurveyScreen screen = (SurveyScreen) inflator.inflate(R.layout.survey_content, null);
+    screen.setScreenId(screenId);
+    screen.addSurveyComponent(questionTextComponent);
+    screen.addSurveyComponent(checkboxGroupComponent);
 
     return screen;
   }

@@ -17,7 +17,7 @@ import java.util.Stack;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class SurveyFragment extends Fragment implements ContentTransitionListener {
+public class SurveyFragment extends Fragment {
 
   @InjectView(R.id.contentPanel)
   LinearLayout contentPanel;
@@ -30,7 +30,6 @@ public class SurveyFragment extends Fragment implements ContentTransitionListene
 
   private OnFragmentInteractionListener mListener;
   private HashMap<String, SurveyScreen> surveyScreens = new HashMap<String, SurveyScreen>();
-  private ContentTransitioner contentTransitioner;
   private SurveyScreen currentScreen;
   private Stack<SurveyScreen> screenStack = new Stack<SurveyScreen>();
 
@@ -51,8 +50,16 @@ public class SurveyFragment extends Fragment implements ContentTransitionListene
     nextButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        //Toast.makeText(getActivity(), new ResponseAggregator().collectResponses(surveyComponents), Toast.LENGTH_SHORT).show();
-        contentTransitioner.executeNextTransition(currentScreen);
+        Action action = currentScreen.getAction();
+        if (action != null) {
+          if (action instanceof DirectContentTransition) {
+            String toScreenId = ((DirectContentTransition) action).getToId();
+            setCurrentScreen(toScreenId);
+            SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
+            screenStack.push(surveyScreen);
+          }
+        }
+
       }
     });
 
@@ -98,11 +105,6 @@ public class SurveyFragment extends Fragment implements ContentTransitionListene
     surveyScreens.put(surveyScreen.getScreenId(), surveyScreen);
   }
 
-  public void setContentTransitioner(ContentTransitioner contentTransitioner) {
-    this.contentTransitioner = contentTransitioner;
-    contentTransitioner.setContentTransitionListener(this);
-  }
-
   public void startSurvey(String startScreenId) {
     // TODO - any other setup upon survey start (e.g. capture start timestamp).
     setCurrentScreen(startScreenId);
@@ -118,14 +120,6 @@ public class SurveyFragment extends Fragment implements ContentTransitionListene
     currentScreen = surveyScreen;
     contentPanel.removeAllViews();
     contentPanel.addView(surveyScreen);
-  }
-
-  @Override
-  public void onTransition(ContentTransition contentTransition) {
-    String toScreenId = contentTransition.getToId();
-    setCurrentScreen(toScreenId);
-    SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
-    screenStack.push(surveyScreen);
   }
 
   public interface OnFragmentInteractionListener {

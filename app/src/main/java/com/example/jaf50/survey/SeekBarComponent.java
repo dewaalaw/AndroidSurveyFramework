@@ -8,6 +8,8 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 public class SeekBarComponent extends DiscreteSeekBar implements ISurveyComponent {
 
+  private String responseId;
+
   public SeekBarComponent(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
@@ -19,7 +21,7 @@ public class SeekBarComponent extends DiscreteSeekBar implements ISurveyComponen
 
   @Override
   public Response getResponse() {
-    Response response = new Response();
+    Response response = new Response(responseId);
     response.addValue(getProgress() + "");
     return response;
   }
@@ -27,5 +29,13 @@ public class SeekBarComponent extends DiscreteSeekBar implements ISurveyComponen
   @Override
   public View getView() {
     return this;
+  }
+
+  public void setResponseId(String responseId) {
+    this.responseId = responseId;
+  }
+
+  public String getResponseId() {
+    return responseId;
   }
 }

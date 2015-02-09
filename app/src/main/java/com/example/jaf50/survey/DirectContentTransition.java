@@ -1,9 +1,14 @@
 package com.example.jaf50.survey;
 
-public class ContentTransition {
+public class DirectContentTransition implements Action {
 
-  String fromId;
-  String toId;
+  private String fromId;
+  private String toId;
+
+  public DirectContentTransition(String fromId, String toId) {
+    setFromId(fromId);
+    setToId(toId);
+  }
 
   public void setFromId(String fromId) {
     this.fromId = fromId;
@@ -19,5 +24,10 @@ public class ContentTransition {
 
   public String getToId() {
     return toId;
+  }
+
+  @Override
+  public void execute() {
+
   }
 }

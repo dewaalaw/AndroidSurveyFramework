@@ -8,6 +8,8 @@ import android.widget.RadioGroup;
 
 public class RadioGroupComponent extends RadioGroup implements ISurveyComponent {
 
+  private String responseId;
+
   public RadioGroupComponent(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
@@ -26,12 +28,20 @@ public class RadioGroupComponent extends RadioGroup implements ISurveyComponent 
   }
 
   public Response getResponse() {
-    Response response = new Response();
+    Response response = new Response(responseId);
     int checkedId = getCheckedRadioButtonId();
     if (checkedId != -1) {
       RadioButton radioButton = (RadioButton) findViewById(checkedId);
       response.addValue(radioButton.getText().toString());
     }
     return response;
+  }
+
+  public void setResponseId(String responseId) {
+    this.responseId = responseId;
+  }
+
+  public String getResponseId() {
+    return responseId;
   }
 }

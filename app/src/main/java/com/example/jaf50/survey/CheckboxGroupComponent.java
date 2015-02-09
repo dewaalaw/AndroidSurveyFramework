@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CheckboxGroupComponent extends LinearLayout implements ISurveyComponent {
+
+  private String responseId;
+
   private List<CheckBox> checkboxes = new ArrayList<CheckBox>();
 
   public CheckboxGroupComponent(Context context, AttributeSet attrs) {
@@ -31,12 +34,16 @@ public class CheckboxGroupComponent extends LinearLayout implements ISurveyCompo
   }
 
   public Response getResponse() {
-    Response response = new Response();
+    Response response = new Response(responseId);
     for (CheckBox checkbox : checkboxes) {
       if (checkbox.isChecked()) {
         response.addValue(checkbox.getText().toString());
       }
     }
     return response;
+  }
+
+  public void setResponseId(String responseId) {
+    this.responseId = responseId;
   }
 }
