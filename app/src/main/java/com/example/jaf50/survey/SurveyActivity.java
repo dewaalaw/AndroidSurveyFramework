@@ -85,10 +85,16 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     screen1.addSurveyComponent(datePickerTextView);
     screen1.addSurveyComponent(timePickerTextView);
 
-    ResponseCriteria responseCriteria = new ResponseCriteria();
-    DirectContentTransition transition = new DirectContentTransition("screen1", "screen2");
-    responseCriteria.addCondition(new ResponseCondition("=", new Response("var5").addValue("one")));
-    screen1.addResponseCriteria(responseCriteria, transition);
+    ResponseCriteria responseCriteria1 = new ResponseCriteria();
+    DirectContentTransition transition1 = new DirectContentTransition("screen1", "screen2");
+    responseCriteria1.addCondition(new ResponseCondition("=", new Response("var5").addValue("one")));
+
+    ResponseCriteria responseCriteria2 = new ResponseCriteria();
+    DirectContentTransition transition2 = new DirectContentTransition("screen1", "screen3");
+    responseCriteria2.addCondition(new ResponseCondition("contains", new Response("var1").addValue("Personal Holiday").addValue("Pay Deduction")));
+
+    screen1.addResponseCriteria(responseCriteria1, transition1);
+    screen1.addResponseCriteria(responseCriteria2, transition2);
 
     return screen1;
   }
