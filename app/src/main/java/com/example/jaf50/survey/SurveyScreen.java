@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -17,7 +17,7 @@ public class SurveyScreen extends LinearLayout {
   LinearLayout contentLayout;
 
   private List<ISurveyComponent> surveyComponents = new ArrayList<ISurveyComponent>();
-  private HashMap<ResponseCriteria, Action> actionMap = new HashMap<>();
+  private LinkedHashMap<ResponseCriteria, Action> actionMap = new LinkedHashMap<>();
 
   private String screenId;
 

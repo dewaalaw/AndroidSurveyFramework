@@ -93,7 +93,7 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     responseCriteria2.addCondition(new ResponseCondition("contains", new Response("var1").addValue("Personal Holiday").addValue("Pay Deduction")));
 
     ResponseCriteria defaultResponseCriteria = new ResponseCriteria();
-    defaultResponseCriteria.addCondition(new ResponseCondition("default", new Response(null)));
+    defaultResponseCriteria.addCondition(new ResponseCondition("default", new Response()));
 
     screen1.addResponseCriteria(responseCriteria1, new DirectContentTransition("screen1", "screen2"));
     screen1.addResponseCriteria(responseCriteria2, new DirectContentTransition("screen1", "screen3"));

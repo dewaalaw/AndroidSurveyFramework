@@ -8,6 +8,9 @@ public class Response {
   private String id;
   private List<Object> values = new ArrayList<Object>();
 
+  public Response() {
+  }
+
   public Response(String id) {
     this.id = id;
   }
