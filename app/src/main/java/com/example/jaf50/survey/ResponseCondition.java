@@ -17,10 +17,10 @@ public class ResponseCondition {
   public boolean isSatisfied(Response response) {
     if (operator.equals("=")) {
       return expectedResponse.equals(response);
-      //return expectedResponses.equals(filteredResponses);
     } else if (operator.equals("contains")) {
-      // Satisfied if a subset of the filteredResponses match the actualResponses.
       return response.contains(expectedResponse);
+    } else if (operator.equals("default")) {
+      return true;
     }
     return false;
   }

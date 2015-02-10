@@ -19,6 +19,7 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     fragment.addSurveyScreen(buildScreen1());
     fragment.addSurveyScreen(buildScreen2());
     fragment.addSurveyScreen(buildTestScreen("screen3", "Screen 3", new String[]{"check 1", "check 2", "check 3"}));
+    fragment.addSurveyScreen(buildTestScreen("screen4", "Screen 4", new String[]{"check haha", "cool!", "good stuff", "yet another checkbox"}));
 
     fragment.startSurvey("screen1");
   }
@@ -86,15 +87,17 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     screen1.addSurveyComponent(timePickerTextView);
 
     ResponseCriteria responseCriteria1 = new ResponseCriteria();
-    DirectContentTransition transition1 = new DirectContentTransition("screen1", "screen2");
     responseCriteria1.addCondition(new ResponseCondition("=", new Response("var5").addValue("one")));
 
     ResponseCriteria responseCriteria2 = new ResponseCriteria();
-    DirectContentTransition transition2 = new DirectContentTransition("screen1", "screen3");
     responseCriteria2.addCondition(new ResponseCondition("contains", new Response("var1").addValue("Personal Holiday").addValue("Pay Deduction")));
 
-    screen1.addResponseCriteria(responseCriteria1, transition1);
-    screen1.addResponseCriteria(responseCriteria2, transition2);
+    ResponseCriteria defaultResponseCriteria = new ResponseCriteria();
+    defaultResponseCriteria.addCondition(new ResponseCondition("default", new Response(null)));
+
+    screen1.addResponseCriteria(responseCriteria1, new DirectContentTransition("screen1", "screen2"));
+    screen1.addResponseCriteria(responseCriteria2, new DirectContentTransition("screen1", "screen3"));
+    screen1.addResponseCriteria(defaultResponseCriteria, new DirectContentTransition("screen1", "screen4"));
 
     return screen1;
   }
