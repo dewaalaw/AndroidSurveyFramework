@@ -42,24 +42,18 @@ public class TestSurvey extends ActivityInstrumentationTestCase2<SurveyActivity>
   }
 
   public void testSurveySaveAndRetrieve() {
-    Value val1 = new Value();
-    val1.setValue("val1");
-
-    Value val2 = new Value();
-    val2.setValue("val2");
-
     Date response1Date = new Date();
     Date response2Date = new Date();
 
     SurveyResponse surveyResponse1 = new SurveyResponse();
     surveyResponse1.setResponseId("var1");
-    surveyResponse1.setValues(Arrays.asList(val1));
     surveyResponse1.setResponseDate(response1Date);
+    surveyResponse1.addValue(new Value().setValue("val1"));
 
     SurveyResponse surveyResponse2 = new SurveyResponse();
     surveyResponse2.setResponseId("var2");
-    surveyResponse2.setValues(Arrays.asList(val2));
     surveyResponse2.setResponseDate(response2Date);
+    surveyResponse2.addValue(new Value().setValue("val2"));
 
     Survey survey = new Survey();
     survey.setName("My Survey");

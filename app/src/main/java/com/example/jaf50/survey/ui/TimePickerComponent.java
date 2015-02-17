@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.jaf50.survey.R;
-import com.example.jaf50.survey.TimeWrapper;
+import com.example.jaf50.survey.response.TimeWrapper;
 import com.example.jaf50.survey.response.Response;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;

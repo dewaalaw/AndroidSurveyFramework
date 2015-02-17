@@ -9,7 +9,10 @@ import android.widget.CheckBox;
 import android.widget.RadioButton;
 
 import com.example.jaf50.survey.actions.DirectContentTransition;
-import com.example.jaf50.survey.response.Response;
+import com.example.jaf50.survey.actions.EndSurveyAction;
+import com.example.jaf50.survey.domain.Survey;
+import com.example.jaf50.survey.domain.SurveyResponse;
+import com.example.jaf50.survey.domain.Value;
 import com.example.jaf50.survey.response.ResponseCondition;
 import com.example.jaf50.survey.response.ResponseCriteria;
 import com.example.jaf50.survey.ui.CheckboxGroupComponent;
@@ -21,12 +24,19 @@ import com.example.jaf50.survey.ui.TimePickerComponent;
 
 public class SurveyActivity extends FragmentActivity implements SurveyFragment.OnFragmentInteractionListener {
 
+  private Survey survey;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey);
 
+    survey = new Survey();
+    survey.setName("My Survey");
+    survey.setDescription("Description");
+
     SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
+    fragment.setCurrentSurvey(survey);
     fragment.addSurveyScreen(buildScreen1());
     fragment.addSurveyScreen(buildScreen2());
     fragment.addSurveyScreen(buildTestScreen("screen3", "Screen 3", new String[]{"check 1", "check 2", "check 3"}));
@@ -98,13 +108,13 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     screen1.addSurveyComponent(timePickerTextView);
 
     ResponseCriteria responseCriteria1 = new ResponseCriteria();
-    responseCriteria1.addCondition(new ResponseCondition("=", new Response("var5").addValue("one")));
+    responseCriteria1.addCondition(new ResponseCondition("=", new SurveyResponse("var5").addValue(new Value().setValue("one"))));
 
     ResponseCriteria responseCriteria2 = new ResponseCriteria();
-    responseCriteria2.addCondition(new ResponseCondition("contains", new Response("var1").addValue("Personal Holiday").addValue("Pay Deduction")));
+    responseCriteria2.addCondition(new ResponseCondition("contains", new SurveyResponse("var1").addValue(new Value().setValue("Personal Holiday")).addValue(new Value().setValue("Pay Deduction"))));
 
     ResponseCriteria defaultResponseCriteria = new ResponseCriteria();
-    defaultResponseCriteria.addCondition(new ResponseCondition("default", new Response()));
+    defaultResponseCriteria.addCondition(new ResponseCondition("default", new SurveyResponse()));
 
     screen1.addResponseCriteria(responseCriteria1, new DirectContentTransition("screen1", "screen2"));
     screen1.addResponseCriteria(responseCriteria2, new DirectContentTransition("screen1", "screen3"));
@@ -127,6 +137,11 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     screen.setScreenId("screen2");
     screen.addSurveyComponent(questionTextComponent);
     screen.addSurveyComponent(seekBarComponent);
+
+    ResponseCriteria defaultResponseCriteria = new ResponseCriteria();
+    defaultResponseCriteria.addCondition(new ResponseCondition("default", new SurveyResponse()));
+
+    screen.addResponseCriteria(defaultResponseCriteria, new EndSurveyAction(survey));
 
     return screen;
   }
