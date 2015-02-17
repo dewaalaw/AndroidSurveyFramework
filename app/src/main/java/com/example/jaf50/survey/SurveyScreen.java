@@ -4,6 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
+import com.example.jaf50.survey.actions.Action;
+import com.example.jaf50.survey.response.Response;
+import com.example.jaf50.survey.response.ResponseCriteria;
+import com.example.jaf50.survey.ui.ISurveyComponent;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

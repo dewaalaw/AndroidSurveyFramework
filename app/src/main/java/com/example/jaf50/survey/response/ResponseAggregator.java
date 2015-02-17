@@ -1,4 +1,6 @@
-package com.example.jaf50.survey;
+package com.example.jaf50.survey.response;
+
+import com.example.jaf50.survey.ui.ISurveyComponent;
 
 import java.util.List;
 

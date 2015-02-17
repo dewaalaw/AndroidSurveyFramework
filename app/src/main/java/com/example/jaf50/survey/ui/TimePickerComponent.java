@@ -1,4 +1,4 @@
-package com.example.jaf50.survey;
+package com.example.jaf50.survey.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.jaf50.survey.R;
+import com.example.jaf50.survey.TimeWrapper;
+import com.example.jaf50.survey.response.Response;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 

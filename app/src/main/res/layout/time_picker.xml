@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.jaf50.survey.TimePickerComponent xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.jaf50.survey.ui.TimePickerComponent xmlns:android="http://schemas.android.com/apk/res/android"
                                               android:orientation="horizontal"
                                               android:layout_width="match_parent"
                                               android:layout_height="wrap_content">
@@ -18,4 +18,4 @@
         android:textSize="14dp"
         android:text="Select a time..."
         android:id="@+id/selectionTextView"/>
-</com.example.jaf50.survey.TimePickerComponent>
+</com.example.jaf50.survey.ui.TimePickerComponent>

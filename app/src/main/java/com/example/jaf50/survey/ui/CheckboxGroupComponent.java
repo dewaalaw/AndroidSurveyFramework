@@ -1,10 +1,12 @@
-package com.example.jaf50.survey;
+package com.example.jaf50.survey.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+
+import com.example.jaf50.survey.response.Response;
 
 import java.util.ArrayList;
 import java.util.List;

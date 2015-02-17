@@ -1,4 +1,4 @@
-package com.example.jaf50.survey;
+package com.example.jaf50.survey.actions;
 
 public interface Action {
 

@@ -1,8 +1,10 @@
-package com.example.jaf50.survey;
+package com.example.jaf50.survey.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.example.jaf50.survey.response.Response;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 

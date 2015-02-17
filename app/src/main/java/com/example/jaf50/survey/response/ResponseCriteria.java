@@ -1,4 +1,4 @@
-package com.example.jaf50.survey;
+package com.example.jaf50.survey.response;
 
 import java.util.ArrayList;
 import java.util.HashMap;

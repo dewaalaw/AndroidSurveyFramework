@@ -8,6 +8,17 @@ import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 
+import com.example.jaf50.survey.actions.DirectContentTransition;
+import com.example.jaf50.survey.response.Response;
+import com.example.jaf50.survey.response.ResponseCondition;
+import com.example.jaf50.survey.response.ResponseCriteria;
+import com.example.jaf50.survey.ui.CheckboxGroupComponent;
+import com.example.jaf50.survey.ui.DatePickerComponent;
+import com.example.jaf50.survey.ui.RadioGroupComponent;
+import com.example.jaf50.survey.ui.SeekBarComponent;
+import com.example.jaf50.survey.ui.TextComponent;
+import com.example.jaf50.survey.ui.TimePickerComponent;
+
 public class SurveyActivity extends FragmentActivity implements SurveyFragment.OnFragmentInteractionListener {
 
   @Override

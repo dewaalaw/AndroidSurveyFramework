@@ -2,6 +2,10 @@ package com.example.jaf50.survey;
 
 import android.test.AndroidTestCase;
 
+import com.example.jaf50.survey.response.Response;
+import com.example.jaf50.survey.response.ResponseCondition;
+import com.example.jaf50.survey.response.ResponseCriteria;
+
 import java.util.Arrays;
 
 public class TestResponseCriteria extends AndroidTestCase {

@@ -3,11 +3,13 @@ package com.example.jaf50.survey.domain;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 
+import java.util.Date;
 import java.util.List;
 
 public class SurveyResponse extends SugarRecord<SurveyResponse> {
 
   Survey survey;
+  Date responseDate;
   String responseId;
   @Ignore
   List<Value> values;
@@ -40,6 +42,14 @@ public class SurveyResponse extends SugarRecord<SurveyResponse> {
 
   public void setSurvey(Survey survey) {
     this.survey = survey;
+  }
+
+  public Date getResponseDate() {
+    return responseDate;
+  }
+
+  public void setResponseDate(Date responseDate) {
+    this.responseDate = responseDate;
   }
 
   @Override

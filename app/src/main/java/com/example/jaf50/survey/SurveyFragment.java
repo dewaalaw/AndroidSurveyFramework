@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.example.jaf50.survey.actions.Action;
+import com.example.jaf50.survey.actions.DirectContentTransition;
+import com.example.jaf50.survey.response.Response;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
