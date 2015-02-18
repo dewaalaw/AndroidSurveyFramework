@@ -25,6 +25,7 @@ import com.example.jaf50.survey.ui.TimePickerComponent;
 public class SurveyActivity extends FragmentActivity implements SurveyFragment.OnFragmentInteractionListener {
 
   private Survey survey;
+  private int testScreenCount = 0;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,6 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     survey.setDescription("Description");
 
     SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
-    fragment.setCurrentSurvey(survey);
     fragment.addSurveyScreen(buildScreen1());
     fragment.addSurveyScreen(buildScreen2());
     fragment.addSurveyScreen(buildTestScreen("screen3", "Screen 3", new String[]{"check 1", "check 2", "check 3"}));
@@ -54,6 +54,7 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     questionTextComponent.setPadding(0, 0, 0, (int)(15 * displayMetrics.density));
 
     RadioGroupComponent radioGroupComponent = (RadioGroupComponent) inflator.inflate(R.layout.radio_group, null);
+    radioGroupComponent.setResponseId("screen1Radio");
 
     RadioButton radioButton1 = (RadioButton) inflator.inflate(R.layout.radio_button, null);
     RadioButton radioButton2 = (RadioButton) inflator.inflate(R.layout.radio_button, null);
@@ -100,6 +101,7 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
 
     SurveyScreen screen1 = (SurveyScreen) inflator.inflate(R.layout.survey_content, null);
     screen1.setScreenId("screen1");
+    screen1.setAssociatedSurvey(survey);
     screen1.addSurveyComponent(questionTextComponent);
     screen1.addSurveyComponent(radioGroupComponent);
     screen1.addSurveyComponent(checkboxGroupComponent);
@@ -132,9 +134,11 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     questionTextComponent.setPadding(0, 0, 0, (int)(15 * displayMetrics.density));
 
     SeekBarComponent seekBarComponent = (SeekBarComponent) inflator.inflate(R.layout.seekbar, null);
+    seekBarComponent.setResponseId("screen2Seek");
 
     SurveyScreen screen = (SurveyScreen) inflator.inflate(R.layout.survey_content, null);
     screen.setScreenId("screen2");
+    screen.setAssociatedSurvey(survey);
     screen.addSurveyComponent(questionTextComponent);
     screen.addSurveyComponent(seekBarComponent);
 
@@ -155,6 +159,7 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
     questionTextComponent.setPadding(0, 0, 0, (int)(15 * displayMetrics.density));
 
     CheckboxGroupComponent checkboxGroupComponent = (CheckboxGroupComponent) inflator.inflate(R.layout.checkbox_group, null);
+    checkboxGroupComponent.setResponseId("screenId_" + ++testScreenCount);
     for (String checkBoxText : checkBoxTexts) {
       CheckBox checkBox = (CheckBox) inflator.inflate(R.layout.checkbox, null);
       checkBox.setText(checkBoxText);
@@ -163,6 +168,7 @@ public class SurveyActivity extends FragmentActivity implements SurveyFragment.O
 
     SurveyScreen screen = (SurveyScreen) inflator.inflate(R.layout.survey_content, null);
     screen.setScreenId(screenId);
+    screen.setAssociatedSurvey(survey);
     screen.addSurveyComponent(questionTextComponent);
     screen.addSurveyComponent(checkboxGroupComponent);
 

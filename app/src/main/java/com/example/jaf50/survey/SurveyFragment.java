@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.actions.DirectContentTransition;
@@ -37,7 +38,6 @@ public class SurveyFragment extends Fragment {
   Button previousButton;
 
   private OnFragmentInteractionListener mListener;
-  private Survey currentSurvey;
   private HashMap<String, SurveyScreen> surveyScreens = new HashMap<String, SurveyScreen>();
   private SurveyScreen currentScreen;
   private Stack<SurveyScreen> screenStack = new Stack<SurveyScreen>();
@@ -70,8 +70,13 @@ public class SurveyFragment extends Fragment {
             screenStack.push(surveyScreen);
           } else if (action instanceof EndSurveyAction) {
             EndSurveyAction endSurveyAction = (EndSurveyAction) action;
-            //endSurveyAction.setSurveyResponses(collectResponses());
+            endSurveyAction.setSurveyResponses(collectResponses());
             endSurveyAction.execute();
+
+
+            List<Survey> surveys = Survey.listAll(Survey.class);
+            Survey savedSurvey = surveys.get(surveys.size()-1);
+            Toast.makeText(getActivity(), "Saved data for survey " + savedSurvey.getName() + ", # assessments = " + surveys.size() + ", responses = " + savedSurvey.getResponses(), Toast.LENGTH_LONG).show();
           }
         }
       }
@@ -93,24 +98,14 @@ public class SurveyFragment extends Fragment {
     return view;
   }
 
-  private List<SurveyResponse> collectResponses(Survey survey) {
+  private List<SurveyResponse> collectResponses() {
     List<SurveyResponse> surveyResponses = new ArrayList<>();
 
     SurveyScreen [] screensCopy = new SurveyScreen[screenStack.size()];
     screenStack.copyInto(screensCopy);
 
-//    for (SurveyScreen screen : screensCopy) {
-//      List<Response> responses = screen.getResponses();
-//      for (Response response : responses) {
-//        SurveyResponse surveyResponse = new SurveyResponse();
-//        surveyResponse.setResponseId(response.getId());
-//        surveyResponse.setSurvey(survey);
-//        surveyResponse.setValues(response.getValues());
-//      }
-//    }
-
     for (SurveyScreen screen : screensCopy) {
-      surveyResponses.addAll(screen.getResponses());
+      surveyResponses.addAll(screen.collectResponses());
     }
 
     return surveyResponses;
@@ -157,10 +152,6 @@ public class SurveyFragment extends Fragment {
     currentScreen = surveyScreen;
     contentPanel.removeAllViews();
     contentPanel.addView(surveyScreen);
-  }
-
-  public void setCurrentSurvey(Survey currentSurvey) {
-    this.currentSurvey = currentSurvey;
   }
 
   public interface OnFragmentInteractionListener {

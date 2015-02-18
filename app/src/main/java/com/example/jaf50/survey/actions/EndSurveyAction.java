@@ -20,7 +20,6 @@ public class EndSurveyAction implements Action {
 
   @Override
   public void execute() {
-    // TODO - collect responses up until now.
     survey.setResponses(surveyResponses);
     survey.save();
   }
