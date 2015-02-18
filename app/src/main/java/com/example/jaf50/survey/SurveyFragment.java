@@ -73,10 +73,11 @@ public class SurveyFragment extends Fragment {
             endSurveyAction.setSurveyResponses(collectResponses());
             endSurveyAction.execute();
 
-
             List<Survey> surveys = Survey.listAll(Survey.class);
             Survey savedSurvey = surveys.get(surveys.size()-1);
             Toast.makeText(getActivity(), "Saved data for survey " + savedSurvey.getName() + ", # assessments = " + surveys.size() + ", responses = " + savedSurvey.getResponses(), Toast.LENGTH_LONG).show();
+
+            getActivity().finish();
           }
         }
       }
