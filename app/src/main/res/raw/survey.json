@@ -1,0 +1,141 @@
+{
+  "description": "Description",
+  "name": "My Survey",
+  "screens": [
+    {
+      "id": "screen1",
+      "components": [
+        {
+          "type": "text",
+          "label": "Nice text!"
+        },
+        {
+          "type": "radioGroup",
+          "responseId": "screen1RadioResponse",
+          "inputs": [
+            {
+              "label": "radio 1",
+              "value": "1"
+            },
+            {
+              "label": "radio 2",
+              "value": "2"
+            },
+            {
+              "label": "radio 3",
+              "value": "3"
+            }
+          ]
+        },
+        {
+          "type": "slider",
+          "responseId": "sliderResponse"
+        }
+      ],
+      "responseCriteria": [
+        {
+          "condition": "=",
+          "response": {
+            "id": "screen1RadioResponse",
+            "values": [
+              "1"
+            ]
+          },
+          "transition": "screen2"
+        },
+        {
+          "condition": "default",
+          "transition": "screen3"
+        }
+      ]
+    },
+    {
+      "id": "screen2",
+      "components": [
+        {
+          "type": "text",
+          "label": "Screen 2 Text"
+        },
+        {
+          "type": "checkboxGroup",
+          "responseId": "absenceType",
+          "inputs": [
+            {
+              "label": "Vacation",
+              "value": "1"
+            },
+            {
+              "label": "Sick",
+              "value": "2"
+            },
+            {
+              "label": "Personal Holiday",
+              "value": "3"
+            },
+            {
+              "label": "Earned Time Off",
+              "value": "4"
+            },
+            {
+              "label": "Pay Deduction",
+              "value": "5"
+            },
+            {
+              "label": "Holiday Compensation",
+              "value": "6"
+            }
+          ]
+        }
+      ],
+      "responseCriteria": [
+        {
+          "condition": "contains",
+          "response": {
+            "id": "absenceType",
+            "values": [
+              "1",
+              "4"
+            ]
+          },
+          "transition": "screen3"
+        },
+        {
+          "condition": "default",
+          "transition": "screen4"
+        }
+      ]
+    },
+    {
+      "id": "screen3",
+      "components": [
+        {
+          "type": "text",
+          "label": "Screen 3 Text"
+        },
+        {
+          "type": "datePicker",
+          "responseId": "datePickerResponse"
+        },
+        {
+          "type": "timePicker",
+          "responseId": "timePickerResponse"
+        }
+      ],
+      "responseCriteria": [
+        {
+          "condition": "default",
+          "transition": "screen4"
+        }
+      ]
+    },
+    {
+      "id": "screen4",
+      "components": [
+        {
+          "type": "text",
+          "label": "End survey!"
+        }
+      ]
+    }
+  ]
+}
