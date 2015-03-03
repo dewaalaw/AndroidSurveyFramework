@@ -1,6 +1,6 @@
 package com.example.jaf50.survey;
 
-import android.test.ActivityInstrumentationTestCase2;
+import android.test.AndroidTestCase;
 
 import com.example.jaf50.survey.domain.Survey;
 import com.example.jaf50.survey.domain.SurveyResponse;
@@ -13,11 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class TestSurvey extends ActivityInstrumentationTestCase2<SurveyActivity> {
-
-  public TestSurvey() {
-    super(SurveyActivity.class);
-  }
+public class TestSurvey extends AndroidTestCase {
 
   @Override
   protected void setUp() throws Exception {
