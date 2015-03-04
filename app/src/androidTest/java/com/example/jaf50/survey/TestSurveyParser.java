@@ -3,8 +3,6 @@ package com.example.jaf50.survey;
 import android.test.AndroidTestCase;
 
 import com.example.jaf50.survey.parser.CheckboxGroupModel;
-import com.example.jaf50.survey.parser.ComponentModel;
-import com.example.jaf50.survey.parser.ComponentModelDeserializer;
 import com.example.jaf50.survey.parser.DatePickerModel;
 import com.example.jaf50.survey.parser.InputModel;
 import com.example.jaf50.survey.parser.RadioGroupModel;
@@ -12,26 +10,19 @@ import com.example.jaf50.survey.parser.ResponseCondition;
 import com.example.jaf50.survey.parser.ResponseCriteriaModel;
 import com.example.jaf50.survey.parser.SliderModel;
 import com.example.jaf50.survey.parser.SurveyModel;
+import com.example.jaf50.survey.parser.SurveyParser;
 import com.example.jaf50.survey.parser.SurveyScreenModel;
 import com.example.jaf50.survey.parser.TextModel;
 import com.example.jaf50.survey.parser.TimePickerModel;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class TestSurveyParser extends AndroidTestCase {
 
   public void testParse() throws IOException {
-    InputStream surveyInputStream = getContext().getResources().openRawResource(R.raw.test_survey);
+    SurveyParser surveyParser = new SurveyParser();
+    SurveyModel surveyModel = surveyParser.parse(getContext().getResources().openRawResource(R.raw.test_survey));
 
-    GsonBuilder gsonBuilder = new GsonBuilder();
-    gsonBuilder.registerTypeAdapter(ComponentModel.class, new ComponentModelDeserializer());
-    Gson gson = gsonBuilder.create();
-
-    SurveyModel surveyModel = gson.fromJson(new InputStreamReader(surveyInputStream), SurveyModel.class);
     assertEquals("My Survey", surveyModel.getName());
     assertEquals("Description", surveyModel.getDescription());
     assertEquals(2, surveyModel.getScreens().size());
