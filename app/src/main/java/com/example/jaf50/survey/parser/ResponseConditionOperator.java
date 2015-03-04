@@ -2,7 +2,7 @@ package com.example.jaf50.survey.parser;
 
 import com.google.gson.annotations.SerializedName;
 
-public enum ResponseCondition {
+public enum ResponseConditionOperator {
 
   @SerializedName("=")
   EQUALS("="),
@@ -13,7 +13,7 @@ public enum ResponseCondition {
 
   private String condition;
 
-  ResponseCondition(String condition) {
+  ResponseConditionOperator(String condition) {
     this.condition = condition;
   }
 

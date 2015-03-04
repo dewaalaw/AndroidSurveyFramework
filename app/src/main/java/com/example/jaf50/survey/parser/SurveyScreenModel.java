@@ -1,12 +1,13 @@
 package com.example.jaf50.survey.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SurveyScreenModel {
 
   private String id;
   private List<ComponentModel> components;
-  private List<ResponseCriteriaModel> responseCriteria;
+  private List<ResponseCriteriaModel> responseCriteria = new ArrayList<>();
 
   public String getId() {
     return id;

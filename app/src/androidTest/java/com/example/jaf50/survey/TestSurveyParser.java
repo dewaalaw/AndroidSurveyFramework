@@ -6,7 +6,7 @@ import com.example.jaf50.survey.parser.CheckboxGroupModel;
 import com.example.jaf50.survey.parser.DatePickerModel;
 import com.example.jaf50.survey.parser.InputModel;
 import com.example.jaf50.survey.parser.RadioGroupModel;
-import com.example.jaf50.survey.parser.ResponseCondition;
+import com.example.jaf50.survey.parser.ResponseConditionOperator;
 import com.example.jaf50.survey.parser.ResponseCriteriaModel;
 import com.example.jaf50.survey.parser.SliderModel;
 import com.example.jaf50.survey.parser.SurveyModel;
@@ -50,7 +50,7 @@ public class TestSurveyParser extends AndroidTestCase {
     assertEquals("sliderResponse", sliderModel1.getResponseId());
 
     ResponseCriteriaModel responseCriteriaModel1 = screen1.getResponseCriteria().get(0);
-    assertEquals(ResponseCondition.EQUALS, responseCriteriaModel1.getCondition());
+    assertEquals(ResponseConditionOperator.EQUALS, responseCriteriaModel1.getCondition());
     assertEquals("screen1RadioResponse", responseCriteriaModel1.getResponse().getId());
     assertEquals(1, responseCriteriaModel1.getResponse().getValues().size());
     assertEquals("1", responseCriteriaModel1.getResponse().getValues().get(0));
@@ -81,14 +81,14 @@ public class TestSurveyParser extends AndroidTestCase {
     ResponseCriteriaModel screen2_responseCriteriaModel1 = screen2.getResponseCriteria().get(0);
     ResponseCriteriaModel screen2_responseCriteriaModel2 = screen2.getResponseCriteria().get(1);
 
-    assertEquals(ResponseCondition.CONTAINS, screen2_responseCriteriaModel1.getCondition());
+    assertEquals(ResponseConditionOperator.CONTAINS, screen2_responseCriteriaModel1.getCondition());
     assertEquals("absenceType", screen2_responseCriteriaModel1.getResponse().getId());
     assertEquals(2, screen2_responseCriteriaModel1.getResponse().getValues().size());
     assertEquals("1", screen2_responseCriteriaModel1.getResponse().getValues().get(0));
     assertEquals("4", screen2_responseCriteriaModel1.getResponse().getValues().get(1));
     assertEquals("screen3", screen2_responseCriteriaModel1.getTransition());
 
-    assertEquals(ResponseCondition.DEFAULT, screen2_responseCriteriaModel2.getCondition());
+    assertEquals(ResponseConditionOperator.DEFAULT, screen2_responseCriteriaModel2.getCondition());
     assertEquals("screen4", screen2_responseCriteriaModel2.getTransition());
   }
 }

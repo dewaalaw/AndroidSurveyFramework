@@ -2,15 +2,15 @@ package com.example.jaf50.survey.parser;
 
 public class ResponseCriteriaModel extends ComponentModel {
 
-  private ResponseCondition condition;
+  private ResponseConditionOperator condition;
   private ResponseModel response;
   private String transition;
 
-  public ResponseCondition getCondition() {
+  public ResponseConditionOperator getCondition() {
     return condition;
   }
 
-  public void setCondition(ResponseCondition condition) {
+  public void setCondition(ResponseConditionOperator condition) {
     this.condition = condition;
   }
 
