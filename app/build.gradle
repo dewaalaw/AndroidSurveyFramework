@@ -24,7 +24,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.loopj.android:android-async-http:1.4.5'
     compile 'com.jakewharton:butterknife:6.1.0'
-    compile 'com.google.code.gson:gson:1.7.2'
+    compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.beardedhen:androidbootstrap:+'
     compile 'com.wdullaer:materialdatetimepicker:1.0.0'
     compile 'com.github.satyan:sugar:1.3'

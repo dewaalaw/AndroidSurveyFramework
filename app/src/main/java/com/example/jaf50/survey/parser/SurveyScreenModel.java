@@ -6,6 +6,7 @@ public class SurveyScreenModel {
 
   private String id;
   private List<ComponentModel> components;
+  private List<ResponseCriteriaModel> responseCriteria;
 
   public String getId() {
     return id;
@@ -21,5 +22,13 @@ public class SurveyScreenModel {
 
   public void setComponents(List<ComponentModel> components) {
     this.components = components;
+  }
+
+  public List<ResponseCriteriaModel> getResponseCriteria() {
+    return responseCriteria;
+  }
+
+  public void setResponseCriteria(List<ResponseCriteriaModel> responseCriteria) {
+    this.responseCriteria = responseCriteria;
   }
 }
