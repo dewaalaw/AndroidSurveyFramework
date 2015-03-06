@@ -70,13 +70,12 @@ public class DomainBuilder {
       for (ResponseCriteriaModel responseCriteriaModel : surveyScreenModel.getResponseCriteria()) {
         if (responseCriteriaModel.getCondition() == ResponseConditionOperator.EQUALS ||
             responseCriteriaModel.getCondition() == ResponseConditionOperator.CONTAINS) {
-          String operator = responseCriteriaModel.getCondition().getOperator();
           SurveyResponse surveyResponse = new SurveyResponse();
           surveyResponse.setResponseId(responseCriteriaModel.getResponse().getId());
           surveyResponse.setSurvey(survey);
           surveyResponse.setValues(buildValues(responseCriteriaModel));
 
-          ResponseCondition responseCondition = new ResponseCondition(operator, surveyResponse);
+          ResponseCondition responseCondition = new ResponseCondition(responseCriteriaModel.getCondition(), surveyResponse);
           DirectContentTransition transition = new DirectContentTransition(responseCriteriaModel.getResponse().getId(), responseCriteriaModel.getTransition());
 
           ResponseCriteria responseCriteria = new ResponseCriteria();
@@ -85,12 +84,12 @@ public class DomainBuilder {
           surveyScreen.addResponseCriteria(responseCriteria, transition);
         } else if (responseCriteriaModel.getCondition() == ResponseConditionOperator.DEFAULT) {
           ResponseCriteria defaultResponseCriteria = new ResponseCriteria();
-          defaultResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.DEFAULT.getOperator(), new SurveyResponse()));
+          defaultResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.DEFAULT, new SurveyResponse()));
 
           surveyScreen.addResponseCriteria(defaultResponseCriteria, new DirectContentTransition(null, responseCriteriaModel.getTransition()));
         } else if (responseCriteriaModel.getCondition() == ResponseConditionOperator.COMPLETE) {
           ResponseCriteria surveyCompleteResponseCriteria = new ResponseCriteria();
-          surveyCompleteResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.COMPLETE.getOperator(), new SurveyResponse()));
+          surveyCompleteResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.COMPLETE, new SurveyResponse()));
 
           surveyScreen.addResponseCriteria(surveyCompleteResponseCriteria, new EndSurveyAction(survey));
         }
