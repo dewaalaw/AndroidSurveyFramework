@@ -3,7 +3,6 @@ package com.example.jaf50.survey.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import com.example.jaf50.survey.response.Response;
@@ -15,7 +14,7 @@ public class CheckboxGroupComponent extends LinearLayout implements ISurveyCompo
 
   private String responseId;
 
-  private List<CheckBox> checkboxes = new ArrayList<CheckBox>();
+  private List<CheckboxComponent> checkboxComponents = new ArrayList<CheckboxComponent>();
 
   public CheckboxGroupComponent(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -25,9 +24,9 @@ public class CheckboxGroupComponent extends LinearLayout implements ISurveyCompo
     return this;
   }
 
-  public void addComponent(CheckBox checkBox) {
-    addView(checkBox);
-    checkboxes.add(checkBox);
+  public void addComponent(CheckboxComponent checkboxComponent) {
+    addView(checkboxComponent);
+    checkboxComponents.add(checkboxComponent);
   }
 
   @Override
@@ -37,9 +36,9 @@ public class CheckboxGroupComponent extends LinearLayout implements ISurveyCompo
 
   public Response getResponse() {
     Response response = new Response(responseId);
-    for (CheckBox checkbox : checkboxes) {
-      if (checkbox.isChecked()) {
-        response.addValue(checkbox.getText().toString());
+    for (CheckboxComponent checkboxComponent : checkboxComponents) {
+      if (checkboxComponent.isChecked()) {
+        response.addValue(checkboxComponent.getValue());
       }
     }
     return response;

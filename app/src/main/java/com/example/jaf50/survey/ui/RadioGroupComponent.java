@@ -20,8 +20,8 @@ public class RadioGroupComponent extends RadioGroup implements ISurveyComponent 
     return this;
   }
 
-  public void addComponent(RadioButton radioButton) {
-    addView(radioButton);
+  public void addComponent(RadioButtonComponent radioButtonComponent) {
+    addView(radioButtonComponent);
   }
 
   @Override
@@ -33,8 +33,8 @@ public class RadioGroupComponent extends RadioGroup implements ISurveyComponent 
     Response response = new Response(responseId);
     int checkedId = getCheckedRadioButtonId();
     if (checkedId != -1) {
-      RadioButton radioButton = (RadioButton) findViewById(checkedId);
-      response.addValue(radioButton.getText().toString());
+      RadioButtonComponent radioButtonComponent = (RadioButtonComponent) findViewById(checkedId);
+      response.addValue(radioButtonComponent.getValue());
     }
     return response;
   }

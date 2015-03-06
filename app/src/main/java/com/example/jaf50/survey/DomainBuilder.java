@@ -1,8 +1,6 @@
 package com.example.jaf50.survey;
 
 import android.view.LayoutInflater;
-import android.widget.CheckBox;
-import android.widget.RadioButton;
 
 import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.domain.Survey;
@@ -22,8 +20,10 @@ import com.example.jaf50.survey.parser.TextModel;
 import com.example.jaf50.survey.parser.TimePickerModel;
 import com.example.jaf50.survey.response.ResponseCondition;
 import com.example.jaf50.survey.response.ResponseCriteria;
+import com.example.jaf50.survey.ui.CheckboxComponent;
 import com.example.jaf50.survey.ui.CheckboxGroupComponent;
 import com.example.jaf50.survey.ui.DatePickerComponent;
+import com.example.jaf50.survey.ui.RadioButtonComponent;
 import com.example.jaf50.survey.ui.RadioGroupComponent;
 import com.example.jaf50.survey.ui.SeekBarComponent;
 import com.example.jaf50.survey.ui.TextComponent;
@@ -128,9 +128,10 @@ public class DomainBuilder {
     CheckboxGroupComponent checkboxGroupComponent = (CheckboxGroupComponent) layoutInflater.inflate(R.layout.checkbox_group, null);
     checkboxGroupComponent.setResponseId(model.getResponseId());
     for (InputModel inputModel : model.getInputs()) {
-      CheckBox checkBox = (CheckBox) layoutInflater.inflate(R.layout.checkbox, null);
-      checkBox.setText(inputModel.getLabel());
-      checkboxGroupComponent.addComponent(checkBox);
+      CheckboxComponent checkboxComponent = (CheckboxComponent) layoutInflater.inflate(R.layout.checkbox, null);
+      checkboxComponent.setText(inputModel.getLabel());
+      checkboxComponent.setValue(inputModel.getValue());
+      checkboxGroupComponent.addComponent(checkboxComponent);
     }
     return checkboxGroupComponent;
   }
@@ -139,9 +140,10 @@ public class DomainBuilder {
     RadioGroupComponent radioGroupComponent = (RadioGroupComponent) layoutInflater.inflate(R.layout.radio_group, null);
     radioGroupComponent.setResponseId(model.getResponseId());
     for (InputModel inputModel : model.getInputs()) {
-      RadioButton radioButton = (RadioButton) layoutInflater.inflate(R.layout.radio_button, null);
-      radioButton.setText(inputModel.getLabel());
-      radioGroupComponent.addComponent(radioButton);
+      RadioButtonComponent radioButtonComponent = (RadioButtonComponent) layoutInflater.inflate(R.layout.radio_button, null);
+      radioButtonComponent.setText(inputModel.getLabel());
+      radioButtonComponent.setValue(inputModel.getValue());
+      radioGroupComponent.addComponent(radioButtonComponent);
     }
     return radioGroupComponent;
   }

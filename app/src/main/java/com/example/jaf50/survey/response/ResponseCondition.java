@@ -26,4 +26,12 @@ public class ResponseCondition {
     }
     return false;
   }
+
+  @Override
+  public String toString() {
+    return "ResponseCondition{" +
+        "operator='" + operator + '\'' +
+        ", expectedResponse=" + expectedResponse +
+        '}';
+  }
 }
