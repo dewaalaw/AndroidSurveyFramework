@@ -1,6 +1,7 @@
 package com.example.jaf50.survey.response;
 
 import com.example.jaf50.survey.domain.SurveyResponse;
+import com.example.jaf50.survey.parser.ResponseConditionOperator;
 
 public class ResponseCondition {
 
@@ -17,11 +18,13 @@ public class ResponseCondition {
   }
 
   public boolean isSatisfied(SurveyResponse response) {
-    if (operator.equals("=")) {
+    if (operator.equals(ResponseConditionOperator.EQUALS.getOperator())) {
       return expectedResponse.equals(response);
-    } else if (operator.equals("contains")) {
+    } else if (operator.equals(ResponseConditionOperator.CONTAINS.getOperator())) {
       return response.contains(expectedResponse);
-    } else if (operator.equals("default")) {
+    } else if (operator.equals(ResponseConditionOperator.DEFAULT.getOperator())) {
+      return true;
+    } else if (operator.equals(ResponseConditionOperator.COMPLETE.getOperator())) {
       return true;
     }
     return false;

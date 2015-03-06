@@ -9,7 +9,9 @@ public enum ResponseConditionOperator {
   @SerializedName("contains")
   CONTAINS("contains"),
   @SerializedName("default")
-  DEFAULT("default");
+  DEFAULT("default"),
+  @SerializedName("complete")
+  COMPLETE("complete");
 
   private String operator;
 

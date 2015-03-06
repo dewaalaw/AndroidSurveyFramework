@@ -3,6 +3,7 @@ package com.example.jaf50.survey;
 import android.view.LayoutInflater;
 
 import com.example.jaf50.survey.actions.DirectContentTransition;
+import com.example.jaf50.survey.actions.EndSurveyAction;
 import com.example.jaf50.survey.domain.Survey;
 import com.example.jaf50.survey.domain.SurveyResponse;
 import com.example.jaf50.survey.domain.Value;
@@ -67,7 +68,8 @@ public class DomainBuilder {
       }
 
       for (ResponseCriteriaModel responseCriteriaModel : surveyScreenModel.getResponseCriteria()) {
-        if (responseCriteriaModel.getResponse() != null) {
+        if (responseCriteriaModel.getCondition() == ResponseConditionOperator.EQUALS ||
+            responseCriteriaModel.getCondition() == ResponseConditionOperator.CONTAINS) {
           String operator = responseCriteriaModel.getCondition().getOperator();
           SurveyResponse surveyResponse = new SurveyResponse();
           surveyResponse.setResponseId(responseCriteriaModel.getResponse().getId());
@@ -81,17 +83,21 @@ public class DomainBuilder {
           responseCriteria.addCondition(responseCondition);
 
           surveyScreen.addResponseCriteria(responseCriteria, transition);
-        } else {
+        } else if (responseCriteriaModel.getCondition() == ResponseConditionOperator.DEFAULT) {
           ResponseCriteria defaultResponseCriteria = new ResponseCriteria();
           defaultResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.DEFAULT.getOperator(), new SurveyResponse()));
 
           surveyScreen.addResponseCriteria(defaultResponseCriteria, new DirectContentTransition(null, responseCriteriaModel.getTransition()));
+        } else if (responseCriteriaModel.getCondition() == ResponseConditionOperator.COMPLETE) {
+          ResponseCriteria surveyCompleteResponseCriteria = new ResponseCriteria();
+          surveyCompleteResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.COMPLETE.getOperator(), new SurveyResponse()));
+
+          surveyScreen.addResponseCriteria(surveyCompleteResponseCriteria, new EndSurveyAction(survey));
         }
       }
 
       surveyScreens.add(surveyScreen);
     }
-
   }
 
   private ISurveyComponent buildComponent(ComponentModel componentModel) {
