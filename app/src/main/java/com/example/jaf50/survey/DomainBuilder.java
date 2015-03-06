@@ -23,6 +23,7 @@ import com.example.jaf50.survey.response.ResponseCriteria;
 import com.example.jaf50.survey.ui.CheckboxComponent;
 import com.example.jaf50.survey.ui.CheckboxGroupComponent;
 import com.example.jaf50.survey.ui.DatePickerComponent;
+import com.example.jaf50.survey.ui.ISurveyComponent;
 import com.example.jaf50.survey.ui.RadioButtonComponent;
 import com.example.jaf50.survey.ui.RadioGroupComponent;
 import com.example.jaf50.survey.ui.SeekBarComponent;
@@ -62,46 +63,27 @@ public class DomainBuilder {
       surveyScreen.setAssociatedSurvey(survey);
 
       for (ComponentModel componentModel : surveyScreenModel.getComponents()) {
-        if (componentModel instanceof TextModel) {
-          surveyScreen.addSurveyComponent(buildTextComponent((TextModel) componentModel));
-        } else if (componentModel instanceof SliderModel) {
-          surveyScreen.addSurveyComponent(buildSeekBarComponent((SliderModel) componentModel));
-        } else if (componentModel instanceof CheckboxGroupModel) {
-          surveyScreen.addSurveyComponent(buildCheckboxGroupComponent((CheckboxGroupModel) componentModel));
-        } else if (componentModel instanceof RadioGroupModel) {
-          surveyScreen.addSurveyComponent(buildRadioGroupComponent((RadioGroupModel) componentModel));
-        } else if (componentModel instanceof DatePickerModel) {
-          surveyScreen.addSurveyComponent(buildDatePickerComponent((DatePickerModel) componentModel));
-        } else if (componentModel instanceof TimePickerModel) {
-          surveyScreen.addSurveyComponent(buildTimePickerComponent((TimePickerModel) componentModel));
-        }
+        surveyScreen.addSurveyComponent(buildComponent(componentModel));
       }
 
       for (ResponseCriteriaModel responseCriteriaModel : surveyScreenModel.getResponseCriteria()) {
-        ResponseCriteria responseCriteria = new ResponseCriteria();
-
         if (responseCriteriaModel.getResponse() != null) {
-          String operator = responseCriteriaModel.getCondition().getCondition();
+          String operator = responseCriteriaModel.getCondition().getOperator();
           SurveyResponse surveyResponse = new SurveyResponse();
           surveyResponse.setResponseId(responseCriteriaModel.getResponse().getId());
           surveyResponse.setSurvey(survey);
-
-          List<Value> values = new ArrayList<>();
-          for (String val : responseCriteriaModel.getResponse().getValues()) {
-            Value value = new Value();
-            value.setValue(val);
-            values.add(value);
-          }
-          surveyResponse.setValues(values);
+          surveyResponse.setValues(buildValues(responseCriteriaModel));
 
           ResponseCondition responseCondition = new ResponseCondition(operator, surveyResponse);
           DirectContentTransition transition = new DirectContentTransition(responseCriteriaModel.getResponse().getId(), responseCriteriaModel.getTransition());
+
+          ResponseCriteria responseCriteria = new ResponseCriteria();
           responseCriteria.addCondition(responseCondition);
 
           surveyScreen.addResponseCriteria(responseCriteria, transition);
         } else {
           ResponseCriteria defaultResponseCriteria = new ResponseCriteria();
-          defaultResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.DEFAULT.getCondition(), new SurveyResponse()));
+          defaultResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.DEFAULT.getOperator(), new SurveyResponse()));
 
           surveyScreen.addResponseCriteria(defaultResponseCriteria, new DirectContentTransition(null, responseCriteriaModel.getTransition()));
         }
@@ -110,6 +92,23 @@ public class DomainBuilder {
       surveyScreens.add(surveyScreen);
     }
 
+  }
+
+  private ISurveyComponent buildComponent(ComponentModel componentModel) {
+    if (componentModel instanceof TextModel) {
+      return buildTextComponent((TextModel) componentModel);
+    } else if (componentModel instanceof SliderModel) {
+      return buildSeekBarComponent((SliderModel) componentModel);
+    } else if (componentModel instanceof CheckboxGroupModel) {
+      return buildCheckboxGroupComponent((CheckboxGroupModel) componentModel);
+    } else if (componentModel instanceof RadioGroupModel) {
+      return buildRadioGroupComponent((RadioGroupModel) componentModel);
+    } else if (componentModel instanceof DatePickerModel) {
+      return buildDatePickerComponent((DatePickerModel) componentModel);
+    } else if (componentModel instanceof TimePickerModel) {
+      return buildTimePickerComponent((TimePickerModel) componentModel);
+    }
+    throw new IllegalArgumentException("componentModel type " + componentModel.getClass() + " is not valid.");
   }
 
   private TextComponent buildTextComponent(TextModel model) {
@@ -158,5 +157,15 @@ public class DomainBuilder {
     TimePickerComponent timePickerComponent = (TimePickerComponent) layoutInflater.inflate(R.layout.time_picker, null);
     timePickerComponent.setResponseId(model.getResponseId());
     return timePickerComponent;
+  }
+
+  private List<Value> buildValues(ResponseCriteriaModel responseCriteriaModel) {
+    List<Value> values = new ArrayList<>();
+    for (String val : responseCriteriaModel.getResponse().getValues()) {
+      Value value = new Value();
+      value.setValue(val);
+      values.add(value);
+    }
+    return values;
   }
 }

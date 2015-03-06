@@ -11,13 +11,13 @@ public enum ResponseConditionOperator {
   @SerializedName("default")
   DEFAULT("default");
 
-  private String condition;
+  private String operator;
 
-  ResponseConditionOperator(String condition) {
-    this.condition = condition;
+  ResponseConditionOperator(String operator) {
+    this.operator = operator;
   }
 
-  public String getCondition() {
-    return condition;
+  public String getOperator() {
+    return operator;
   }
 }

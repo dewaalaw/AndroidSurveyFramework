@@ -62,8 +62,6 @@ public class SurveyFragment extends Fragment {
         Action action = currentScreen.getAction();
         if (action != null) {
           if (action instanceof DirectContentTransition) {
-            // TODO - collect responses for the previous screen.
-
             String toScreenId = ((DirectContentTransition) action).getToId();
             setCurrentScreen(toScreenId);
             SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
