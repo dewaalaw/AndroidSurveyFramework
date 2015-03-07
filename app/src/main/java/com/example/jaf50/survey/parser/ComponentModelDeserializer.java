@@ -26,6 +26,8 @@ public class ComponentModelDeserializer implements JsonDeserializer<ComponentMod
     } else if ("slider".equals(type)) {
       SliderModel model = new SliderModel();
       model.setResponseId(jsonObject.get("responseId").getAsString());
+      model.setLeftLabel(jsonObject.get("leftLabel").getAsString());
+      model.setRightLabel(jsonObject.get("rightLabel").getAsString());
       return model;
     } else if ("datePicker".equals(type)) {
       DatePickerModel model = new DatePickerModel();

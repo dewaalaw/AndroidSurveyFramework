@@ -48,6 +48,8 @@ public class TestSurveyParser extends AndroidTestCase {
     assertEquals("radio 3", screen1_radioInputModel3.getLabel());
     assertEquals("3", screen1_radioInputModel3.getValue());
     assertEquals("sliderResponse", sliderModel1.getResponseId());
+    assertEquals("Not a lot", sliderModel1.getLeftLabel());
+    assertEquals("Very much", sliderModel1.getRightLabel());
 
     ResponseCriteriaModel responseCriteriaModel1 = screen1.getResponseCriteria().get(0);
     assertEquals(ResponseConditionOperator.EQUALS, responseCriteriaModel1.getCondition());

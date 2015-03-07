@@ -3,14 +3,29 @@ package com.example.jaf50.survey.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.example.jaf50.survey.R;
 import com.example.jaf50.survey.response.Response;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
-public class SeekBarComponent extends DiscreteSeekBar implements ISurveyComponent {
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
+public class SeekBarComponent extends LinearLayout implements ISurveyComponent {
 
   private static final int DEFAULT_PROGRESS = 50;
+
+  @InjectView(R.id.seekBar)
+  DiscreteSeekBar seekBar;
+
+  @InjectView(R.id.leftLabelTextView)
+  TextView leftLabelTextView;
+
+  @InjectView(R.id.rightLabelTextView)
+  TextView rightLabelTextView;
 
   private String responseId;
 
@@ -18,7 +33,13 @@ public class SeekBarComponent extends DiscreteSeekBar implements ISurveyComponen
 
   public SeekBarComponent(Context context, AttributeSet attrs) {
     super(context, attrs);
-    setOnProgressChangeListener(new OnProgressChangeListener() {
+  }
+
+  @Override
+  protected void onFinishInflate() {
+    super.onFinishInflate();
+    ButterKnife.inject(this, this);
+    seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
       @Override
       public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
         if (fromUser) {
@@ -26,7 +47,15 @@ public class SeekBarComponent extends DiscreteSeekBar implements ISurveyComponen
         }
       }
     });
-    setProgress(DEFAULT_PROGRESS);
+    seekBar.setProgress(DEFAULT_PROGRESS);
+  }
+
+  public void setLeftLabelText(String text) {
+    this.leftLabelTextView.setText(text);
+  }
+
+  public void setRightLabelText(String text) {
+    this.rightLabelTextView.setText(text);
   }
 
   @Override
@@ -38,7 +67,7 @@ public class SeekBarComponent extends DiscreteSeekBar implements ISurveyComponen
   public Response getResponse() {
     Response response = new Response(responseId);
     if (valueSelected) {
-      response.addValue(getProgress() + "");
+      response.addValue(seekBar.getProgress() + "");
     }
     return response;
   }

@@ -38,9 +38,9 @@ public class SurveyFragment extends Fragment {
   Button previousButton;
 
   private OnFragmentInteractionListener mListener;
-  private HashMap<String, SurveyScreen> surveyScreens = new HashMap<String, SurveyScreen>();
+  private HashMap<String, SurveyScreen> surveyScreens = new HashMap<>();
   private SurveyScreen currentScreen;
-  private Stack<SurveyScreen> screenStack = new Stack<SurveyScreen>();
+  private Stack<SurveyScreen> screenStack = new Stack<>();
 
   public SurveyFragment() {
   }

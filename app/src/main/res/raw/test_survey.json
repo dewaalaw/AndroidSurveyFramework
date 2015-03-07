@@ -29,6 +29,8 @@
         },
         {
           "type": "slider",
+          "leftLabel": "Not a lot",
+          "rightLabel": "Very much",
           "responseId": "sliderResponse"
         }
       ],

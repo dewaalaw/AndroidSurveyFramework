@@ -125,6 +125,8 @@ public class DomainBuilder {
   private SeekBarComponent buildSeekBarComponent(SliderModel model) {
     SeekBarComponent seekBarComponent = (SeekBarComponent) layoutInflater.inflate(R.layout.seekbar, null);
     seekBarComponent.setResponseId(model.getResponseId());
+    seekBarComponent.setLeftLabelText(model.getLeftLabel());
+    seekBarComponent.setRightLabelText(model.getRightLabel());
     return seekBarComponent;
   }
 
