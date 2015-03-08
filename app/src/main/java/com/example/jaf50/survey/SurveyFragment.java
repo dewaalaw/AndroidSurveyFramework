@@ -16,7 +16,6 @@ import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
-import com.example.jaf50.survey.response.Response;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -127,10 +126,6 @@ public class SurveyFragment extends Fragment {
     mListener = null;
   }
 
-  public List<Response> getResponses() {
-    return null;
-  }
-
   public void addSurveyScreen(SurveyScreen surveyScreen) {
     // TODO - throw exception if this has already been added as a warning of possible duplicate ids.
     surveyScreens.put(surveyScreen.getScreenId(), surveyScreen);
@@ -149,8 +144,43 @@ public class SurveyFragment extends Fragment {
       throw new IllegalArgumentException("Invalid survey screen id specified: '" + screenId + "'.");
     }
     currentScreen = surveyScreen;
+    updateNavigationButtons();
     contentPanel.removeAllViews();
     contentPanel.addView(surveyScreen);
+  }
+
+  private void updateNavigationButtons() {
+    if (currentScreen.getPreviousButtonModel().getLabel() != null) {
+      setPreviousButtonLabel(currentScreen.getPreviousButtonModel().getLabel());
+    }
+    if (currentScreen.getNextButtonModel().getLabel() != null) {
+      setNextButtonLabel(currentScreen.getNextButtonModel().getLabel());
+    }
+
+    if (currentScreen.getPreviousButtonModel().isAllowed()) {
+      showPreviousButton();
+    } else {
+      hidePreviousButton();
+    }
+
+    if (currentScreen.getNextButtonModel().isAllowed()) {
+      showNextButton();
+    } else {
+      hideNextButton();
+    }
+  }
+
+  public void showPreviousButton() { previousButton.setVisibility(View.VISIBLE); }
+  public void showNextButton() { nextButton.setVisibility(View.VISIBLE); }
+  public void hidePreviousButton() { previousButton.setVisibility(View.INVISIBLE); }
+  public void hideNextButton() { nextButton.setVisibility(View.INVISIBLE); }
+
+  public void setPreviousButtonLabel(String label) {
+    previousButton.setText(label);
+  }
+
+  public void setNextButtonLabel(String label) {
+    nextButton.setText(label);
   }
 
   public interface OnFragmentInteractionListener {

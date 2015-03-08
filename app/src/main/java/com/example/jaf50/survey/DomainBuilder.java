@@ -11,6 +11,7 @@ import com.example.jaf50.survey.parser.CheckboxGroupModel;
 import com.example.jaf50.survey.parser.ComponentModel;
 import com.example.jaf50.survey.parser.DatePickerModel;
 import com.example.jaf50.survey.parser.InputModel;
+import com.example.jaf50.survey.parser.NavigationButtonModel;
 import com.example.jaf50.survey.parser.RadioGroupModel;
 import com.example.jaf50.survey.parser.ResponseConditionOperator;
 import com.example.jaf50.survey.parser.ResponseCriteriaModel;
@@ -63,6 +64,9 @@ public class DomainBuilder {
       surveyScreen.setScreenId(surveyScreenModel.getId());
       surveyScreen.setAssociatedAssessment(assessment);
 
+      surveyScreen.setPreviousButtonModel(getButtonModel(surveyScreenModel.getPrevious(), true, "Previous"));
+      surveyScreen.setNextButtonModel(getButtonModel(surveyScreenModel.getNext(), true, "Next"));
+
       for (ComponentModel componentModel : surveyScreenModel.getComponents()) {
         surveyScreen.addSurveyComponent(buildComponent(componentModel));
       }
@@ -97,6 +101,22 @@ public class DomainBuilder {
 
       surveyScreens.add(surveyScreen);
     }
+  }
+
+  private NavigationButtonModel getButtonModel(NavigationButtonModel parsedModel, boolean defaultAllowed, String defaultLabel) {
+    NavigationButtonModel navigationButtonModel = new NavigationButtonModel();
+    navigationButtonModel.setAllowed(defaultAllowed);
+    navigationButtonModel.setLabel(defaultLabel);
+
+    if (parsedModel != null) {
+      if (parsedModel.isAllowed() != null) {
+        navigationButtonModel.setAllowed(parsedModel.isAllowed());
+      }
+      if (parsedModel.getLabel() != null) {
+        navigationButtonModel.setLabel(parsedModel.getLabel());
+      }
+    }
+    return navigationButtonModel;
   }
 
   private ISurveyComponent buildComponent(ComponentModel componentModel) {

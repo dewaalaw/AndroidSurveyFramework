@@ -8,6 +8,7 @@ import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.domain.Value;
+import com.example.jaf50.survey.parser.NavigationButtonModel;
 import com.example.jaf50.survey.response.Response;
 import com.example.jaf50.survey.response.ResponseCriteria;
 import com.example.jaf50.survey.ui.ISurveyComponent;
@@ -30,6 +31,9 @@ public class SurveyScreen extends LinearLayout {
 
   private String screenId;
   private Assessment associatedAssessment;
+
+  private NavigationButtonModel previousButtonModel;
+  private NavigationButtonModel nextButtonModel;
 
   public SurveyScreen(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -98,5 +102,21 @@ public class SurveyScreen extends LinearLayout {
 
   public void addResponseCriteria(ResponseCriteria responseCriteria, Action correspondingAction) {
     actionMap.put(responseCriteria, correspondingAction);
+  }
+
+  public NavigationButtonModel getPreviousButtonModel() {
+    return previousButtonModel;
+  }
+
+  public void setPreviousButtonModel(NavigationButtonModel previousButtonModel) {
+    this.previousButtonModel = previousButtonModel;
+  }
+
+  public NavigationButtonModel getNextButtonModel() {
+    return nextButtonModel;
+  }
+
+  public void setNextButtonModel(NavigationButtonModel nextButtonModel) {
+    this.nextButtonModel = nextButtonModel;
   }
 }

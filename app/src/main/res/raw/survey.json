@@ -4,6 +4,13 @@
   "screens": [
     {
       "id": "screen1",
+      "previous": {
+        "allowed": false
+      },
+      "next": {
+        "label": "Forward"
+      },
+      "allowsPrevious":false,
       "components": [
         {
           "type": "text",

@@ -6,6 +6,8 @@ import java.util.List;
 public class SurveyScreenModel {
 
   private String id;
+  private NavigationButtonModel previous;
+  private NavigationButtonModel next;
   private List<ComponentModel> components;
   private List<ResponseCriteriaModel> responseCriteria = new ArrayList<>();
 
@@ -31,5 +33,13 @@ public class SurveyScreenModel {
 
   public void setResponseCriteria(List<ResponseCriteriaModel> responseCriteria) {
     this.responseCriteria = responseCriteria;
+  }
+
+  public NavigationButtonModel getPrevious() {
+    return previous;
+  }
+
+  public NavigationButtonModel getNext() {
+    return next;
   }
 }
