@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 
-import com.example.jaf50.survey.domain.Survey;
+import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.parser.SurveyModel;
 import com.example.jaf50.survey.parser.SurveyParser;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class SurveyActivity extends FragmentActivity implements SurveyFragment.OnFragmentInteractionListener {
 
-  private Survey survey;
+  private Assessment assessment;
   private int testScreenCount = 0;
 
   @Override

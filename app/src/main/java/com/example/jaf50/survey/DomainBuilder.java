@@ -3,9 +3,9 @@ package com.example.jaf50.survey;
 import android.view.LayoutInflater;
 
 import com.example.jaf50.survey.actions.DirectContentTransition;
-import com.example.jaf50.survey.actions.EndSurveyAction;
-import com.example.jaf50.survey.domain.Survey;
-import com.example.jaf50.survey.domain.SurveyResponse;
+import com.example.jaf50.survey.actions.EndAssessmentAction;
+import com.example.jaf50.survey.domain.Assessment;
+import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.domain.Value;
 import com.example.jaf50.survey.parser.CheckboxGroupModel;
 import com.example.jaf50.survey.parser.ComponentModel;
@@ -38,15 +38,15 @@ public class DomainBuilder {
 
   private LayoutInflater layoutInflater;
 
-  private Survey survey;
+  private Assessment assessment;
   private List<SurveyScreen> surveyScreens = new ArrayList<>();
 
   public DomainBuilder(LayoutInflater layoutInflater) {
     this.layoutInflater = layoutInflater;
   }
 
-  public Survey getSurvey() {
-    return survey;
+  public Assessment getAssessment() {
+    return assessment;
   }
 
   public List<SurveyScreen> getSurveyScreens() {
@@ -54,14 +54,14 @@ public class DomainBuilder {
   }
 
   public void build(SurveyModel surveyModel) {
-    survey = new Survey();
-    survey.setDescription(surveyModel.getDescription());
-    survey.setName(surveyModel.getName());
+    assessment = new Assessment();
+    assessment.setDescription(surveyModel.getDescription());
+    assessment.setName(surveyModel.getName());
 
     for (SurveyScreenModel surveyScreenModel : surveyModel.getScreens()) {
       SurveyScreen surveyScreen = (SurveyScreen) layoutInflater.inflate(R.layout.survey_content, null);
       surveyScreen.setScreenId(surveyScreenModel.getId());
-      surveyScreen.setAssociatedSurvey(survey);
+      surveyScreen.setAssociatedAssessment(assessment);
 
       for (ComponentModel componentModel : surveyScreenModel.getComponents()) {
         surveyScreen.addSurveyComponent(buildComponent(componentModel));
@@ -70,12 +70,12 @@ public class DomainBuilder {
       for (ResponseCriteriaModel responseCriteriaModel : surveyScreenModel.getResponseCriteria()) {
         if (responseCriteriaModel.getCondition() == ResponseConditionOperator.EQUALS ||
             responseCriteriaModel.getCondition() == ResponseConditionOperator.CONTAINS) {
-          SurveyResponse surveyResponse = new SurveyResponse();
-          surveyResponse.setResponseId(responseCriteriaModel.getResponse().getId());
-          surveyResponse.setSurvey(survey);
-          surveyResponse.setValues(buildValues(responseCriteriaModel));
+          AssessmentResponse assessmentResponse = new AssessmentResponse();
+          assessmentResponse.setResponseId(responseCriteriaModel.getResponse().getId());
+          assessmentResponse.setAssessment(assessment);
+          assessmentResponse.setValues(buildValues(responseCriteriaModel));
 
-          ResponseCondition responseCondition = new ResponseCondition(responseCriteriaModel.getCondition(), surveyResponse);
+          ResponseCondition responseCondition = new ResponseCondition(responseCriteriaModel.getCondition(), assessmentResponse);
           DirectContentTransition transition = new DirectContentTransition(responseCriteriaModel.getResponse().getId(), responseCriteriaModel.getTransition());
 
           ResponseCriteria responseCriteria = new ResponseCriteria();
@@ -84,14 +84,14 @@ public class DomainBuilder {
           surveyScreen.addResponseCriteria(responseCriteria, transition);
         } else if (responseCriteriaModel.getCondition() == ResponseConditionOperator.DEFAULT) {
           ResponseCriteria defaultResponseCriteria = new ResponseCriteria();
-          defaultResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.DEFAULT, new SurveyResponse()));
+          defaultResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.DEFAULT, new AssessmentResponse()));
 
           surveyScreen.addResponseCriteria(defaultResponseCriteria, new DirectContentTransition(null, responseCriteriaModel.getTransition()));
         } else if (responseCriteriaModel.getCondition() == ResponseConditionOperator.COMPLETE) {
           ResponseCriteria surveyCompleteResponseCriteria = new ResponseCriteria();
-          surveyCompleteResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.COMPLETE, new SurveyResponse()));
+          surveyCompleteResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.COMPLETE, new AssessmentResponse()));
 
-          surveyScreen.addResponseCriteria(surveyCompleteResponseCriteria, new EndSurveyAction(survey));
+          surveyScreen.addResponseCriteria(surveyCompleteResponseCriteria, new EndAssessmentAction(assessment));
         }
       }
 

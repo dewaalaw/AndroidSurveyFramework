@@ -4,7 +4,7 @@ import com.orm.SugarRecord;
 
 public class Value extends SugarRecord<Value> {
 
-  SurveyResponse response;
+  AssessmentResponse response;
   String value;
 
   public Value() {
@@ -19,7 +19,7 @@ public class Value extends SugarRecord<Value> {
     return value;
   }
 
-  public Value setSurveyResponse(SurveyResponse response) {
+  public Value setResponse(AssessmentResponse response) {
     this.response = response;
     return this;
   }

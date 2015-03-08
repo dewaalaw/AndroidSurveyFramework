@@ -13,9 +13,9 @@ import android.widget.Toast;
 
 import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.actions.DirectContentTransition;
-import com.example.jaf50.survey.actions.EndSurveyAction;
-import com.example.jaf50.survey.domain.Survey;
-import com.example.jaf50.survey.domain.SurveyResponse;
+import com.example.jaf50.survey.actions.EndAssessmentAction;
+import com.example.jaf50.survey.domain.Assessment;
+import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.response.Response;
 
 import java.util.ArrayList;
@@ -66,14 +66,14 @@ public class SurveyFragment extends Fragment {
             setCurrentScreen(toScreenId);
             SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
             screenStack.push(surveyScreen);
-          } else if (action instanceof EndSurveyAction) {
-            EndSurveyAction endSurveyAction = (EndSurveyAction) action;
-            endSurveyAction.setSurveyResponses(collectResponses());
-            endSurveyAction.execute();
+          } else if (action instanceof EndAssessmentAction) {
+            EndAssessmentAction endAssessmentAction = (EndAssessmentAction) action;
+            endAssessmentAction.setAssessmentResponses(collectResponses());
+            endAssessmentAction.execute();
 
-            List<Survey> surveys = Survey.listAll(Survey.class);
-            Survey savedSurvey = surveys.get(surveys.size()-1);
-            Toast.makeText(getActivity(), "Saved data for survey " + savedSurvey.getName() + ", # assessments = " + surveys.size() + ", responses = " + savedSurvey.getResponses(), Toast.LENGTH_LONG).show();
+            List<Assessment> assessments = Assessment.listAll(Assessment.class);
+            Assessment savedAssessment = assessments.get(assessments.size()-1);
+            Toast.makeText(getActivity(), "Saved data for survey " + savedAssessment.getName() + ", # assessments = " + assessments.size() + ", responses = " + savedAssessment.getResponses(), Toast.LENGTH_LONG).show();
 
             getActivity().finish();
           }
@@ -97,17 +97,17 @@ public class SurveyFragment extends Fragment {
     return view;
   }
 
-  private List<SurveyResponse> collectResponses() {
-    List<SurveyResponse> surveyResponses = new ArrayList<>();
+  private List<AssessmentResponse> collectResponses() {
+    List<AssessmentResponse> assessmentResponses = new ArrayList<>();
 
     SurveyScreen [] screensCopy = new SurveyScreen[screenStack.size()];
     screenStack.copyInto(screensCopy);
 
     for (SurveyScreen screen : screensCopy) {
-      surveyResponses.addAll(screen.collectResponses());
+      assessmentResponses.addAll(screen.collectResponses());
     }
 
-    return surveyResponses;
+    return assessmentResponses;
   }
 
   @Override

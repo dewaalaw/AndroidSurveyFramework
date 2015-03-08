@@ -7,18 +7,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SurveyResponse extends SugarRecord<SurveyResponse> {
+public class AssessmentResponse extends SugarRecord<AssessmentResponse> {
 
-  Survey survey;
+  Assessment assessment;
   Date responseDate;
   String responseId;
   @Ignore
   List<Value> values = new ArrayList<>();
 
-  public SurveyResponse() {
+  public AssessmentResponse() {
   }
 
-  public SurveyResponse(String responseId) {
+  public AssessmentResponse(String responseId) {
     this.responseId = responseId;
   }
 
@@ -26,7 +26,7 @@ public class SurveyResponse extends SugarRecord<SurveyResponse> {
     return responseId;
   }
 
-  public SurveyResponse setResponseId(String responseId) {
+  public AssessmentResponse setResponseId(String responseId) {
     this.responseId = responseId;
     return this;
   }
@@ -40,30 +40,30 @@ public class SurveyResponse extends SugarRecord<SurveyResponse> {
 
   public void setValues(List<Value> values) {
     for (Value value : values) {
-      value.setSurveyResponse(this);
+      value.setResponse(this);
     }
     this.values = values;
   }
 
-  public SurveyResponse addValue(Value value) {
+  public AssessmentResponse addValue(Value value) {
     this.values.add(value);
-    value.setSurveyResponse(this);
+    value.setResponse(this);
     return this;
   }
 
-  public SurveyResponse addValue(Object value) {
+  public AssessmentResponse addValue(Object value) {
     Value v = new Value().setValue(value.toString());
     this.values.add(v);
-    v.setSurveyResponse(this);
+    v.setResponse(this);
     return this;
   }
 
-  public Survey getSurvey() {
-    return survey;
+  public Assessment getAssessment() {
+    return assessment;
   }
 
-  public void setSurvey(Survey survey) {
-    this.survey = survey;
+  public void setAssessment(Assessment assessment) {
+    this.assessment = assessment;
   }
 
   public Date getResponseDate() {
@@ -78,7 +78,7 @@ public class SurveyResponse extends SugarRecord<SurveyResponse> {
   public void save() {
     super.save();
     for (Value value : values) {
-      value.setSurveyResponse(this);
+      value.setResponse(this);
       value.save();
     }
     super.save();
@@ -88,7 +88,7 @@ public class SurveyResponse extends SugarRecord<SurveyResponse> {
     return values.isEmpty();
   }
 
-  public boolean contains(SurveyResponse otherResponse) {
+  public boolean contains(AssessmentResponse otherResponse) {
     if (otherResponse == null) {
       return false;
     }
@@ -100,7 +100,7 @@ public class SurveyResponse extends SugarRecord<SurveyResponse> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    SurveyResponse that = (SurveyResponse) o;
+    AssessmentResponse that = (AssessmentResponse) o;
 
     if (responseId != null ? !responseId.equals(that.responseId) : that.responseId != null)
       return false;
@@ -111,7 +111,7 @@ public class SurveyResponse extends SugarRecord<SurveyResponse> {
 
   @Override
   public int hashCode() {
-    int result = survey != null ? survey.hashCode() : 0;
+    int result = assessment != null ? assessment.hashCode() : 0;
     result = 31 * result + (responseDate != null ? responseDate.hashCode() : 0);
     result = 31 * result + (responseId != null ? responseId.hashCode() : 0);
     result = 31 * result + (values != null ? values.hashCode() : 0);
@@ -121,7 +121,7 @@ public class SurveyResponse extends SugarRecord<SurveyResponse> {
   @Override
   public String toString() {
     return "SurveyResponse{" +
-        "survey=" + survey +
+        "survey=" + assessment +
         ", responseDate=" + responseDate +
         ", responseId='" + responseId + '\'' +
         ", values=" + values +

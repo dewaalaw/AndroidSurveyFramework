@@ -1,6 +1,6 @@
 package com.example.jaf50.survey.response;
 
-import com.example.jaf50.survey.domain.SurveyResponse;
+import com.example.jaf50.survey.domain.AssessmentResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ public class ResponseCriteria {
 
   private HashMap<String, List<ResponseCondition>> variableToResponseConditions = new HashMap<>();
 
-  public boolean isSatisfied(List<SurveyResponse> responses) {
+  public boolean isSatisfied(List<AssessmentResponse> responses) {
     /*
      * example response list:
      *
@@ -21,7 +21,7 @@ public class ResponseCriteria {
      */
     for (String responseId : variableToResponseConditions.keySet()) {
       List<ResponseCondition> responseConditions = variableToResponseConditions.get(responseId);
-      SurveyResponse responseForId = getResponseForId(responseId, responses);
+      AssessmentResponse responseForId = getResponseForId(responseId, responses);
 
       // Verify each variable response set is satisfied.
       for (ResponseCondition responseCondition : responseConditions) {
@@ -33,8 +33,8 @@ public class ResponseCriteria {
     return true;
   }
 
-  private SurveyResponse getResponseForId(String responseId, List<SurveyResponse> responses) {
-    for (SurveyResponse response : responses) {
+  private AssessmentResponse getResponseForId(String responseId, List<AssessmentResponse> responses) {
+    for (AssessmentResponse response : responses) {
       if (response.getResponseId().equals(responseId)) {
         return response;
       }
@@ -43,7 +43,7 @@ public class ResponseCriteria {
   }
 
   public void addCondition(ResponseCondition responseCondition) {
-    SurveyResponse expectedResponse = responseCondition.getExpectedResponse();
+    AssessmentResponse expectedResponse = responseCondition.getExpectedResponse();
     if (variableToResponseConditions.containsKey(expectedResponse.getId())) {
       List<ResponseCondition> currentExpectedResponseConditions = variableToResponseConditions.get(expectedResponse.getId());
       currentExpectedResponseConditions.add(responseCondition);

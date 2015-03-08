@@ -1,23 +1,23 @@
 package com.example.jaf50.survey.response;
 
-import com.example.jaf50.survey.domain.SurveyResponse;
+import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.parser.ResponseConditionOperator;
 
 public class ResponseCondition {
 
   private ResponseConditionOperator responseConditionOperator;
-  private SurveyResponse expectedResponse;
+  private AssessmentResponse expectedResponse;
 
-  public ResponseCondition(ResponseConditionOperator responseConditionOperator, SurveyResponse expectedResponse) {
+  public ResponseCondition(ResponseConditionOperator responseConditionOperator, AssessmentResponse expectedResponse) {
     this.responseConditionOperator = responseConditionOperator;
     this.expectedResponse = expectedResponse;
   }
 
-  public SurveyResponse getExpectedResponse() {
+  public AssessmentResponse getExpectedResponse() {
     return expectedResponse;
   }
 
-  public boolean isSatisfied(SurveyResponse response) {
+  public boolean isSatisfied(AssessmentResponse response) {
     if (responseConditionOperator.equals(ResponseConditionOperator.EQUALS)) {
       return expectedResponse.equals(response);
     } else if (responseConditionOperator.equals(ResponseConditionOperator.CONTAINS)) {

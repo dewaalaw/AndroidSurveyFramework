@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
 import com.example.jaf50.survey.actions.Action;
-import com.example.jaf50.survey.domain.Survey;
-import com.example.jaf50.survey.domain.SurveyResponse;
+import com.example.jaf50.survey.domain.Assessment;
+import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.domain.Value;
 import com.example.jaf50.survey.response.Response;
 import com.example.jaf50.survey.response.ResponseCriteria;
@@ -29,7 +29,7 @@ public class SurveyScreen extends LinearLayout {
   private LinkedHashMap<ResponseCriteria, Action> actionMap = new LinkedHashMap<>();
 
   private String screenId;
-  private Survey associatedSurvey;
+  private Assessment associatedAssessment;
 
   public SurveyScreen(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -49,37 +49,37 @@ public class SurveyScreen extends LinearLayout {
     return screenId;
   }
 
-  public Survey getAssociatedSurvey() {
-    return associatedSurvey;
+  public Assessment getAssociatedAssessment() {
+    return associatedAssessment;
   }
 
-  public void setAssociatedSurvey(Survey associatedSurvey) {
-    this.associatedSurvey = associatedSurvey;
+  public void setAssociatedAssessment(Assessment associatedAssessment) {
+    this.associatedAssessment = associatedAssessment;
   }
 
-  public List<SurveyResponse> collectResponses() {
-    List<SurveyResponse> responses = new ArrayList<>();
+  public List<AssessmentResponse> collectResponses() {
+    List<AssessmentResponse> responses = new ArrayList<>();
     Date responseDate = new Date();
     for (ISurveyComponent surveyComponent : surveyComponents) {
       if (surveyComponent.acceptsResponse()) {
-        SurveyResponse surveyResponse = new SurveyResponse();
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
         Response response = surveyComponent.getResponse();
-        surveyResponse.setResponseDate(responseDate);
-        surveyResponse.setSurvey(associatedSurvey);
-        surveyResponse.setResponseId(response.getId());
+        assessmentResponse.setResponseDate(responseDate);
+        assessmentResponse.setAssessment(associatedAssessment);
+        assessmentResponse.setResponseId(response.getId());
 
         List <Value> values = new ArrayList<>();
         for (Object rawValue : response.getValues()) {
           if (rawValue != null) {
             Value value = new Value();
-            value.setSurveyResponse(surveyResponse);
+            value.setResponse(assessmentResponse);
             value.setValue(rawValue.toString());
             values.add(value);
           }
         }
-        surveyResponse.setValues(values);
+        assessmentResponse.setValues(values);
 
-        responses.add(surveyResponse);
+        responses.add(assessmentResponse);
       }
     }
 
@@ -87,7 +87,7 @@ public class SurveyScreen extends LinearLayout {
   }
 
   public Action getAction() {
-    List<SurveyResponse> responses = collectResponses();
+    List<AssessmentResponse> responses = collectResponses();
     for (ResponseCriteria responseCriteria: actionMap.keySet()) {
       if (responseCriteria.isSatisfied(responses)) {
         return actionMap.get(responseCriteria);
