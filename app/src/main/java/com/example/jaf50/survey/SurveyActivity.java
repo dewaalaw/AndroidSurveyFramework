@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 
 import com.example.jaf50.survey.parser.SurveyModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
+import com.example.jaf50.survey.service.AssessmentUiBuilder;
 
 import java.util.List;
 
@@ -20,15 +21,14 @@ public class SurveyActivity extends FragmentActivity {
     SurveyModel surveyModel = assessmentParserService.parse(getResources().openRawResource(R.raw.survey));
 
     LayoutInflater inflator = LayoutInflater.from(this);
-    DomainBuilder domainBuilder = new DomainBuilder(inflator);
-    domainBuilder.build(surveyModel);
+    AssessmentUiBuilder assessmentUiBuilder = new AssessmentUiBuilder(inflator);
+    List<SurveyScreen> surveyScreens = assessmentUiBuilder.build(surveyModel);
 
     SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
-    List<SurveyScreen> screens = domainBuilder.getSurveyScreens();
-    for (SurveyScreen screen : screens) {
+    for (SurveyScreen screen : surveyScreens) {
       fragment.addSurveyScreen(screen);
     }
 
-    fragment.startSurvey(screens.get(0).getScreenId());
+    fragment.startSurvey(surveyScreens.get(0).getScreenId());
   }
 }

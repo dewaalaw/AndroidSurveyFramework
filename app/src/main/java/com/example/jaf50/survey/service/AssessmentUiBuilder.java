@@ -1,7 +1,9 @@
-package com.example.jaf50.survey;
+package com.example.jaf50.survey.service;
 
 import android.view.LayoutInflater;
 
+import com.example.jaf50.survey.R;
+import com.example.jaf50.survey.SurveyScreen;
 import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
@@ -35,30 +37,20 @@ import com.example.jaf50.survey.ui.TimePickerComponent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DomainBuilder {
+public class AssessmentUiBuilder {
 
   private LayoutInflater layoutInflater;
 
-  private Assessment assessment;
-  private List<SurveyScreen> surveyScreens = new ArrayList<>();
-
-  public DomainBuilder(LayoutInflater layoutInflater) {
+  public AssessmentUiBuilder(LayoutInflater layoutInflater) {
     this.layoutInflater = layoutInflater;
   }
 
-  public Assessment getAssessment() {
-    return assessment;
-  }
-
-  public List<SurveyScreen> getSurveyScreens() {
-    return surveyScreens;
-  }
-
-  public void build(SurveyModel surveyModel) {
-    assessment = new Assessment();
+  public List<SurveyScreen> build(SurveyModel surveyModel) {
+    Assessment assessment = new Assessment();
     assessment.setDescription(surveyModel.getDescription());
     assessment.setName(surveyModel.getName());
 
+    List<SurveyScreen> surveyScreens = new ArrayList<>();
     for (SurveyScreenModel surveyScreenModel : surveyModel.getScreens()) {
       SurveyScreen surveyScreen = (SurveyScreen) layoutInflater.inflate(R.layout.survey_content, null);
       surveyScreen.setScreenId(surveyScreenModel.getId());
@@ -101,6 +93,7 @@ public class DomainBuilder {
 
       surveyScreens.add(surveyScreen);
     }
+    return surveyScreens;
   }
 
   private NavigationButtonModel getButtonModel(NavigationButtonModel parsedModel, boolean defaultAllowed, String defaultLabel) {
