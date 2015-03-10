@@ -1,10 +1,12 @@
 package com.example.jaf50.survey.domain;
 
+import com.google.gson.annotations.Expose;
 import com.orm.SugarRecord;
 
 public class Value extends SugarRecord<Value> {
 
   AssessmentResponse response;
+  @Expose
   String value;
 
   public Value() {

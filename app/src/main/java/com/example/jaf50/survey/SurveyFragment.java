@@ -1,7 +1,5 @@
 package com.example.jaf50.survey;
 
-import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,6 +14,7 @@ import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
+import com.example.jaf50.survey.service.AssessmentSerializationService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +35,6 @@ public class SurveyFragment extends Fragment {
   @InjectView(R.id.previousButton)
   Button previousButton;
 
-  private OnFragmentInteractionListener mListener;
   private HashMap<String, SurveyScreen> surveyScreens = new HashMap<>();
   private SurveyScreen currentScreen;
   private Stack<SurveyScreen> screenStack = new Stack<>();
@@ -61,20 +59,9 @@ public class SurveyFragment extends Fragment {
         Action action = currentScreen.getAction();
         if (action != null) {
           if (action instanceof DirectContentTransition) {
-            String toScreenId = ((DirectContentTransition) action).getToId();
-            setCurrentScreen(toScreenId);
-            SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
-            screenStack.push(surveyScreen);
+            transition((DirectContentTransition) action);
           } else if (action instanceof EndAssessmentAction) {
-            EndAssessmentAction endAssessmentAction = (EndAssessmentAction) action;
-            endAssessmentAction.setAssessmentResponses(collectResponses());
-            endAssessmentAction.execute();
-
-            List<Assessment> assessments = Assessment.listAll(Assessment.class);
-            Assessment savedAssessment = assessments.get(assessments.size()-1);
-            Toast.makeText(getActivity(), "Saved data for survey " + savedAssessment.getName() + ", # assessments = " + assessments.size() + ", responses = " + savedAssessment.getResponses(), Toast.LENGTH_LONG).show();
-
-            getActivity().finish();
+            endAssessment((EndAssessmentAction) action);
           }
         }
       }
@@ -96,6 +83,27 @@ public class SurveyFragment extends Fragment {
     return view;
   }
 
+  private void endAssessment(EndAssessmentAction action) {
+    EndAssessmentAction endAssessmentAction = (EndAssessmentAction) action;
+    Assessment assessment = endAssessmentAction.getAssessment();
+    assessment.setResponses(collectResponses());
+    assessment.save();
+
+    AssessmentSerializationService assessmentSerializationService = new AssessmentSerializationService();
+    String json = assessmentSerializationService.serialize(assessment);
+
+    Toast.makeText(getActivity(), json, Toast.LENGTH_LONG).show();
+
+    getActivity().finish();
+  }
+
+  private void transition(DirectContentTransition action) {
+    String toScreenId = action.getToId();
+    setCurrentScreen(toScreenId);
+    SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
+    screenStack.push(surveyScreen);
+  }
+
   private List<AssessmentResponse> collectResponses() {
     List<AssessmentResponse> assessmentResponses = new ArrayList<>();
 
@@ -107,23 +115,6 @@ public class SurveyFragment extends Fragment {
     }
 
     return assessmentResponses;
-  }
-
-  @Override
-  public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    try {
-      mListener = (OnFragmentInteractionListener) activity;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(activity.toString()
-          + " must implement OnFragmentInteractionListener");
-    }
-  }
-
-  @Override
-  public void onDetach() {
-    super.onDetach();
-    mListener = null;
   }
 
   public void addSurveyScreen(SurveyScreen surveyScreen) {
@@ -181,9 +172,5 @@ public class SurveyFragment extends Fragment {
 
   public void setNextButtonLabel(String label) {
     nextButton.setText(label);
-  }
-
-  public interface OnFragmentInteractionListener {
-    public void onFragmentInteraction(Uri uri);
   }
 }

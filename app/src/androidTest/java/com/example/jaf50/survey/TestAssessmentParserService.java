@@ -10,18 +10,18 @@ import com.example.jaf50.survey.parser.ResponseConditionOperator;
 import com.example.jaf50.survey.parser.ResponseCriteriaModel;
 import com.example.jaf50.survey.parser.SliderModel;
 import com.example.jaf50.survey.parser.SurveyModel;
-import com.example.jaf50.survey.parser.SurveyParser;
 import com.example.jaf50.survey.parser.SurveyScreenModel;
 import com.example.jaf50.survey.parser.TextModel;
 import com.example.jaf50.survey.parser.TimePickerModel;
+import com.example.jaf50.survey.service.AssessmentParserService;
 
 import java.io.IOException;
 
-public class TestSurveyParser extends AndroidTestCase {
+public class TestAssessmentParserService extends AndroidTestCase {
 
   public void testParse() throws IOException {
-    SurveyParser surveyParser = new SurveyParser();
-    SurveyModel surveyModel = surveyParser.parse(getContext().getResources().openRawResource(R.raw.test_survey));
+    AssessmentParserService assessmentParserService = new AssessmentParserService();
+    SurveyModel surveyModel = assessmentParserService.parse(getContext().getResources().openRawResource(R.raw.test_survey));
 
     assertEquals("My Survey", surveyModel.getName());
     assertEquals("Description", surveyModel.getDescription());

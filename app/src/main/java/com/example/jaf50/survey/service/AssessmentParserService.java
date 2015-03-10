@@ -1,12 +1,15 @@
-package com.example.jaf50.survey.parser;
+package com.example.jaf50.survey.service;
 
+import com.example.jaf50.survey.parser.ComponentModel;
+import com.example.jaf50.survey.parser.ComponentModelDeserializer;
+import com.example.jaf50.survey.parser.SurveyModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class SurveyParser {
+public class AssessmentParserService {
 
   public SurveyModel parse(InputStream inputStream) {
     GsonBuilder gsonBuilder = new GsonBuilder();

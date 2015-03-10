@@ -139,6 +139,9 @@
     },
     {
       "id": "screen4",
+      "next": {
+        "label": "End Survey"
+      },
       "components": [
         {
           "type": "text",

@@ -1,5 +1,6 @@
 package com.example.jaf50.survey.domain;
 
+import com.google.gson.annotations.Expose;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 
@@ -7,9 +8,10 @@ import java.util.List;
 
 public class Assessment extends SugarRecord<Assessment> {
 
-  String name;
   String description;
-  @Ignore
+  @Expose
+  String name;
+  @Expose @Ignore
   List<AssessmentResponse> responses;
 
   public Assessment() {
