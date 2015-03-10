@@ -8,11 +8,14 @@ import java.util.List;
 
 public class Assessment extends SugarRecord<Assessment> {
 
-  String description;
   @Expose
   String name;
-  @Expose @Ignore
+  @Expose
+  @Ignore
   List<AssessmentResponse> responses;
+
+  String description;
+  boolean submitted;
 
   public Assessment() {
   }
@@ -44,6 +47,14 @@ public class Assessment extends SugarRecord<Assessment> {
     this.responses = responses;
   }
 
+  public boolean isSubmitted() {
+    return submitted;
+  }
+
+  public void setSubmitted(boolean submitted) {
+    this.submitted = submitted;
+  }
+
   @Override
   public void save() {
     super.save();
@@ -59,12 +70,13 @@ public class Assessment extends SugarRecord<Assessment> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    Assessment assessment = (Assessment) o;
+    Assessment that = (Assessment) o;
 
-    if (description != null ? !description.equals(assessment.description) : assessment.description != null)
+    if (submitted != that.submitted) return false;
+    if (description != null ? !description.equals(that.description) : that.description != null)
       return false;
-    if (name != null ? !name.equals(assessment.name) : assessment.name != null) return false;
-    if (responses != null ? !responses.equals(assessment.responses) : assessment.responses != null)
+    if (name != null ? !name.equals(that.name) : that.name != null) return false;
+    if (responses != null ? !responses.equals(that.responses) : that.responses != null)
       return false;
 
     return true;
@@ -72,18 +84,20 @@ public class Assessment extends SugarRecord<Assessment> {
 
   @Override
   public int hashCode() {
-    int result = name != null ? name.hashCode() : 0;
-    result = 31 * result + (description != null ? description.hashCode() : 0);
+    int result = description != null ? description.hashCode() : 0;
+    result = 31 * result + (name != null ? name.hashCode() : 0);
     result = 31 * result + (responses != null ? responses.hashCode() : 0);
+    result = 31 * result + (submitted ? 1 : 0);
     return result;
   }
 
   @Override
   public String toString() {
-    return "Survey{" +
-        "name='" + name + '\'' +
-        ", description='" + description + '\'' +
+    return "Assessment{" +
+        "description='" + description + '\'' +
+        ", name='" + name + '\'' +
         ", responses=" + responses +
+        ", submitted=" + submitted +
         '}';
   }
 }

@@ -14,7 +14,7 @@ import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
-import com.example.jaf50.survey.service.AssessmentSerializationService;
+import com.example.jaf50.survey.service.SerializationService;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -97,12 +97,21 @@ public class SurveyFragment extends Fragment {
   }
 
   private void endAssessment(EndAssessmentAction action) {
-    Assessment assessment = action.getAssessment();
+    final Assessment assessment = action.getAssessment();
     assessment.setResponses(collectResponses());
     assessment.save();
 
-    AssessmentSerializationService assessmentSerializationService = new AssessmentSerializationService();
-    String json = assessmentSerializationService.serialize(assessment);
+    List<Assessment> unsubmittedAssessments = Assessment.find(Assessment.class, "submitted = 0");
+    for (Assessment unsubmittedAssessment : unsubmittedAssessments) {
+      // Need to eager fetch the responses collections and values collections.
+      List<AssessmentResponse> assessmentResponses = unsubmittedAssessment.getResponses();
+      for (AssessmentResponse assessmentResponse : assessmentResponses) {
+        assessmentResponse.getValues();
+      }
+    }
+
+    SerializationService serializationService = new SerializationService();
+    String json = serializationService.serialize(unsubmittedAssessments);
 
     try {
       AsyncHttpClient client = new AsyncHttpClient();
@@ -110,6 +119,7 @@ public class SurveyFragment extends Fragment {
       client.get("http://validate.jsontest.com/?json=" + encodedJson, new AsyncHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+          // TODO - mark this assessment as uploaded.
           Toast.makeText(getActivity(), "Data upload succeeded: " + new String(responseBody), Toast.LENGTH_LONG).show();
           getActivity().finish();
         }
