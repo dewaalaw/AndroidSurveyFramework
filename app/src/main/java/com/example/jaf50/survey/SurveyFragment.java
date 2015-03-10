@@ -15,7 +15,13 @@ import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.service.AssessmentSerializationService;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import org.apache.http.Header;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,25 +89,40 @@ public class SurveyFragment extends Fragment {
     return view;
   }
 
+  private void transition(DirectContentTransition action) {
+    String toScreenId = action.getToId();
+    setCurrentScreen(toScreenId);
+    SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
+    screenStack.push(surveyScreen);
+  }
+
   private void endAssessment(EndAssessmentAction action) {
-    EndAssessmentAction endAssessmentAction = (EndAssessmentAction) action;
-    Assessment assessment = endAssessmentAction.getAssessment();
+    Assessment assessment = action.getAssessment();
     assessment.setResponses(collectResponses());
     assessment.save();
 
     AssessmentSerializationService assessmentSerializationService = new AssessmentSerializationService();
     String json = assessmentSerializationService.serialize(assessment);
 
-    Toast.makeText(getActivity(), json, Toast.LENGTH_LONG).show();
+    try {
+      AsyncHttpClient client = new AsyncHttpClient();
+      String encodedJson = URLEncoder.encode(json, "UTF-8");
+      client.get("http://validate.jsontest.com/?json=" + encodedJson, new AsyncHttpResponseHandler() {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+          Toast.makeText(getActivity(), "Data upload succeeded: " + new String(responseBody), Toast.LENGTH_LONG).show();
+          getActivity().finish();
+        }
 
-    getActivity().finish();
-  }
-
-  private void transition(DirectContentTransition action) {
-    String toScreenId = action.getToId();
-    setCurrentScreen(toScreenId);
-    SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
-    screenStack.push(surveyScreen);
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+          Toast.makeText(getActivity(), "Data upload failed: " + new String(responseBody), Toast.LENGTH_LONG).show();
+          getActivity().finish();
+        }
+      });
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
   }
 
   private List<AssessmentResponse> collectResponses() {
