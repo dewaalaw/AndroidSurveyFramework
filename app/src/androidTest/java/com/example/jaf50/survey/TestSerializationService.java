@@ -16,9 +16,9 @@ import java.util.Arrays;
 
 public class TestSerializationService extends AndroidTestCase {
 
-  public void testSerializeAssessment() throws IOException, ParseException {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+  private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
+  public void testSerializeAssessment() throws IOException, ParseException {
     AssessmentResponse assessmentResponse1 = new AssessmentResponse();
     assessmentResponse1.setResponseId("var1");
     assessmentResponse1.setResponseDate(simpleDateFormat.parse("2015-02-03 12:54:55"));
@@ -54,6 +54,41 @@ public class TestSerializationService extends AndroidTestCase {
         "            \"values\": [" +
         "                {" +
         "                    \"value\": \"val2\"" +
+        "                }" +
+        "            ]" +
+        "        }" +
+        "    ]" +
+        "}";
+
+    JsonParser parser = new JsonParser();
+    JsonElement expectedElement = parser.parse(expectedJson);
+    JsonElement actualElement = parser.parse(serializationService.serialize(assessment));
+
+    assertEquals(expectedElement, actualElement);
+  }
+
+  public void testSerializedDateResponse() throws IOException, ParseException {
+    AssessmentResponse assessmentResponse1 = new AssessmentResponse();
+    assessmentResponse1.setResponseId("var1");
+    assessmentResponse1.setResponseDate(simpleDateFormat.parse("2015-02-03 12:54:55"));
+    assessmentResponse1.addValue(new Value().setValue("2015-02-02 12:00:00"));
+
+    Assessment assessment = new Assessment();
+    assessment.setName("My Survey");
+    assessment.setDescription("Description");
+    assessment.setResponses(Arrays.asList(assessmentResponse1));
+
+    SerializationService serializationService = new SerializationService();
+
+    String expectedJson = "{" +
+        "    \"name\": \"My Survey\"," +
+        "    \"responses\": [" +
+        "        {" +
+        "            \"responseDate\": \"2015-02-03T00:54:55Z\"," +
+        "            \"responseId\": \"var1\"," +
+        "            \"values\": [" +
+        "                {" +
+        "                    \"value\": \"2015-02-02 12:00:00\"" +
         "                }" +
         "            ]" +
         "        }" +

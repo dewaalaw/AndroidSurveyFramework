@@ -29,14 +29,15 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
   private TextView selectionTextView;
   private Date selectedDate;
 
+  private SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd");
+  private SimpleDateFormat prettyDateFormatter = new SimpleDateFormat("EEE, MMMM d");
+
   private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int monthOfYear, int dayOfMonth) {
       String dateText = year + "-" + padZeroes(monthOfYear + 1) + "-" + padZeroes(dayOfMonth);
-      SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd");
       try {
         Date date = dateParser.parse(dateText);
-        SimpleDateFormat prettyDateFormatter = new SimpleDateFormat("EEE, MMMM d");
         selectionTextView.setText(prettyDateFormatter.format(date));
         selectedDate = date;
       } catch (ParseException e) {
