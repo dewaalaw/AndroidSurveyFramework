@@ -11,14 +11,6 @@ public class ResponseCriteria {
   private HashMap<String, List<ResponseCondition>> variableToResponseConditions = new HashMap<>();
 
   public boolean isSatisfied(List<AssessmentResponse> responses) {
-    /*
-     * example response list:
-     *
-     * 1, 2, 5 selected in checkboxes.
-     *
-     * If response contains 1 and 5 then perform a given action.
-     * else if response equals 2 then perform a different action.
-     */
     for (String responseId : variableToResponseConditions.keySet()) {
       List<ResponseCondition> responseConditions = variableToResponseConditions.get(responseId);
       AssessmentResponse responseForId = getResponseForId(responseId, responses);

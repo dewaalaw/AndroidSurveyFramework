@@ -29,6 +29,7 @@ import java.util.Stack;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class SurveyFragment extends Fragment {
 
@@ -89,8 +90,33 @@ public class SurveyFragment extends Fragment {
     return view;
   }
 
-  private void transition(DirectContentTransition action) {
-    String toScreenId = action.getToId();
+  private void transition(final DirectContentTransition action) {
+    if (action.allowsSkipping() && !currentScreen.hasResponse()) {
+      new SweetAlertDialog(getActivity(), SweetAlertDialog.NORMAL_TYPE)
+          .setTitleText("Skip Question?")
+          .setContentText("Would you like to skip this question?")
+          .setCancelText("No")
+          .setConfirmText("Yes")
+          .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+              // TODO - Need to mark this screen as being "skipped".
+              sweetAlertDialog.dismissWithAnimation();
+              transitionToNextScreen(action.getToId());
+            }
+          })
+          .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+              sweetAlertDialog.dismissWithAnimation();
+            }
+          }).show();
+    } else {
+      transitionToNextScreen(action.getToId());
+    }
+  }
+
+  private void transitionToNextScreen(String toScreenId) {
     setCurrentScreen(toScreenId);
     SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
     screenStack.push(surveyScreen);
@@ -138,7 +164,7 @@ public class SurveyFragment extends Fragment {
   private List<AssessmentResponse> collectResponses() {
     List<AssessmentResponse> assessmentResponses = new ArrayList<>();
 
-    SurveyScreen [] screensCopy = new SurveyScreen[screenStack.size()];
+    SurveyScreen[] screensCopy = new SurveyScreen[screenStack.size()];
     screenStack.copyInto(screensCopy);
 
     for (SurveyScreen screen : screensCopy) {
@@ -192,10 +218,21 @@ public class SurveyFragment extends Fragment {
     }
   }
 
-  public void showPreviousButton() { previousButton.setVisibility(View.VISIBLE); }
-  public void showNextButton() { nextButton.setVisibility(View.VISIBLE); }
-  public void hidePreviousButton() { previousButton.setVisibility(View.INVISIBLE); }
-  public void hideNextButton() { nextButton.setVisibility(View.INVISIBLE); }
+  public void showPreviousButton() {
+    previousButton.setVisibility(View.VISIBLE);
+  }
+
+  public void showNextButton() {
+    nextButton.setVisibility(View.VISIBLE);
+  }
+
+  public void hidePreviousButton() {
+    previousButton.setVisibility(View.INVISIBLE);
+  }
+
+  public void hideNextButton() {
+    nextButton.setVisibility(View.INVISIBLE);
+  }
 
   public void setPreviousButtonLabel(String label) {
     previousButton.setText(label);

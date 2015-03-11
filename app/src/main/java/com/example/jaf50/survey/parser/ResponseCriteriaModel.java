@@ -5,6 +5,7 @@ public class ResponseCriteriaModel extends ComponentModel {
   private ResponseConditionOperator condition;
   private ResponseModel response;
   private String transition;
+  private boolean allowsSkipping;
 
   public ResponseConditionOperator getCondition() {
     return condition;
@@ -28,5 +29,13 @@ public class ResponseCriteriaModel extends ComponentModel {
 
   public void setTransition(String transition) {
     this.transition = transition;
+  }
+
+  public boolean allowsSkipping() {
+    return allowsSkipping;
+  }
+
+  public void setAllowsSkipping(boolean allowsSkipping) {
+    this.allowsSkipping = allowsSkipping;
   }
 }

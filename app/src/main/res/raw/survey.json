@@ -54,7 +54,8 @@
         },
         {
           "condition": "default",
-          "transition": "screen3"
+          "transition": "screen3",
+          "allowsSkipping": true
         }
       ]
     },
@@ -110,7 +111,8 @@
         },
         {
           "condition": "default",
-          "transition": "screen4"
+          "transition": "screen4",
+          "allowsSkipping": true
         }
       ]
     },
@@ -133,7 +135,8 @@
       "responseCriteria": [
         {
           "condition": "default",
-          "transition": "screen4"
+          "transition": "screen4",
+          "allowsSkipping": true
         }
       ]
     },

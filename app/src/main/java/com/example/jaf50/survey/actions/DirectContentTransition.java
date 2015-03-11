@@ -4,10 +4,12 @@ public class DirectContentTransition implements Action {
 
   private String fromId;
   private String toId;
+  private boolean allowsSkipping;
 
-  public DirectContentTransition(String fromId, String toId) {
+  public DirectContentTransition(String fromId, String toId, boolean allowsSkipping) {
     setFromId(fromId);
     setToId(toId);
+    setAllowsSkipping(allowsSkipping);
   }
 
   public void setFromId(String fromId) {
@@ -26,8 +28,16 @@ public class DirectContentTransition implements Action {
     return toId;
   }
 
+  public boolean allowsSkipping() {
+    return allowsSkipping;
+  }
+
+  public void setAllowsSkipping(boolean allowsSkipping) {
+    this.allowsSkipping = allowsSkipping;
+  }
+
   @Override
   public void execute() {
-
+    // TODO
   }
 }

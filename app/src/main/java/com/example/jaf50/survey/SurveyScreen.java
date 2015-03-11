@@ -90,6 +90,19 @@ public class SurveyScreen extends LinearLayout {
     return responses;
   }
 
+  /**
+   * Returns true if at least one response has been entered on this screen; false otherwise.
+   */
+  public boolean hasResponse() {
+    List<AssessmentResponse> screenResponses = collectResponses();
+    for (AssessmentResponse screenResponse : screenResponses) {
+      if (!screenResponse.isEmpty()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public Action getAction() {
     List<AssessmentResponse> responses = collectResponses();
     for (ResponseCriteria responseCriteria: actionMap.keySet()) {
