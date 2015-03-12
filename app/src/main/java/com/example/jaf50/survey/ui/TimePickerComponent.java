@@ -5,13 +5,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.example.jaf50.survey.R;
-import com.example.jaf50.survey.response.TimeWrapper;
 import com.example.jaf50.survey.response.Response;
+import com.example.jaf50.survey.response.TimeResponse;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -24,15 +23,18 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
   private String responseId;
 
   private TimePickerDialog timePickerDialog;
-  private Button selectButton;
-  private TextView selectionTextView;
-  private TimeWrapper selectedTime;
+  private BootstrapButton selectButton;
+  private TimeResponse selectedTime;
 
   private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
     @Override
     public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
-      selectedTime = new TimeWrapper(hourOfDay, minute);
-      selectionTextView.setText(selectedTime.toString());
+      Calendar calendar = Calendar.getInstance();
+      calendar.clear();
+      calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+      calendar.set(Calendar.MINUTE, minute);
+      selectedTime = new TimeResponse(calendar.getTime());
+      selectButton.setText(selectedTime.getDisplayValue());
     }
   };
 
@@ -41,8 +43,6 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
     super.onAttachedToWindow();
 
     selectButton = ButterKnife.findById(this, R.id.selectButton);
-    selectionTextView = ButterKnife.findById(this, R.id.selectionTextView);
-
     selectButton.setOnTouchListener(new OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {

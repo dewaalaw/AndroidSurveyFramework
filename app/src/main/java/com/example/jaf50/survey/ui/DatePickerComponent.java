@@ -5,10 +5,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.example.jaf50.survey.R;
 import com.example.jaf50.survey.response.Response;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -25,8 +24,7 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
   private String responseId;
 
   private DatePickerDialog datePickerDialog;
-  private Button selectButton;
-  private TextView selectionTextView;
+  private BootstrapButton selectButton;
   private Date selectedDate;
 
   private SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd");
@@ -38,7 +36,7 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
       String dateText = year + "-" + padZeroes(monthOfYear + 1) + "-" + padZeroes(dayOfMonth);
       try {
         Date date = dateParser.parse(dateText);
-        selectionTextView.setText(prettyDateFormatter.format(date));
+        selectButton.setText(prettyDateFormatter.format(date));
         selectedDate = date;
       } catch (ParseException e) {
         e.printStackTrace();
@@ -55,8 +53,6 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
     super.onAttachedToWindow();
 
     selectButton = ButterKnife.findById(this, R.id.selectButton);
-    selectionTextView = ButterKnife.findById(this, R.id.selectionTextView);
-
     selectButton.setOnTouchListener(new OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
