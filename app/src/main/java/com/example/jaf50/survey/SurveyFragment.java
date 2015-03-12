@@ -1,5 +1,6 @@
 package com.example.jaf50.survey;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,11 +18,10 @@ import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.service.SerializationService;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.apache.http.Header;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -137,28 +137,34 @@ public class SurveyFragment extends Fragment {
     }
 
     SerializationService serializationService = new SerializationService();
-    String json = serializationService.serialize(unsubmittedAssessments);
+    final String json = serializationService.serialize(unsubmittedAssessments);
 
-    try {
-      AsyncHttpClient client = new AsyncHttpClient();
-      String encodedJson = URLEncoder.encode(json, "UTF-8");
-      client.get("http://validate.jsontest.com/?json=" + encodedJson, new AsyncHttpResponseHandler() {
-        @Override
-        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-          // TODO - mark this assessment as uploaded.
-          Toast.makeText(getActivity(), "Data upload succeeded: " + new String(responseBody), Toast.LENGTH_LONG).show();
-          getActivity().finish();
-        }
+    AsyncHttpClient client = new AsyncHttpClient();
+    RequestParams params = new RequestParams();
+    params.put("json", json);
 
-        @Override
-        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-          Toast.makeText(getActivity(), "Data upload failed: " + new String(responseBody), Toast.LENGTH_LONG).show();
-          getActivity().finish();
+    client.post("http://validate.jsontest.com/", params, new AsyncHttpResponseHandler() {
+      @Override
+      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        // TODO - mark this assessment as uploaded.
+        Toast.makeText(getActivity(), "Data upload succeeded: " + new String(responseBody), Toast.LENGTH_LONG).show();
+        getActivity().finish();
+      }
+
+      @Override
+      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+        Toast.makeText(getActivity(), "Data upload failed with status " + statusCode + ": " + error.getMessage() + "\n\n" + json, Toast.LENGTH_LONG).show();
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{"josh7up@gmail.com"});
+        i.putExtra(Intent.EXTRA_SUBJECT, "Survey submission error");
+        i.putExtra(Intent.EXTRA_TEXT, "Failed sending json data: " + json);
+        try {
+          startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
         }
-      });
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-    }
+      }
+    });
   }
 
   private List<AssessmentResponse> collectResponses() {
