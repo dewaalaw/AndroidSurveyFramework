@@ -34,12 +34,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
 
-            <Button
+            <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/previousButton"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_weight=".4"
+                android:layout_alignParentLeft="true"
+                bootstrap:bb_roundedCorners="true"
+                bootstrap:bb_type="danger"
                 android:text="Previous"/>
 
             <View
@@ -47,32 +49,16 @@
                 android:layout_height="0px"
                 android:layout_weight=".2"/>
 
-            <Button
+            <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/nextButton"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_weight=".4"
+                android:layout_alignParentRight="true"
+                bootstrap:bb_roundedCorners="true"
+                bootstrap:bb_type="success"
                 android:text="Next"/>
         </LinearLayout>
-
-        <!--<com.beardedhen.androidbootstrap.BootstrapButton-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_margin="10dp"-->
-        <!--android:text="Previous"-->
-        <!--bootstrap:bb_roundedCorners="true"-->
-        <!--bootstrap:bb_type="success" />-->
-
-        <!--<com.beardedhen.androidbootstrap.BootstrapButton-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_margin="10dp"-->
-        <!--android:text="Next"-->
-        <!--bootstrap:bb_roundedCorners="true"-->
-        <!--bootstrap:bb_type="success" />-->
 
     </RelativeLayout>
 

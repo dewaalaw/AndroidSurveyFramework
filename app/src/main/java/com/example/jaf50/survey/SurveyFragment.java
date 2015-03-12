@@ -5,10 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
@@ -37,10 +37,10 @@ public class SurveyFragment extends Fragment {
   LinearLayout contentPanel;
 
   @InjectView(R.id.nextButton)
-  Button nextButton;
+  BootstrapButton nextButton;
 
   @InjectView(R.id.previousButton)
-  Button previousButton;
+  BootstrapButton previousButton;
 
   private HashMap<String, SurveyScreen> surveyScreens = new HashMap<>();
   private SurveyScreen currentScreen;
