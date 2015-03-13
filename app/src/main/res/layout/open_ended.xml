@@ -9,7 +9,6 @@
                                                 android:imeOptions="actionDone"
                                                 android:layout_margin="10dp"
                                                 android:hint="Tap to enter text..."
-                                                bootstrap:be_roundedCorners="true"
                                                 android:gravity="center"
                                                 bootstrap:be_state="primary">
 

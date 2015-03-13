@@ -141,7 +141,7 @@
       "components": [
         {
           "type": "text",
-          "label": "Screen 3 Text"
+          "label": "Please enter the date and time that you last went to the grocery store."
         },
         {
           "type": "spacer",

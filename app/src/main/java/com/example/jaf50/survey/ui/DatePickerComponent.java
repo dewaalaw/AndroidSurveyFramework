@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.BootstrapEditText;
 import com.example.jaf50.survey.R;
 import com.example.jaf50.survey.response.Response;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -18,13 +19,21 @@ import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class DatePickerComponent extends LinearLayout implements ISurveyComponent {
 
   private String responseId;
 
   private DatePickerDialog datePickerDialog;
-  private BootstrapButton selectButton;
+  @InjectView(R.id.selectButton)
+  BootstrapButton selectButton;
+  @InjectView(R.id.dayEditText)
+  BootstrapEditText dayEditText;
+  @InjectView(R.id.monthEditText)
+  BootstrapEditText monthEditText;
+  @InjectView(R.id.yearEditText)
+  BootstrapEditText yearEditText;
   private Date selectedDate;
 
   private SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd");
@@ -36,7 +45,10 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
       String dateText = year + "-" + padZeroes(monthOfYear + 1) + "-" + padZeroes(dayOfMonth);
       try {
         Date date = dateParser.parse(dateText);
-        selectButton.setText(prettyDateFormatter.format(date));
+        yearEditText.setText(year + "");
+        monthEditText.setText(padZeroes(monthOfYear + 1) + "");
+        dayEditText.setText(padZeroes(dayOfMonth) + "");
+
         selectedDate = date;
       } catch (ParseException e) {
         e.printStackTrace();
@@ -51,8 +63,8 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
+    ButterKnife.inject(this);
 
-    selectButton = ButterKnife.findById(this, R.id.selectButton);
     selectButton.setOnTouchListener(new OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
