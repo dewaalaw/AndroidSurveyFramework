@@ -187,6 +187,7 @@ public class AssessmentUiBuilder {
   private DatePickerComponent buildDatePickerComponent(DatePickerModel model) {
     DatePickerComponent datePickerComponent = (DatePickerComponent) layoutInflater.inflate(R.layout.date_picker, null);
     datePickerComponent.setResponseId(model.getResponseId());
+    datePickerComponent.setPickerStyle(model.getPickerStyle());
     return datePickerComponent;
   }
 

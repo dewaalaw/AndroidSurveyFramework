@@ -149,7 +149,8 @@
         },
         {
           "type": "datePicker",
-          "responseId": "datePickerResponse"
+          "responseId": "datePickerResponse",
+          "style": "text"
         },
         {
           "type": "spacer",

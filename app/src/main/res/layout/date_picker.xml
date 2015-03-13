@@ -9,7 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         bootstrap:bb_icon_right="fa-calendar"
-        bootstrap:bb_type="primary"
         android:text="Select Date"
         android:textSize="14dp"/>
 
@@ -25,16 +24,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            bootstrap:be_state="default"
             android:maxLength="2"
             android:minEms="2"
             android:padding="5dp"
             android:textSize="16dp"
             android:gravity="center_horizontal"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:alpha="0.5"
-            android:inputType="none"/>
+            android:inputType="number"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -65,14 +60,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            bootstrap:be_state="default"
             android:maxLength="2"
             android:minEms="2"
             android:padding="5dp"
             android:textSize="16dp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:alpha="0.5"
             android:gravity="center_horizontal"
             android:inputType="number"/>
 
@@ -106,14 +97,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            bootstrap:be_state="default"
             android:maxLength="4"
             android:minEms="4"
             android:padding="5dp"
             android:textSize="16dp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:alpha="0.5"
             android:gravity="center_horizontal"
             android:inputType="number"/>
 
