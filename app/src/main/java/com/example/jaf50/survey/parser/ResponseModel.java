@@ -2,7 +2,7 @@ package com.example.jaf50.survey.parser;
 
 import java.util.List;
 
-public class ResponseModel extends ComponentModel {
+public class ResponseModel {
 
   private String id;
   private List<String> values;

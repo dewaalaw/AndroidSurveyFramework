@@ -2,7 +2,6 @@ package com.example.jaf50.survey;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
 
 import com.example.jaf50.survey.parser.SurveyModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
@@ -20,8 +19,7 @@ public class SurveyActivity extends FragmentActivity {
     AssessmentParserService assessmentParserService = new AssessmentParserService();
     SurveyModel surveyModel = assessmentParserService.parse(getResources().openRawResource(R.raw.survey));
 
-    LayoutInflater inflator = LayoutInflater.from(this);
-    AssessmentUiBuilder assessmentUiBuilder = new AssessmentUiBuilder(inflator);
+    AssessmentUiBuilder assessmentUiBuilder = new AssessmentUiBuilder(this);
     List<SurveyScreen> surveyScreens = assessmentUiBuilder.build(surveyModel);
 
     SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);

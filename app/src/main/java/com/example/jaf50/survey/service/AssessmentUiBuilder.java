@@ -1,6 +1,9 @@
 package com.example.jaf50.survey.service;
 
+import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 
 import com.example.jaf50.survey.R;
 import com.example.jaf50.survey.SurveyScreen;
@@ -18,6 +21,7 @@ import com.example.jaf50.survey.parser.RadioGroupModel;
 import com.example.jaf50.survey.parser.ResponseConditionOperator;
 import com.example.jaf50.survey.parser.ResponseCriteriaModel;
 import com.example.jaf50.survey.parser.SliderModel;
+import com.example.jaf50.survey.parser.SpacerModel;
 import com.example.jaf50.survey.parser.SurveyModel;
 import com.example.jaf50.survey.parser.SurveyScreenModel;
 import com.example.jaf50.survey.parser.TextModel;
@@ -31,6 +35,7 @@ import com.example.jaf50.survey.ui.ISurveyComponent;
 import com.example.jaf50.survey.ui.RadioButtonComponent;
 import com.example.jaf50.survey.ui.RadioGroupComponent;
 import com.example.jaf50.survey.ui.SeekBarComponent;
+import com.example.jaf50.survey.ui.SpacerComponent;
 import com.example.jaf50.survey.ui.TextComponent;
 import com.example.jaf50.survey.ui.TimePickerComponent;
 
@@ -39,10 +44,12 @@ import java.util.List;
 
 public class AssessmentUiBuilder {
 
+  private Context context;
   private LayoutInflater layoutInflater;
 
-  public AssessmentUiBuilder(LayoutInflater layoutInflater) {
-    this.layoutInflater = layoutInflater;
+  public AssessmentUiBuilder(Context context) {
+    this.context = context;
+    this.layoutInflater = LayoutInflater.from(context);
   }
 
   public List<SurveyScreen> build(SurveyModel surveyModel) {
@@ -129,6 +136,8 @@ public class AssessmentUiBuilder {
       return buildDatePickerComponent((DatePickerModel) componentModel);
     } else if (componentModel instanceof TimePickerModel) {
       return buildTimePickerComponent((TimePickerModel) componentModel);
+    } else if (componentModel instanceof SpacerModel) {
+      return buildSpacerComponent((SpacerModel) componentModel);
     }
     throw new IllegalArgumentException("componentModel type " + componentModel.getClass() + " is not valid.");
   }
@@ -181,6 +190,15 @@ public class AssessmentUiBuilder {
     TimePickerComponent timePickerComponent = (TimePickerComponent) layoutInflater.inflate(R.layout.time_picker, null);
     timePickerComponent.setResponseId(model.getResponseId());
     return timePickerComponent;
+  }
+
+  private ISurveyComponent buildSpacerComponent(SpacerModel componentModel) {
+    SpacerComponent spacerComponent = (SpacerComponent) layoutInflater.inflate(R.layout.spacer, null);
+    //LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) spacerComponent.getLayoutParams();
+    int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, componentModel.getHeight(), this.context.getResources().getDisplayMetrics());
+    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
+    spacerComponent.setLayoutParams(params);
+    return spacerComponent;
   }
 
   private List<Value> buildValues(ResponseCriteriaModel responseCriteriaModel) {

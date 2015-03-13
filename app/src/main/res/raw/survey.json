@@ -17,6 +17,10 @@
           "label": "Nice text!"
         },
         {
+          "type": "spacer",
+          "height": 20
+        },
+        {
           "type": "radioGroup",
           "responseId": "screen1RadioResponse",
           "inputs": [
@@ -33,6 +37,10 @@
               "value": "3"
             }
           ]
+        },
+        {
+          "type": "spacer",
+          "height": 10
         },
         {
           "type": "slider",
@@ -65,6 +73,10 @@
         {
           "type": "text",
           "label": "Screen 2 Text"
+        },
+        {
+          "type": "spacer",
+          "height": 20
         },
         {
           "type": "checkboxGroup",
@@ -124,8 +136,16 @@
           "label": "Screen 3 Text"
         },
         {
+          "type": "spacer",
+          "height": 20
+        },
+        {
           "type": "datePicker",
           "responseId": "datePickerResponse"
+        },
+        {
+          "type": "spacer",
+          "height": 10
         },
         {
           "type": "timePicker",
