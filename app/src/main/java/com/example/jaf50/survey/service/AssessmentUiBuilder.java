@@ -17,6 +17,7 @@ import com.example.jaf50.survey.parser.ComponentModel;
 import com.example.jaf50.survey.parser.DatePickerModel;
 import com.example.jaf50.survey.parser.InputModel;
 import com.example.jaf50.survey.parser.NavigationButtonModel;
+import com.example.jaf50.survey.parser.OpenEndedModel;
 import com.example.jaf50.survey.parser.RadioGroupModel;
 import com.example.jaf50.survey.parser.ResponseConditionOperator;
 import com.example.jaf50.survey.parser.ResponseCriteriaModel;
@@ -32,6 +33,7 @@ import com.example.jaf50.survey.ui.CheckboxComponent;
 import com.example.jaf50.survey.ui.CheckboxGroupComponent;
 import com.example.jaf50.survey.ui.DatePickerComponent;
 import com.example.jaf50.survey.ui.ISurveyComponent;
+import com.example.jaf50.survey.ui.OpenEndedComponent;
 import com.example.jaf50.survey.ui.RadioButtonComponent;
 import com.example.jaf50.survey.ui.RadioGroupComponent;
 import com.example.jaf50.survey.ui.SeekBarComponent;
@@ -138,6 +140,8 @@ public class AssessmentUiBuilder {
       return buildTimePickerComponent((TimePickerModel) componentModel);
     } else if (componentModel instanceof SpacerModel) {
       return buildSpacerComponent((SpacerModel) componentModel);
+    } else if (componentModel instanceof OpenEndedModel) {
+      return buildOpenEndedComponent((OpenEndedModel) componentModel);
     }
     throw new IllegalArgumentException("componentModel type " + componentModel.getClass() + " is not valid.");
   }
@@ -192,13 +196,18 @@ public class AssessmentUiBuilder {
     return timePickerComponent;
   }
 
-  private ISurveyComponent buildSpacerComponent(SpacerModel componentModel) {
+  private ISurveyComponent buildSpacerComponent(SpacerModel model) {
     SpacerComponent spacerComponent = (SpacerComponent) layoutInflater.inflate(R.layout.spacer, null);
-    //LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) spacerComponent.getLayoutParams();
-    int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, componentModel.getHeight(), this.context.getResources().getDisplayMetrics());
+    int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, model.getHeight(), this.context.getResources().getDisplayMetrics());
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
     spacerComponent.setLayoutParams(params);
     return spacerComponent;
+  }
+
+  private ISurveyComponent buildOpenEndedComponent(OpenEndedModel model) {
+    OpenEndedComponent openEndedComponent = (OpenEndedComponent) layoutInflater.inflate(R.layout.open_ended, null);
+    openEndedComponent.setResponseId(model.getResponseId());
+    return openEndedComponent;
   }
 
   private List<Value> buildValues(ResponseCriteriaModel responseCriteriaModel) {

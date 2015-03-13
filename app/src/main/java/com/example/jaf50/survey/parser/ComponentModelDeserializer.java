@@ -51,6 +51,10 @@ public class ComponentModelDeserializer implements JsonDeserializer<ComponentMod
       SpacerModel model = new SpacerModel();
       model.setHeight(jsonObject.get("height").getAsInt());
       return model;
+    } else if ("open-ended".equals(type)) {
+      OpenEndedModel model = new OpenEndedModel();
+      model.setResponseId(jsonObject.get("responseId").getAsString());
+      return model;
     }
 
     return null;

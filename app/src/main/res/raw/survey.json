@@ -47,6 +47,14 @@
           "leftLabel": "Not a lot",
           "rightLabel": "Very much",
           "responseId": "sliderResponse"
+        },
+        {
+          "type": "spacer",
+          "height": 10
+        },
+        {
+          "type": "open-ended",
+          "responseId": "screen1OpenEnded"
         }
       ],
       "responseCriteria": [

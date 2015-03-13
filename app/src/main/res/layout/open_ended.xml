@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.jaf50.survey.ui.OpenEndedComponent xmlns:android="http://schemas.android.com/apk/res/android"
+                                                xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+                                                android:id="@+id/openEnded"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:lines="3"
+                                                android:maxLines="3"
+                                                android:imeOptions="actionDone"
+                                                android:layout_margin="10dp"
+                                                android:hint="Tap to enter text..."
+                                                bootstrap:be_roundedCorners="true"
+                                                android:gravity="center"
+                                                bootstrap:be_state="primary">
+
+</com.example.jaf50.survey.ui.OpenEndedComponent>
