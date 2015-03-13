@@ -33,6 +33,7 @@ public class ComponentModelDeserializer implements JsonDeserializer<ComponentMod
     } else if ("datePicker".equals(type)) {
       DatePickerModel model = new DatePickerModel();
       model.setResponseId(jsonObject.get("responseId").getAsString());
+      model.setLabel(jsonObject.get("label").getAsString());
       if (jsonObject.get("style") != null) {
         String inputType = jsonObject.get("style").getAsString();
         for (DatePickerStyle datePickerStyle : DatePickerStyle.values()) {

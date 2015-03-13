@@ -6,6 +6,7 @@ public class DatePickerModel extends ComponentModel {
 
   private String responseId;
   private DatePickerStyle pickerStyle = DatePickerStyle.CALENDAR;
+  private String label;
 
   public String getResponseId() {
     return responseId;
@@ -21,5 +22,13 @@ public class DatePickerModel extends ComponentModel {
 
   public void setPickerStyle(DatePickerStyle pickerStyle) {
     this.pickerStyle = pickerStyle;
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public void setLabel(String label) {
+    this.label = label;
   }
 }

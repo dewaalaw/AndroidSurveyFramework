@@ -38,6 +38,7 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
   private String responseId;
   private DatePickerDialog datePickerDialog;
   private Date selectedDate;
+  private String label;
 
   private SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd");
   private SimpleDateFormat prettyDateFormatter = new SimpleDateFormat("EEE, MMMM d");
@@ -93,11 +94,22 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
     }
   }
 
+  public void setLabel(String label) {
+    this.label = label;
+    if (isViewAttachedToWindow) {
+      selectButton.setText(label);
+    }
+  }
+
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     this.isViewAttachedToWindow = true;
     ButterKnife.inject(this);
+
+    if (this.label != null) {
+      setLabel(this.label);
+    }
     setPickerStyle(this.datePickerStyle);
 
     selectButton.setOnTouchListener(new OnTouchListener() {

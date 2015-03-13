@@ -150,7 +150,8 @@
         {
           "type": "datePicker",
           "responseId": "datePickerResponse",
-          "style": "text"
+          "style": "text",
+          "label": "Enter Date:"
         },
         {
           "type": "spacer",
