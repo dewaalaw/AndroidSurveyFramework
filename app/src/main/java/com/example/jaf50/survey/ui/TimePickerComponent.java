@@ -62,7 +62,6 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
   }
 
   public void setEditable(View view, boolean editable) {
-    //view.setAlpha(editable ? 1.0f : 0.55f);
     view.setFocusable(editable);
     view.setFocusableInTouchMode(editable);
     view.setEnabled(editable);

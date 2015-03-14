@@ -1,7 +1,8 @@
 <com.example.jaf50.survey.ui.TimePickerComponent xmlns:android="http://schemas.android.com/apk/res/android"
                                                  xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
-                                                 android:orientation="horizontal"
-                                                 android:layout_width="match_parent"
+                                                 android:orientation="vertical"
+                                                 android:layout_width="wrap_content"
+                                                 android:gravity="center_horizontal"
                                                  android:layout_height="wrap_content">
 
     <com.beardedhen.androidbootstrap.BootstrapButton
@@ -10,57 +11,58 @@
         android:layout_height="wrap_content"
         bootstrap:bb_icon_left="fa-clock-o"
         android:text="Select Time"
+        android:layout_marginBottom="6dp"
         android:textSize="14dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <com.beardedhen.androidbootstrap.BootstrapEditText
-            android:id="@+id/hourEditText"
-            style="@style/PickerEditText"
-            android:maxLength="2"
-            android:minEms="2"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
 
-        <TextView
-            style="@style/PickerHintText"
-            android:text="HH"/>
-    </LinearLayout>
+            <com.beardedhen.androidbootstrap.BootstrapEditText
+                android:id="@+id/hourEditText"
+                style="@style/PickerEditText"
+                android:maxLength="2"
+                android:minEms="2"/>
 
-    <TextView
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14dp"
-        android:layout_marginTop="6dp"
-        android:text=":"/>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical">
-
-        <com.beardedhen.androidbootstrap.BootstrapEditText
-            android:id="@+id/minuteEditText"
-            style="@style/PickerEditText"
-            android:maxLength="2"
-            android:minEms="2"/>
+            <TextView
+                style="@style/PickerHintText"
+                android:text="HH"/>
+        </LinearLayout>
 
         <TextView
-            style="@style/PickerHintText"
-            android:text="MM"/>
-    </LinearLayout>
+            style="@style/PickerSeparatorLabel"
+            android:text=":"/>
 
-    <Spinner
-        android:id="@+id/amPmSpinner"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="6dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <com.beardedhen.androidbootstrap.BootstrapEditText
+                android:id="@+id/minuteEditText"
+                style="@style/PickerEditText"
+                android:maxLength="2"
+                android:minEms="2"/>
+
+            <TextView
+                style="@style/PickerHintText"
+                android:text="MM"/>
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/amPmSpinner"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
 </com.example.jaf50.survey.ui.TimePickerComponent>

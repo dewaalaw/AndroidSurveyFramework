@@ -151,7 +151,7 @@
           "type": "datePicker",
           "responseId": "datePickerResponse",
           "style": "chooser",
-          "label": "Enter Date:"
+          "label": "Select Date:"
         },
         {
           "type": "spacer",
