@@ -8,34 +8,25 @@
         android:id="@+id/selectButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        bootstrap:bb_icon_right="fa-calendar"
+        bootstrap:bb_icon_left="fa-calendar"
         android:text="Select Date"
         android:textSize="14dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="10dp"
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
         <com.beardedhen.androidbootstrap.BootstrapEditText
             android:id="@+id/monthEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
+            style="@style/PickerEditText"
             android:maxLength="2"
-            android:minEms="2"
-            android:padding="5dp"
-            android:textSize="16dp"
-            android:gravity="center_horizontal"
-            android:inputType="number"/>
+            android:minEms="2"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12dp"
-            android:layout_gravity="center_horizontal"
+            style="@style/PickerHintText"
             android:text="MM"/>
     </LinearLayout>
 
@@ -57,21 +48,12 @@
 
         <com.beardedhen.androidbootstrap.BootstrapEditText
             android:id="@+id/dayEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
+            style="@style/PickerEditText"
             android:maxLength="2"
-            android:minEms="2"
-            android:padding="5dp"
-            android:textSize="16dp"
-            android:gravity="center_horizontal"
-            android:inputType="number"/>
+            android:minEms="2"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12dp"
-            android:layout_gravity="center_horizontal"
+            style="@style/PickerHintText"
             android:text="DD"/>
     </LinearLayout>
 
@@ -93,22 +75,12 @@
 
         <com.beardedhen.androidbootstrap.BootstrapEditText
             android:id="@+id/yearEditText"
-            android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
+            style="@style/PickerEditText"
             android:maxLength="4"
-            android:minEms="3"
-            android:padding="5dp"
-            android:textSize="16dp"
-            android:gravity="center_horizontal"
-            android:inputType="number"/>
+            android:minEms="3"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12dp"
-            android:layout_gravity="center_horizontal"
+            style="@style/PickerHintText"
             android:text="YYYY"/>
     </LinearLayout>
 

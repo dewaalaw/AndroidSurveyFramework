@@ -52,7 +52,8 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
       selectedTime = new TimeResponse(calendar.getTime());
       hourEditText.setText(padZeroes(calendar.get(Calendar.HOUR)));
       minuteEditText.setText(padZeroes(minute));
-      amPmSpinner.setSelection(radialPickerLayout.getIsCurrentlyAmOrPm());
+      // Spinner AM index == 1, PM index == 2.
+      amPmSpinner.setSelection(radialPickerLayout.getIsCurrentlyAmOrPm()+1);
     }
   };
 
@@ -110,7 +111,7 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
     hourEditText.setGravity(Gravity.CENTER);
     minuteEditText.setGravity(Gravity.CENTER);
 
-    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.am_pm_array, android.R.layout.simple_spinner_item);
+    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.am_pm_array, R.layout.spinner_layout);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     amPmSpinner.setAdapter(adapter);
 
