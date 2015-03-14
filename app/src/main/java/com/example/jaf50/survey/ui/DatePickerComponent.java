@@ -66,7 +66,6 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
   }
 
   public void setEditable(View view, boolean editable) {
-    //view.setAlpha(editable ? 1.0f : 0.55f);
     view.setFocusable(editable);
     view.setFocusableInTouchMode(editable);
     view.setEnabled(editable);
@@ -120,15 +119,16 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
       @Override
       public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
-          if (datePickerDialog == null) {
-            Calendar now = Calendar.getInstance();
-            datePickerDialog = DatePickerDialog.newInstance(
-                onDateSetListener,
-                now.get(Calendar.YEAR),
-                now.get(Calendar.MONTH),
-                now.get(Calendar.DAY_OF_MONTH)
-            );
+          Calendar calendar = Calendar.getInstance();
+          if (selectedDate != null) {
+            calendar.setTime(selectedDate);
           }
+          datePickerDialog = DatePickerDialog.newInstance(
+              onDateSetListener,
+              calendar.get(Calendar.YEAR),
+              calendar.get(Calendar.MONTH),
+              calendar.get(Calendar.DAY_OF_MONTH)
+          );
           Activity activity = (Activity) getContext();
           datePickerDialog.show(activity.getFragmentManager(), "DatePickerDialog");
         }

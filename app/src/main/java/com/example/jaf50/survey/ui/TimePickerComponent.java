@@ -50,10 +50,10 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
       calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
       calendar.set(Calendar.MINUTE, minute);
       selectedTime = new TimeResponse(calendar.getTime());
-      hourEditText.setText(padZeroes(calendar.get(Calendar.HOUR)));
+      hourEditText.setText(padZeroes(calendar.get(Calendar.HOUR) == 0 ? 12 : calendar.get(Calendar.HOUR)));
       minuteEditText.setText(padZeroes(minute));
       // Spinner AM index == 1, PM index == 2.
-      amPmSpinner.setSelection(radialPickerLayout.getIsCurrentlyAmOrPm()+1);
+      amPmSpinner.setSelection(radialPickerLayout.getIsCurrentlyAmOrPm() + 1);
     }
   };
 
@@ -119,14 +119,15 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
       @Override
       public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
-          if (timePickerDialog == null) {
-            Calendar now = Calendar.getInstance();
-            timePickerDialog = TimePickerDialog.newInstance(
-                onTimeSetListener,
-                now.get(Calendar.HOUR_OF_DAY),
-                now.get(Calendar.MINUTE),
-                false);
+          Calendar calendar = Calendar.getInstance();
+          if (selectedTime != null) {
+            calendar.setTime(selectedTime.getDate());
           }
+          timePickerDialog = TimePickerDialog.newInstance(
+              onTimeSetListener,
+              calendar.get(Calendar.HOUR_OF_DAY),
+              calendar.get(Calendar.MINUTE),
+              false);
           Activity activity = (Activity) getContext();
           timePickerDialog.show(activity.getFragmentManager(), "TimePickerDialog");
         }
