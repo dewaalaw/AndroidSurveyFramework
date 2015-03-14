@@ -3,9 +3,9 @@ package com.example.jaf50.survey.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -34,14 +34,13 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
   @InjectView(R.id.yearEditText)
   BootstrapEditText yearEditText;
 
-  private DatePickerStyle datePickerStyle = DatePickerStyle.CALENDAR;
+  private PickerStyle pickerStyle = PickerStyle.CHOOSER;
   private String responseId;
   private DatePickerDialog datePickerDialog;
   private Date selectedDate;
   private String label;
 
   private SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd");
-  private SimpleDateFormat prettyDateFormatter = new SimpleDateFormat("EEE, MMMM d");
 
   private boolean isViewAttachedToWindow = false;
 
@@ -66,21 +65,22 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
     return String.format("%2s", value + "").replace(' ', '0');
   }
 
-  public void setEditTextEditable(EditText editText, boolean editable) {
-    editText.setAlpha(editable ? 1.0f : 0.55f);
-    editText.setFocusable(editable);
-    editText.setFocusableInTouchMode(editable);
+  public void setEditable(View view, boolean editable) {
+    //view.setAlpha(editable ? 1.0f : 0.55f);
+    view.setFocusable(editable);
+    view.setFocusableInTouchMode(editable);
+    view.setEnabled(editable);
   }
 
-  public void setPickerStyle(DatePickerStyle datePickerStyle) {
-    this.datePickerStyle = datePickerStyle;
-    if (isViewAttachedToWindow) {
-      setSelectButtonCornersRounded(datePickerStyle.isCalendarInputEnabled());
-      selectButton.setBootstrapType(datePickerStyle.getBootstrapType());
-      selectButton.setBootstrapButtonEnabled(datePickerStyle.isCalendarInputEnabled());
-      setEditTextEditable(yearEditText, datePickerStyle.isTextInputEnabled());
-      setEditTextEditable(monthEditText, datePickerStyle.isTextInputEnabled());
-      setEditTextEditable(dayEditText, datePickerStyle.isTextInputEnabled());
+  public void setPickerStyle(PickerStyle pickerStyle) {
+    this.pickerStyle = pickerStyle;
+    if (isViewAttachedToWindow && pickerStyle != null) {
+      setSelectButtonCornersRounded(pickerStyle.isChooserInputEnabled());
+      selectButton.setBootstrapType(pickerStyle.getBootstrapType());
+      selectButton.setBootstrapButtonEnabled(pickerStyle.isChooserInputEnabled());
+      setEditable(yearEditText, pickerStyle.isTextInputEnabled());
+      setEditable(monthEditText, pickerStyle.isTextInputEnabled());
+      setEditable(dayEditText, pickerStyle.isTextInputEnabled());
     }
   }
 
@@ -110,7 +110,11 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
     if (this.label != null) {
       setLabel(this.label);
     }
-    setPickerStyle(this.datePickerStyle);
+    setPickerStyle(this.pickerStyle);
+
+    yearEditText.setGravity(Gravity.CENTER);
+    monthEditText.setGravity(Gravity.CENTER);
+    dayEditText.setGravity(Gravity.CENTER);
 
     selectButton.setOnTouchListener(new OnTouchListener() {
       @Override

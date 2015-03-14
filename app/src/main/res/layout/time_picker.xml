@@ -9,8 +9,78 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         bootstrap:bb_icon_right="fa-clock-o"
-        bootstrap:bb_type="primary"
         android:text="Select Time"
         android:textSize="14dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.beardedhen.androidbootstrap.BootstrapEditText
+            android:id="@+id/hourEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:maxLength="2"
+            android:minEms="2"
+            android:padding="5dp"
+            android:textSize="16dp"
+            android:gravity="center_horizontal"
+            android:inputType="number"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:layout_gravity="center_horizontal"
+            android:text="HH"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:layout_marginTop="6dp"
+        android:text=":"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.beardedhen.androidbootstrap.BootstrapEditText
+            android:id="@+id/minuteEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:maxLength="2"
+            android:minEms="2"
+            android:padding="5dp"
+            android:textSize="16dp"
+            android:gravity="center_horizontal"
+            android:inputType="number"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:layout_gravity="center_horizontal"
+            android:text="MM"/>
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/amPmSpinner"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </Spinner>
 
 </com.example.jaf50.survey.ui.TimePickerComponent>

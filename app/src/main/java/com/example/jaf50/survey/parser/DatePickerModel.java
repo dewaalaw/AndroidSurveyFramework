@@ -1,11 +1,11 @@
 package com.example.jaf50.survey.parser;
 
-import com.example.jaf50.survey.ui.DatePickerStyle;
+import com.example.jaf50.survey.ui.PickerStyle;
 
 public class DatePickerModel extends ComponentModel {
 
   private String responseId;
-  private DatePickerStyle pickerStyle = DatePickerStyle.CALENDAR;
+  private PickerStyle pickerStyle = PickerStyle.CHOOSER;
   private String label;
 
   public String getResponseId() {
@@ -16,11 +16,11 @@ public class DatePickerModel extends ComponentModel {
     this.responseId = responseId;
   }
 
-  public DatePickerStyle getPickerStyle() {
+  public PickerStyle getPickerStyle() {
     return pickerStyle;
   }
 
-  public void setPickerStyle(DatePickerStyle pickerStyle) {
+  public void setPickerStyle(PickerStyle pickerStyle) {
     this.pickerStyle = pickerStyle;
   }
 

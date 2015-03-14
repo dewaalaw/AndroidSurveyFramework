@@ -150,7 +150,7 @@
         {
           "type": "datePicker",
           "responseId": "datePickerResponse",
-          "style": "text",
+          "style": "chooser",
           "label": "Enter Date:"
         },
         {
@@ -159,7 +159,8 @@
         },
         {
           "type": "timePicker",
-          "responseId": "timePickerResponse"
+          "responseId": "timePickerResponse",
+          "style": "chooser"
         }
       ],
       "responseCriteria": [

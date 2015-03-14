@@ -1,6 +1,6 @@
 package com.example.jaf50.survey.parser;
 
-import com.example.jaf50.survey.ui.DatePickerStyle;
+import com.example.jaf50.survey.ui.PickerStyle;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -33,12 +33,14 @@ public class ComponentModelDeserializer implements JsonDeserializer<ComponentMod
     } else if ("datePicker".equals(type)) {
       DatePickerModel model = new DatePickerModel();
       model.setResponseId(jsonObject.get("responseId").getAsString());
-      model.setLabel(jsonObject.get("label").getAsString());
+      if (jsonObject.get("label") != null) {
+        model.setLabel(jsonObject.get("label").getAsString());
+      }
       if (jsonObject.get("style") != null) {
         String inputType = jsonObject.get("style").getAsString();
-        for (DatePickerStyle datePickerStyle : DatePickerStyle.values()) {
-          if (datePickerStyle.getDescription().equals(inputType)) {
-            model.setPickerStyle(datePickerStyle);
+        for (PickerStyle pickerStyle : PickerStyle.values()) {
+          if (pickerStyle.getDescription().equals(inputType)) {
+            model.setPickerStyle(pickerStyle);
             break;
           }
         }
@@ -47,6 +49,18 @@ public class ComponentModelDeserializer implements JsonDeserializer<ComponentMod
     } else if ("timePicker".equals(type)) {
       TimePickerModel model = new TimePickerModel();
       model.setResponseId(jsonObject.get("responseId").getAsString());
+      if (jsonObject.get("label") != null) {
+        model.setLabel(jsonObject.get("label").getAsString());
+      }
+      if (jsonObject.get("style") != null) {
+        String inputType = jsonObject.get("style").getAsString();
+        for (PickerStyle pickerStyle : PickerStyle.values()) {
+          if (pickerStyle.getDescription().equals(inputType)) {
+            model.setPickerStyle(pickerStyle);
+            break;
+          }
+        }
+      }
       return model;
     } else if ("radioGroup".equals(type)) {
       RadioGroupModel model = new RadioGroupModel();

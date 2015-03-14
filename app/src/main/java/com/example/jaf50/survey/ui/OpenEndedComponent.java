@@ -2,6 +2,7 @@ package com.example.jaf50.survey.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -34,6 +35,12 @@ public class OpenEndedComponent extends BootstrapEditText implements ISurveyComp
       outAttrs.imeOptions &= ~EditorInfo.IME_FLAG_NO_ENTER_ACTION;
     }
     return connection;
+  }
+
+  @Override
+  protected void onAttachedToWindow() {
+    super.onAttachedToWindow();
+    setGravity(Gravity.CENTER);
   }
 
   @Override

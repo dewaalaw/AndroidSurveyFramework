@@ -195,6 +195,8 @@ public class AssessmentUiBuilder {
   private TimePickerComponent buildTimePickerComponent(TimePickerModel model) {
     TimePickerComponent timePickerComponent = (TimePickerComponent) layoutInflater.inflate(R.layout.time_picker, null);
     timePickerComponent.setResponseId(model.getResponseId());
+    timePickerComponent.setPickerStyle(model.getPickerStyle());
+    timePickerComponent.setLabel(model.getLabel());
     return timePickerComponent;
   }
 

@@ -8,8 +8,6 @@
                                                 android:maxLines="3"
                                                 android:imeOptions="actionDone"
                                                 android:layout_margin="10dp"
-                                                android:hint="Tap to enter text..."
-                                                android:gravity="center"
-                                                bootstrap:be_state="primary">
+                                                android:hint="Tap to enter text...">
 
 </com.example.jaf50.survey.ui.OpenEndedComponent>

@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:maxLength="4"
-            android:minEms="4"
+            android:minEms="3"
             android:padding="5dp"
             android:textSize="16dp"
             android:gravity="center_horizontal"
