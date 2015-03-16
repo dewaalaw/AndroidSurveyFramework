@@ -11,6 +11,7 @@ import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
+import com.example.jaf50.survey.domain.Survey;
 import com.example.jaf50.survey.domain.Value;
 import com.example.jaf50.survey.parser.CheckboxGroupModel;
 import com.example.jaf50.survey.parser.ComponentModel;
@@ -55,9 +56,13 @@ public class AssessmentUiBuilder {
   }
 
   public List<SurveyScreen> build(SurveyModel surveyModel) {
+    Survey survey = new Survey();
+    survey.setName("My Survey");
+    survey.save();
+
     Assessment assessment = new Assessment();
     assessment.setDescription(surveyModel.getDescription());
-    assessment.setName(surveyModel.getName());
+    assessment.setSurvey(survey);
 
     List<SurveyScreen> surveyScreens = new ArrayList<>();
     for (SurveyScreenModel surveyScreenModel : surveyModel.getScreens()) {

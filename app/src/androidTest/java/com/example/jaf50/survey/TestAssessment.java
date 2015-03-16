@@ -4,6 +4,7 @@ import android.test.AndroidTestCase;
 
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
+import com.example.jaf50.survey.domain.Survey;
 import com.example.jaf50.survey.domain.Value;
 import com.orm.SugarApp;
 import com.orm.query.Condition;
@@ -25,6 +26,9 @@ public class TestAssessment extends AndroidTestCase {
     if (Assessment.listAll(Assessment.class).size() > 0) {
       Assessment.deleteAll(Assessment.class);
     }
+    if (Survey.listAll(Survey.class).size() > 0) {
+      Survey.deleteAll(Survey.class);
+    }
   }
 
   @Override
@@ -35,11 +39,18 @@ public class TestAssessment extends AndroidTestCase {
     if (Assessment.listAll(Assessment.class).size() > 0) {
       Assessment.deleteAll(Assessment.class);
     }
+    if (Survey.listAll(Survey.class).size() > 0) {
+      Survey.deleteAll(Survey.class);
+    }
   }
 
   public void testSurveySaveAndRetrieve() {
     Date response1Date = new Date();
     Date response2Date = new Date();
+
+    Survey survey = new Survey();
+    survey.setName("My Survey");
+    survey.save();
 
     AssessmentResponse assessmentResponse1 = new AssessmentResponse();
     assessmentResponse1.setResponseId("var1");
@@ -52,12 +63,13 @@ public class TestAssessment extends AndroidTestCase {
     assessmentResponse2.addValue(new Value().setValue("val2"));
 
     Assessment assessment = new Assessment();
-    assessment.setName("My Survey");
+    assessment.setSurvey(survey);
     assessment.setDescription("Description");
     assessment.setResponses(Arrays.asList(assessmentResponse1, assessmentResponse2));
     assessment.save();
 
-    List<Assessment> assessments = Select.from(Assessment.class).where(Condition.prop("name").eq("My Survey")).list();
+    List<Assessment> assessments = Select.from(Assessment.class).where(Condition.prop("survey").eq(survey.getId())).list();
+
     assertEquals(1, assessments.size());
     assertEquals("Description", assessments.get(0).getDescription());
 

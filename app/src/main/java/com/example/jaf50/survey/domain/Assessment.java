@@ -9,7 +9,9 @@ import java.util.List;
 public class Assessment extends SugarRecord<Assessment> {
 
   @Expose
-  String name;
+  Survey survey;
+  @Ignore
+  Participant participant;
   @Expose
   @Ignore
   List<AssessmentResponse> responses;
@@ -27,12 +29,12 @@ public class Assessment extends SugarRecord<Assessment> {
     return responses;
   }
 
-  public String getName() {
-    return name;
+  public Survey getSurvey() {
+    return survey;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setSurvey(Survey survey) {
+    this.survey = survey;
   }
 
   public String getDescription() {
@@ -75,18 +77,18 @@ public class Assessment extends SugarRecord<Assessment> {
     if (submitted != that.submitted) return false;
     if (description != null ? !description.equals(that.description) : that.description != null)
       return false;
-    if (name != null ? !name.equals(that.name) : that.name != null) return false;
     if (responses != null ? !responses.equals(that.responses) : that.responses != null)
       return false;
+    if (survey != null ? !survey.equals(that.survey) : that.survey != null) return false;
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    int result = description != null ? description.hashCode() : 0;
-    result = 31 * result + (name != null ? name.hashCode() : 0);
+    int result = survey != null ? survey.hashCode() : 0;
     result = 31 * result + (responses != null ? responses.hashCode() : 0);
+    result = 31 * result + (description != null ? description.hashCode() : 0);
     result = 31 * result + (submitted ? 1 : 0);
     return result;
   }
@@ -94,9 +96,9 @@ public class Assessment extends SugarRecord<Assessment> {
   @Override
   public String toString() {
     return "Assessment{" +
-        "description='" + description + '\'' +
-        ", name='" + name + '\'' +
+        "survey=" + survey +
         ", responses=" + responses +
+        ", description='" + description + '\'' +
         ", submitted=" + submitted +
         '}';
   }
