@@ -11,7 +11,6 @@ import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
-import com.example.jaf50.survey.domain.Survey;
 import com.example.jaf50.survey.domain.Value;
 import com.example.jaf50.survey.parser.CheckboxGroupModel;
 import com.example.jaf50.survey.parser.ComponentModel;
@@ -49,26 +48,19 @@ public class AssessmentUiBuilder {
 
   private Context context;
   private LayoutInflater layoutInflater;
+  private Assessment assessment;
 
-  public AssessmentUiBuilder(Context context) {
+  public AssessmentUiBuilder(Context context, Assessment assessment) {
     this.context = context;
     this.layoutInflater = LayoutInflater.from(context);
+    this.assessment = assessment;
   }
 
   public List<SurveyScreen> build(SurveyModel surveyModel) {
-    Survey survey = new Survey();
-    survey.setName("My Survey");
-    survey.save();
-
-    Assessment assessment = new Assessment();
-    assessment.setDescription(surveyModel.getDescription());
-    assessment.setSurvey(survey);
-
     List<SurveyScreen> surveyScreens = new ArrayList<>();
     for (SurveyScreenModel surveyScreenModel : surveyModel.getScreens()) {
       SurveyScreen surveyScreen = (SurveyScreen) layoutInflater.inflate(R.layout.survey_content, null);
       surveyScreen.setScreenId(surveyScreenModel.getId());
-      surveyScreen.setAssociatedAssessment(assessment);
 
       surveyScreen.setPreviousButtonModel(getButtonModel(surveyScreenModel.getPrevious(), true, "Previous"));
       surveyScreen.setNextButtonModel(getButtonModel(surveyScreenModel.getNext(), true, "Next"));
@@ -80,15 +72,15 @@ public class AssessmentUiBuilder {
       for (ResponseCriteriaModel responseCriteriaModel : surveyScreenModel.getResponseCriteria()) {
         if (responseCriteriaModel.getCondition() == ResponseConditionOperator.EQUALS ||
             responseCriteriaModel.getCondition() == ResponseConditionOperator.CONTAINS) {
-          AssessmentResponse assessmentResponse = new AssessmentResponse();
-          assessmentResponse.setResponseId(responseCriteriaModel.getResponse().getId());
-          assessmentResponse.setAssessment(assessment);
-          assessmentResponse.setValues(buildValues(responseCriteriaModel));
+          AssessmentResponse assessmentResponse = new AssessmentResponse()
+              .setAssessment(assessment)
+              .setResponseId(responseCriteriaModel.getResponse().getId())
+              .setValues(buildValues(responseCriteriaModel));
 
           ResponseCondition responseCondition = new ResponseCondition(responseCriteriaModel.getCondition(), assessmentResponse);
           DirectContentTransition transition = new DirectContentTransition(responseCriteriaModel.getResponse().getId(),
-                                                                           responseCriteriaModel.getTransition(),
-                                                                           false);
+              responseCriteriaModel.getTransition(),
+              false);
 
           ResponseCriteria responseCriteria = new ResponseCriteria();
           responseCriteria.addCondition(responseCondition);
@@ -99,8 +91,8 @@ public class AssessmentUiBuilder {
           defaultResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.DEFAULT, new AssessmentResponse()));
 
           surveyScreen.addResponseCriteria(defaultResponseCriteria, new DirectContentTransition(null,
-                                                                                                responseCriteriaModel.getTransition(),
-                                                                                                responseCriteriaModel.allowsSkipping()));
+              responseCriteriaModel.getTransition(),
+              responseCriteriaModel.allowsSkipping()));
         } else if (responseCriteriaModel.getCondition() == ResponseConditionOperator.COMPLETE) {
           ResponseCriteria surveyCompleteResponseCriteria = new ResponseCriteria();
           surveyCompleteResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.COMPLETE, new AssessmentResponse()));
@@ -222,9 +214,7 @@ public class AssessmentUiBuilder {
   private List<Value> buildValues(ResponseCriteriaModel responseCriteriaModel) {
     List<Value> values = new ArrayList<>();
     for (String val : responseCriteriaModel.getResponse().getValues()) {
-      Value value = new Value();
-      value.setValue(val);
-      values.add(value);
+      values.add(new Value().setValue(val));
     }
     return values;
   }

@@ -3,6 +3,8 @@ package com.example.jaf50.survey.domain;
 import com.google.gson.annotations.Expose;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,6 @@ public class Participant extends SugarRecord<Participant> {
 
   @Expose
   String assignedId;
-  @Expose
   @Ignore
   List<Assessment> assessments = new ArrayList<>();
 
@@ -22,19 +23,26 @@ public class Participant extends SugarRecord<Participant> {
     return assignedId;
   }
 
-  public void setAssignedId(String assignedId) {
+  public Participant setAssignedId(String assignedId) {
     this.assignedId = assignedId;
+    return this;
   }
 
-  //  public List<Assessment> getAssessments() {
-//    if (assessments == null || assessments.isEmpty()) {
-//      assessments = Assessment.find(Assessment.class, "assessment = ?", getId() + "");
-//    }
-//    return assessments;
-//  }
+  public void eagerLoad(Survey survey) {
+    this.assessments = loadAssessments(survey);
+  }
 
-  public List<Assessment> getAssessments(Survey survey) {
-    assessments = Assessment.find(Assessment.class, "survey = ? and participant = ? ", survey.getId() + "", getId() + "");
+  private List<Assessment> loadAssessments(Survey survey) {
+    List<Assessment> assessments = Select.from(Assessment.class).where(
+        Condition.prop("survey").eq(survey.getId() + "")).and(
+        Condition.prop("participant").eq(getId() + "")).list();
+    for (Assessment assessment : assessments) {
+      assessment.eagerLoad();
+    }
+    return assessments;
+  }
+
+  public List<Assessment> getAssessments() {
     return assessments;
   }
 }

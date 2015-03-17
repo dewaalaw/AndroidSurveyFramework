@@ -123,17 +123,14 @@ public class SurveyFragment extends Fragment {
   }
 
   private void endAssessment(EndAssessmentAction action) {
-    final Assessment assessment = action.getAssessment();
+    final Assessment assessment = AssessmentSession.getInstance().getAssessment();
     assessment.setResponses(collectResponses());
+    assessment.setParticipant(AssessmentSession.getInstance().getParticipant());
     assessment.save();
 
     List<Assessment> unsubmittedAssessments = Assessment.find(Assessment.class, "submitted = 0");
     for (Assessment unsubmittedAssessment : unsubmittedAssessments) {
-      // Need to eager fetch the responses collections and values collections.
-      List<AssessmentResponse> assessmentResponses = unsubmittedAssessment.getResponses();
-      for (AssessmentResponse assessmentResponse : assessmentResponses) {
-        assessmentResponse.getValues();
-      }
+      unsubmittedAssessment.eagerLoad();
     }
 
     SerializationService serializationService = new SerializationService();

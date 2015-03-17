@@ -12,8 +12,9 @@ public class Survey extends SugarRecord<Survey> {
     return name;
   }
 
-  public void setName(String name) {
+  public Survey setName(String name) {
     this.name = name;
+    return this;
   }
 
   @Override

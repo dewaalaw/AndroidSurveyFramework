@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
 import com.example.jaf50.survey.actions.Action;
-import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.parser.NavigationButtonModel;
 import com.example.jaf50.survey.response.ResponseCriteria;
@@ -28,7 +27,6 @@ public class SurveyScreen extends LinearLayout {
   private LinkedHashMap<ResponseCriteria, Action> actionMap = new LinkedHashMap<>();
 
   private String screenId;
-  private Assessment associatedAssessment;
 
   private NavigationButtonModel previousButtonModel;
   private NavigationButtonModel nextButtonModel;
@@ -51,16 +49,8 @@ public class SurveyScreen extends LinearLayout {
     return screenId;
   }
 
-  public Assessment getAssociatedAssessment() {
-    return associatedAssessment;
-  }
-
-  public void setAssociatedAssessment(Assessment associatedAssessment) {
-    this.associatedAssessment = associatedAssessment;
-  }
-
   public List<AssessmentResponse> collectResponses() {
-    return new ResponseCollectorService().collectResponses(associatedAssessment, surveyComponents);
+    return new ResponseCollectorService().collectResponses(AssessmentSession.getInstance().getAssessment(), surveyComponents);
   }
 
   /**

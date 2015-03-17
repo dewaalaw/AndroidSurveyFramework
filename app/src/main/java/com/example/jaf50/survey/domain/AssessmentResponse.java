@@ -34,18 +34,27 @@ public class AssessmentResponse extends SugarRecord<AssessmentResponse> {
     return this;
   }
 
-  public List<Value> getValues() {
+  public void eagerLoad() {
+    this.values = loadValues();
+  }
+
+  private List<Value> loadValues() {
     if (values == null || values.isEmpty()) {
       values = Value.find(Value.class, "response = ?", getId() + "");
     }
     return values;
   }
 
-  public void setValues(List<Value> values) {
+  public List<Value> getValues() {
+    return values;
+  }
+
+  public AssessmentResponse setValues(List<Value> values) {
     for (Value value : values) {
       value.setResponse(this);
     }
     this.values = values;
+    return this;
   }
 
   public AssessmentResponse addValue(Value value) {
@@ -65,16 +74,18 @@ public class AssessmentResponse extends SugarRecord<AssessmentResponse> {
     return assessment;
   }
 
-  public void setAssessment(Assessment assessment) {
+  public AssessmentResponse setAssessment(Assessment assessment) {
     this.assessment = assessment;
+    return this;
   }
 
   public Date getResponseDate() {
     return responseDate;
   }
 
-  public void setResponseDate(Date responseDate) {
+  public AssessmentResponse setResponseDate(Date responseDate) {
     this.responseDate = responseDate;
+    return this;
   }
 
   @Override

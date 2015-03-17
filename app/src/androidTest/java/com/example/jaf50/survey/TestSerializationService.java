@@ -4,6 +4,7 @@ import android.test.AndroidTestCase;
 
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
+import com.example.jaf50.survey.domain.Participant;
 import com.example.jaf50.survey.domain.Survey;
 import com.example.jaf50.survey.domain.Value;
 import com.example.jaf50.survey.response.TimeResponse;
@@ -14,34 +15,25 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 
 public class TestSerializationService extends AndroidTestCase {
 
   private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
   public void testSerializeAssessment() throws IOException, ParseException {
-    Survey survey = new Survey();
-    survey.setName("My Survey");
+    Survey survey = new Survey().setName("My Survey");
     survey.save();
 
-    AssessmentResponse assessmentResponse1 = new AssessmentResponse();
-    assessmentResponse1.setResponseId("var1");
-    assessmentResponse1.setResponseDate(simpleDateFormat.parse("2015-02-03 12:54:55"));
-    assessmentResponse1.addValue(new Value().setValue("val1"));
-
-    AssessmentResponse assessmentResponse2 = new AssessmentResponse();
-    assessmentResponse2.setResponseId("var2");
-    assessmentResponse2.setResponseDate(simpleDateFormat.parse("2015-02-03 12:54:57"));
-    assessmentResponse2.addValue(new Value().setValue("val2"));
-
-    Assessment assessment = new Assessment();
-    assessment.setSurvey(survey);
-    assessment.setResponses(Arrays.asList(assessmentResponse1, assessmentResponse2));
+    AssessmentResponse assessmentResponse1 = new AssessmentResponse().setResponseId("var1").setResponseDate(simpleDateFormat.parse("2015-02-03 12:54:55")).addValue(new Value().setValue("val1"));
+    AssessmentResponse assessmentResponse2 = new AssessmentResponse().setResponseId("var2").setResponseDate(simpleDateFormat.parse("2015-02-03 12:54:57")).addValue(new Value().setValue("val2"));
+    Assessment assessment = new Assessment().setSurvey(survey).setResponses(assessmentResponse1, assessmentResponse2).setParticipant(new Participant().setAssignedId("123"));
 
     SerializationService serializationService = new SerializationService();
 
     String expectedJson = "{" +
+        "    \"participant\": {" +
+        "        \"assignedId\": \"123\"" +
+        "    }," +
         "    \"responses\": [" +
         "        {" +
         "            \"responseDate\": \"2015-02-03T00:54:55Z\"," +
@@ -75,18 +67,11 @@ public class TestSerializationService extends AndroidTestCase {
   }
 
   public void testSerializeDateResponse() throws IOException, ParseException {
-    Survey survey = new Survey();
-    survey.setName("My Survey");
+    Survey survey = new Survey().setName("My Survey");
     survey.save();
 
-    AssessmentResponse assessmentResponse1 = new AssessmentResponse();
-    assessmentResponse1.setResponseId("var1");
-    assessmentResponse1.setResponseDate(simpleDateFormat.parse("2015-02-03 12:54:55"));
-    assessmentResponse1.addValue(new Value().setValue("2015-02-02 12:00:00"));
-
-    Assessment assessment = new Assessment();
-    assessment.setSurvey(survey);
-    assessment.setResponses(Arrays.asList(assessmentResponse1));
+    AssessmentResponse assessmentResponse1 = new AssessmentResponse().setResponseId("var1").setResponseDate(simpleDateFormat.parse("2015-02-03 12:54:55")).addValue(new Value().setValue("2015-02-02 12:00:00"));
+    Assessment assessment = new Assessment().setSurvey(survey).setResponses(assessmentResponse1);
 
     SerializationService serializationService = new SerializationService();
 
@@ -115,21 +100,14 @@ public class TestSerializationService extends AndroidTestCase {
   }
 
   public void testSerializeTimeResponse() throws IOException, ParseException {
-    Survey survey = new Survey();
-    survey.setName("My Survey");
+    Survey survey = new Survey().setName("My Survey");
     survey.save();
 
     // The output time ignores the year, month, and day portion of the date.
     String value = new TimeResponse(simpleDateFormat.parse("2015-02-02 12:00:00")).toString();
 
-    AssessmentResponse assessmentResponse1 = new AssessmentResponse();
-    assessmentResponse1.setResponseId("var1");
-    assessmentResponse1.setResponseDate(simpleDateFormat.parse("2015-02-03 12:54:55"));
-    assessmentResponse1.addValue(new Value().setValue(value));
-
-    Assessment assessment = new Assessment();
-    assessment.setSurvey(survey);
-    assessment.setResponses(Arrays.asList(assessmentResponse1));
+    AssessmentResponse assessmentResponse1 = new AssessmentResponse().setResponseId("var1").setResponseDate(simpleDateFormat.parse("2015-02-03 12:54:55")).addValue(new Value().setValue(value));
+    Assessment assessment = new Assessment().setSurvey(survey).setResponses(assessmentResponse1);
 
     SerializationService serializationService = new SerializationService();
 
