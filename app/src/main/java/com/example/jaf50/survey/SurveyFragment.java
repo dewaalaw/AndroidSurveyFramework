@@ -46,6 +46,8 @@ public class SurveyFragment extends Fragment {
   private SurveyScreen currentScreen;
   private Stack<SurveyScreen> screenStack = new Stack<>();
 
+  private Assessment currentAssessment;
+
   public SurveyFragment() {
   }
 
@@ -68,7 +70,7 @@ public class SurveyFragment extends Fragment {
           if (action instanceof DirectContentTransition) {
             transition((DirectContentTransition) action);
           } else if (action instanceof EndAssessmentAction) {
-            endAssessment((EndAssessmentAction) action);
+            endAssessment();
           }
         }
       }
@@ -91,7 +93,7 @@ public class SurveyFragment extends Fragment {
   }
 
   private void transition(final DirectContentTransition action) {
-    if (action.allowsSkipping() && !currentScreen.hasResponse()) {
+    if (action.allowsSkipping() && !currentScreen.responsesEntered()) {
       new SweetAlertDialog(getActivity(), SweetAlertDialog.NORMAL_TYPE)
           .setTitleText("Skip Question?")
           .setContentText("Would you like to skip this question?")
@@ -122,11 +124,9 @@ public class SurveyFragment extends Fragment {
     screenStack.push(surveyScreen);
   }
 
-  private void endAssessment(EndAssessmentAction action) {
-    final Assessment assessment = AssessmentSession.getInstance().getAssessment();
-    assessment.setResponses(collectResponses());
-    assessment.setParticipant(AssessmentSession.getInstance().getParticipant());
-    assessment.save();
+  private void endAssessment() {
+    currentAssessment.setResponses(collectResponses());
+    currentAssessment.save();
 
     List<Assessment> unsubmittedAssessments = Assessment.find(Assessment.class, "submitted = 0");
     for (Assessment unsubmittedAssessment : unsubmittedAssessments) {
@@ -198,6 +198,10 @@ public class SurveyFragment extends Fragment {
     updateNavigationButtons();
     contentPanel.removeAllViews();
     contentPanel.addView(surveyScreen);
+  }
+
+  public void setCurrentAssessment(Assessment currentAssessment) {
+    this.currentAssessment = currentAssessment;
   }
 
   private void updateNavigationButtons() {

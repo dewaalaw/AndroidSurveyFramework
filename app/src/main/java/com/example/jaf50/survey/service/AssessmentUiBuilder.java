@@ -36,7 +36,7 @@ import com.example.jaf50.survey.ui.ISurveyComponent;
 import com.example.jaf50.survey.ui.OpenEndedComponent;
 import com.example.jaf50.survey.ui.RadioButtonComponent;
 import com.example.jaf50.survey.ui.RadioGroupComponent;
-import com.example.jaf50.survey.ui.SeekBarComponent;
+import com.example.jaf50.survey.ui.SliderComponent;
 import com.example.jaf50.survey.ui.SpacerComponent;
 import com.example.jaf50.survey.ui.TextComponent;
 import com.example.jaf50.survey.ui.TimePickerComponent;
@@ -61,6 +61,7 @@ public class AssessmentUiBuilder {
     for (SurveyScreenModel surveyScreenModel : surveyModel.getScreens()) {
       SurveyScreen surveyScreen = (SurveyScreen) layoutInflater.inflate(R.layout.survey_content, null);
       surveyScreen.setScreenId(surveyScreenModel.getId());
+      surveyScreen.setCurrentAssessment(assessment);
 
       surveyScreen.setPreviousButtonModel(getButtonModel(surveyScreenModel.getPrevious(), true, "Previous"));
       surveyScreen.setNextButtonModel(getButtonModel(surveyScreenModel.getNext(), true, "Next"));
@@ -149,12 +150,12 @@ public class AssessmentUiBuilder {
     return questionTextComponent;
   }
 
-  private SeekBarComponent buildSeekBarComponent(SliderModel model) {
-    SeekBarComponent seekBarComponent = (SeekBarComponent) layoutInflater.inflate(R.layout.seekbar, null);
-    seekBarComponent.setResponseId(model.getResponseId());
-    seekBarComponent.setLeftLabelText(model.getLeftLabel());
-    seekBarComponent.setRightLabelText(model.getRightLabel());
-    return seekBarComponent;
+  private SliderComponent buildSeekBarComponent(SliderModel model) {
+    SliderComponent sliderComponent = (SliderComponent) layoutInflater.inflate(R.layout.slider, null);
+    sliderComponent.setResponseId(model.getResponseId());
+    sliderComponent.setLeftLabelText(model.getLeftLabel());
+    sliderComponent.setRightLabelText(model.getRightLabel());
+    return sliderComponent;
   }
 
   private CheckboxGroupComponent buildCheckboxGroupComponent(CheckboxGroupModel model) {

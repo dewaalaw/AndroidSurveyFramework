@@ -29,29 +29,29 @@ public class SurveyActivity extends FragmentActivity {
 
     Assessment assessment = new Assessment()
         .setDescription(surveyModel.getDescription())
-        .setSurvey(survey);
-
-    // TODO - get the "real" Participant for this AssessmentSession.
-    Participant participant;
-    List<Participant> savedParticipants = Select.from(Participant.class).where(Condition.prop("assigned_id = ?").eq("123")).list();
-    if (savedParticipants.isEmpty()) {
-      participant = new Participant().setAssignedId("123");
-      participant.save();
-    } else {
-      participant = savedParticipants.get(0);
-    }
-
-    AssessmentSession.getInstance().setParticipant(participant);
-    AssessmentSession.getInstance().setAssessment(assessment);
+        .setSurvey(survey)
+        .setParticipant(getParticipant());
 
     AssessmentUiBuilder assessmentUiBuilder = new AssessmentUiBuilder(this, assessment);
     List<SurveyScreen> surveyScreens = assessmentUiBuilder.build(surveyModel);
 
     SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
+    fragment.setCurrentAssessment(assessment);
     for (SurveyScreen screen : surveyScreens) {
       fragment.addSurveyScreen(screen);
     }
 
     fragment.startSurvey(surveyScreens.get(0).getScreenId());
+  }
+
+  // TODO - get the "real" Participant for this AssessmentSession.
+  private static Participant getParticipant() {
+    List<Participant> savedParticipants = Select.from(Participant.class).where(Condition.prop("assigned_id = ?").eq("123")).list();
+    if (savedParticipants.isEmpty()) {
+      Participant participant = new Participant().setAssignedId("123");
+      participant.save();
+      return participant;
+    }
+    return savedParticipants.get(0);
   }
 }

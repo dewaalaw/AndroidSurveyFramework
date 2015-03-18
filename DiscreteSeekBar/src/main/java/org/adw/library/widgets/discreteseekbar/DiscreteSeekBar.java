@@ -124,7 +124,7 @@ public class DiscreteSeekBar extends View {
     private static final int PRESSED_STATE = android.R.attr.state_pressed;
     private static final int FOCUSED_STATE = android.R.attr.state_focused;
     private static final int PROGRESS_ANIMATION_DURATION = 75;
-    private static final int INDICATOR_DELAY_FOR_TAPS = 75;
+    private static final int INDICATOR_DELAY_FOR_TAPS = 0;
     private ThumbDrawable mThumb;
     private Drawable mTrack;
     private Drawable mScrubber;
@@ -157,6 +157,7 @@ public class DiscreteSeekBar extends View {
     private int mAnimationTarget;
     private float mDownX;
     private float mTouchSlop;
+    private long mTouchDownStartMillis;
 
     public DiscreteSeekBar(Context context) {
         this(context, null);
@@ -267,7 +268,10 @@ public class DiscreteSeekBar extends View {
         a.recycle();
 
         setNumericTransformer(new DefaultNumericTransformer());
+    }
 
+    public void setShouldDisplayValueIndicator(boolean shouldDisplay) {
+      mIndicator.setShouldDisplayValueIndicator(shouldDisplay);
     }
 
     /**
@@ -568,7 +572,8 @@ public class DiscreteSeekBar extends View {
             //We want to add a small delay here to avoid
             //poping in/out on simple taps
             removeCallbacks(mShowIndicatorRunnable);
-            postDelayed(mShowIndicatorRunnable, INDICATOR_DELAY_FOR_TAPS);
+            //postDelayed(mShowIndicatorRunnable, INDICATOR_DELAY_FOR_TAPS);
+            post(mShowIndicatorRunnable);
         } else {
             hideFloater();
         }
@@ -620,27 +625,46 @@ public class DiscreteSeekBar extends View {
         int actionMasked = MotionEventCompat.getActionMasked(event);
         switch (actionMasked) {
             case MotionEvent.ACTION_DOWN:
+                mTouchDownStartMillis = System.currentTimeMillis();
                 mDownX = event.getX();
                 startDragging(event, false);
                 updateDragging(event);
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (isDragging()) {
-                    updateDragging(event);
+                  updateDragging(event);
                 } else {
-                    final float x = event.getX();
-                    if (Math.abs(x - mDownX) > mTouchSlop) {
-                        startDragging(event, false);
-                    }
+                  final float x = event.getX();
+                  if (Math.abs(x - mDownX) > mTouchSlop) {
+                    startDragging(event, false);
+                  }
                 }
+                removeCallbacks(mDragCancelRunnable);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                stopDragging();
+                scheduleDragCancel();
                 break;
         }
         return true;
     }
+
+    private void scheduleDragCancel() {
+      long touchDownDurationMillis = System.currentTimeMillis() - mTouchDownStartMillis;
+      if (touchDownDurationMillis < 200) {
+        removeCallbacks(mDragCancelRunnable);
+        postDelayed(mDragCancelRunnable, 350);
+      } else {
+        stopDragging();
+      }
+    }
+
+    private Runnable mDragCancelRunnable = new Runnable() {
+      @Override
+      public void run() {
+        stopDragging();
+      }
+    };
 
     private boolean isInScrollingContainer() {
         return SeekBarCompat.isInScrollingContainer(getParent());
@@ -675,7 +699,7 @@ public class DiscreteSeekBar extends View {
         return mIsDragging;
     }
 
-    private void stopDragging() {
+    protected void stopDragging() {
         mIsDragging = false;
         setPressed(false);
     }

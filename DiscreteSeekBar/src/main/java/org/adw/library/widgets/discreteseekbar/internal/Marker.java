@@ -58,6 +58,7 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
     //This will be added to our measured height
     private int mSeparation;
     MarkerDrawable mMarkerDrawable;
+    private boolean mShouldDisplayValueIndicator;
 
     public Marker(Context context) {
         this(context, null);
@@ -112,6 +113,10 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
             SeekBarCompat.setOutlineProvider(this, mMarkerDrawable);
         }
         a.recycle();
+    }
+
+    public void setShouldDisplayValueIndicator(boolean shouldDisplay) {
+      mShouldDisplayValueIndicator = shouldDisplay;
     }
 
     public void resetSizes(String maxValue) {
@@ -206,7 +211,9 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 
     @Override
     public void onOpeningComplete() {
-        mNumber.setVisibility(View.VISIBLE);
+        if (mShouldDisplayValueIndicator) {
+          mNumber.setVisibility(View.VISIBLE);
+        }
         ViewCompat.animate(mNumber)
                 .alpha(1f)
                 .setDuration(100)

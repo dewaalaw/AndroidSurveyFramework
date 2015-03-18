@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
 import com.example.jaf50.survey.actions.Action;
+import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.parser.NavigationButtonModel;
 import com.example.jaf50.survey.response.ResponseCriteria;
@@ -31,6 +32,8 @@ public class SurveyScreen extends LinearLayout {
   private NavigationButtonModel previousButtonModel;
   private NavigationButtonModel nextButtonModel;
 
+  private Assessment currentAssessment;
+
   public SurveyScreen(Context context, AttributeSet attrs) {
     super(context, attrs);
     ButterKnife.inject(this);
@@ -50,20 +53,20 @@ public class SurveyScreen extends LinearLayout {
   }
 
   public List<AssessmentResponse> collectResponses() {
-    return new ResponseCollectorService().collectResponses(AssessmentSession.getInstance().getAssessment(), surveyComponents);
+    return new ResponseCollectorService().collectResponses(currentAssessment, surveyComponents);
   }
 
   /**
-   * Returns true if at least one response has been entered on this screen; false otherwise.
+   * Returns true if all responses have been entered on this screen; false otherwise.
    */
-  public boolean hasResponse() {
+  public boolean responsesEntered() {
     List<AssessmentResponse> screenResponses = collectResponses();
     for (AssessmentResponse screenResponse : screenResponses) {
-      if (!screenResponse.isEmpty()) {
-        return true;
+      if (screenResponse.isEmpty()) {
+        return false;
       }
     }
-    return false;
+    return true;
   }
 
   public Action getAction() {
@@ -94,5 +97,9 @@ public class SurveyScreen extends LinearLayout {
 
   public void setNextButtonModel(NavigationButtonModel nextButtonModel) {
     this.nextButtonModel = nextButtonModel;
+  }
+
+  public void setCurrentAssessment(Assessment currentAssessment) {
+    this.currentAssessment = currentAssessment;
   }
 }

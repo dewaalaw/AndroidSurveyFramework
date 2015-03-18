@@ -14,12 +14,12 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class SeekBarComponent extends LinearLayout implements ISurveyComponent {
+public class SliderComponent extends LinearLayout implements ISurveyComponent {
 
   private static final int DEFAULT_PROGRESS = 50;
 
   @InjectView(R.id.seekBar)
-  DiscreteSeekBar seekBar;
+  SurveySeekBar seekBar;
 
   @InjectView(R.id.leftLabelTextView)
   TextView leftLabelTextView;
@@ -29,9 +29,7 @@ public class SeekBarComponent extends LinearLayout implements ISurveyComponent {
 
   private String responseId;
 
-  private boolean valueSelected;
-
-  public SeekBarComponent(Context context, AttributeSet attrs) {
+  public SliderComponent(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
@@ -43,10 +41,12 @@ public class SeekBarComponent extends LinearLayout implements ISurveyComponent {
       @Override
       public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
         if (fromUser) {
-          valueSelected = true;
+          seekBar.setProgress(value);
+          ((SurveySeekBar) seekBar).setSelectedValue(value);
         }
       }
     });
+    seekBar.setSelectedValue(-1);
     seekBar.setProgress(DEFAULT_PROGRESS);
   }
 
@@ -66,8 +66,8 @@ public class SeekBarComponent extends LinearLayout implements ISurveyComponent {
   @Override
   public Response getResponse() {
     Response response = new Response(responseId);
-    if (valueSelected) {
-      response.addValue(seekBar.getProgress() + "");
+    if (seekBar.getSelectedValue() != SurveySeekBar.DEFAULT_VALUE) {
+      response.addValue(seekBar.getSelectedValue() + "");
     }
     return response;
   }
