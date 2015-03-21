@@ -41,6 +41,7 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
   private TimePickerDialog timePickerDialog;
   private boolean isViewAttachedToWindow = false;
   private String label;
+  private int amPmSelectionIndex;
 
   private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
     @Override
@@ -53,7 +54,8 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
       hourEditText.setText(padZeroes(calendar.get(Calendar.HOUR) == 0 ? 12 : calendar.get(Calendar.HOUR)));
       minuteEditText.setText(padZeroes(minute));
       // Spinner AM index == 1, PM index == 2.
-      amPmSpinner.setSelection(radialPickerLayout.getIsCurrentlyAmOrPm() + 1);
+      amPmSelectionIndex = radialPickerLayout.getIsCurrentlyAmOrPm() + 1;
+      amPmSpinner.setSelection(amPmSelectionIndex);
     }
   };
 
@@ -117,6 +119,7 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
     ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.am_pm_array, R.layout.spinner_selected_item_layout);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     amPmSpinner.setAdapter(adapter);
+    amPmSpinner.setSelection(amPmSelectionIndex);
 
     selectButton.setOnTouchListener(new OnTouchListener() {
       @Override
