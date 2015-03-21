@@ -76,6 +76,10 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
       setEditable(hourEditText, pickerStyle.isTextInputEnabled());
       setEditable(minuteEditText, pickerStyle.isTextInputEnabled());
       setEditable(amPmSpinner, pickerStyle.isTextInputEnabled());
+
+      // Prevents the spinner from requiring one tap to initially focus the component, and another to shows the drop-down.
+      amPmSpinner.setFocusableInTouchMode(false);
+      amPmSpinner.setFocusable(false);
     }
   }
 
@@ -110,7 +114,7 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
     hourEditText.setGravity(Gravity.CENTER);
     minuteEditText.setGravity(Gravity.CENTER);
 
-    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.am_pm_array, R.layout.spinner_layout);
+    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.am_pm_array, R.layout.spinner_selected_item_layout);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     amPmSpinner.setAdapter(adapter);
 
