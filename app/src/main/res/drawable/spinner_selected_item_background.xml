@@ -10,8 +10,8 @@
                     <padding android:left="0dip" android:top="0dip" android:right="0dip" android:bottom="0dip" />
                 </shape>
             </item>
-            <item android:bottom="1dp" android:right="1dp">
-                <bitmap android:src="@drawable/black_triangle" android:gravity="bottom|right"/>
+            <item>
+                <bitmap android:src="@drawable/arrow_down" android:gravity="bottom|center_horizontal"/>
             </item>
         </layer-list>
     </item>
@@ -26,7 +26,7 @@
                 </shape>
             </item>
             <item>
-                <bitmap android:src="@drawable/disabled_triangle" android:gravity="bottom|right"/>
+                <bitmap android:src="@drawable/arrow_down_disabled" android:gravity="bottom|center_horizontal"/>
             </item>
         </layer-list>
     </item>
@@ -40,8 +40,8 @@
                     <padding android:left="0dip" android:top="0dip" android:right="0dip" android:bottom="0dip" />
                 </shape>
             </item>
-            <item android:bottom="1dp" android:right="1dp">
-                <bitmap android:src="@drawable/black_triangle" android:gravity="bottom|right"/>
+            <item>
+                <bitmap android:src="@drawable/arrow_down" android:gravity="bottom|center_horizontal"/>
             </item>
         </layer-list>
     </item>
