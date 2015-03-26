@@ -1,17 +1,23 @@
 package com.example.jaf50.survey.response;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TimeResponse {
+@ParseClassName("TimeResponse")
+public class TimeResponse extends ParseObject {
 
-  private Date date;
   private SimpleDateFormat twelveHourFormatter = new SimpleDateFormat("h:mm a");
   private SimpleDateFormat twentyFourHourFormatter = new SimpleDateFormat("HH:mm");
   private boolean displayInTwelveHourFormat = true;
 
-  public TimeResponse(Date date) {
-    this.date = date;
+  public TimeResponse() {
+  }
+
+  public void setDate(Date date) {
+    put("date", date);
   }
 
   public boolean displayInTwelveHourFormat() {
@@ -23,7 +29,7 @@ public class TimeResponse {
   }
 
   public Date getDate() {
-    return date;
+    return getDate("date");
   }
 
   @Override
@@ -33,9 +39,9 @@ public class TimeResponse {
 
   public String getDisplayValue() {
     if (displayInTwelveHourFormat()) {
-      return twelveHourFormatter.format(date);
+      return twelveHourFormatter.format(getDate());
     } else {
-      return twentyFourHourFormatter.format(date);
+      return twentyFourHourFormatter.format(getDate());
     }
   }
 }

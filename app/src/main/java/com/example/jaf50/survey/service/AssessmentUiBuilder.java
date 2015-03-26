@@ -11,7 +11,6 @@ import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
-import com.example.jaf50.survey.domain.Value;
 import com.example.jaf50.survey.parser.CheckboxGroupModel;
 import com.example.jaf50.survey.parser.ComponentModel;
 import com.example.jaf50.survey.parser.DatePickerModel;
@@ -73,10 +72,9 @@ public class AssessmentUiBuilder {
       for (ResponseCriteriaModel responseCriteriaModel : surveyScreenModel.getResponseCriteria()) {
         if (responseCriteriaModel.getCondition() == ResponseConditionOperator.EQUALS ||
             responseCriteriaModel.getCondition() == ResponseConditionOperator.CONTAINS) {
-          AssessmentResponse assessmentResponse = new AssessmentResponse()
-              .setAssessment(assessment)
-              .setResponseId(responseCriteriaModel.getResponse().getId())
-              .setValues(buildValues(responseCriteriaModel));
+          AssessmentResponse assessmentResponse = new AssessmentResponse();
+          assessmentResponse.setResponseId(responseCriteriaModel.getResponse().getId());
+          assessmentResponse.setValues(responseCriteriaModel.getResponse().getValues());
 
           ResponseCondition responseCondition = new ResponseCondition(responseCriteriaModel.getCondition(), assessmentResponse);
           DirectContentTransition transition = new DirectContentTransition(responseCriteriaModel.getResponse().getId(),
@@ -210,13 +208,5 @@ public class AssessmentUiBuilder {
     OpenEndedComponent openEndedComponent = (OpenEndedComponent) layoutInflater.inflate(R.layout.open_ended, null);
     openEndedComponent.setResponseId(model.getResponseId());
     return openEndedComponent;
-  }
-
-  private List<Value> buildValues(ResponseCriteriaModel responseCriteriaModel) {
-    List<Value> values = new ArrayList<>();
-    for (String val : responseCriteriaModel.getResponse().getValues()) {
-      values.add(new Value().setValue(val));
-    }
-    return values;
   }
 }

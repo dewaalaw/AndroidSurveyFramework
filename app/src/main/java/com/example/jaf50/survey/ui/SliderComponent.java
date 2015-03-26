@@ -67,7 +67,7 @@ public class SliderComponent extends LinearLayout implements ISurveyComponent {
   public Response getResponse() {
     Response response = new Response(responseId);
     if (seekBar.getSelectedValue() != SurveySeekBar.DEFAULT_VALUE) {
-      response.addValue(seekBar.getSelectedValue() + "");
+      response.addValue(seekBar.getSelectedValue());
     }
     return response;
   }

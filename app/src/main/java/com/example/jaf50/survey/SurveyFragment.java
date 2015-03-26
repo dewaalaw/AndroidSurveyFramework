@@ -15,12 +15,8 @@ import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
-import com.example.jaf50.survey.service.SerializationService;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
-import org.apache.http.Header;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,39 +122,24 @@ public class SurveyFragment extends Fragment {
 
   private void endAssessment() {
     currentAssessment.setResponses(collectResponses());
-    currentAssessment.save();
 
-    List<Assessment> unsubmittedAssessments = Assessment.find(Assessment.class, "submitted = 0");
-    for (Assessment unsubmittedAssessment : unsubmittedAssessments) {
-      unsubmittedAssessment.eagerLoad();
-    }
-
-    SerializationService serializationService = new SerializationService();
-    final String json = serializationService.serialize(unsubmittedAssessments);
-
-    AsyncHttpClient client = new AsyncHttpClient();
-    RequestParams params = new RequestParams();
-    params.put("json", json);
-
-    client.post("http://validate.jsontest.com/", params, new AsyncHttpResponseHandler() {
+    currentAssessment.saveInBackground(new SaveCallback() {
       @Override
-      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-        // TODO - mark this assessment as uploaded.
-        Toast.makeText(getActivity(), "Data upload succeeded: " + new String(responseBody), Toast.LENGTH_LONG).show();
-        getActivity().finish();
-      }
-
-      @Override
-      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-        Toast.makeText(getActivity(), "Data upload failed with status " + statusCode + ": " + error.getMessage() + "\n\n" + json, Toast.LENGTH_LONG).show();
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL, new String[]{"josh7up@gmail.com"});
-        i.putExtra(Intent.EXTRA_SUBJECT, "Survey submission error");
-        i.putExtra(Intent.EXTRA_TEXT, "Failed sending json data: " + json);
-        try {
-          startActivity(Intent.createChooser(i, "Send mail..."));
-        } catch (android.content.ActivityNotFoundException ex) {
+      public void done(ParseException e) {
+        if (e == null) {
+          Toast.makeText(getActivity(), "Data upload succeeded: " + currentAssessment.toString(), Toast.LENGTH_LONG).show();
+          getActivity().finish();
+        } else {
+          Toast.makeText(getActivity(), "Data upload failed: " + e, Toast.LENGTH_LONG).show();
+          Intent i = new Intent(Intent.ACTION_SEND);
+          i.setType("message/rfc822");
+          i.putExtra(Intent.EXTRA_EMAIL, new String[]{"josh7up@gmail.com"});
+          i.putExtra(Intent.EXTRA_SUBJECT, "Survey submission error");
+          i.putExtra(Intent.EXTRA_TEXT, "Failed sending data. Stack trace = " + e);
+          try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+          } catch (android.content.ActivityNotFoundException ex) {
+          }
         }
       }
     });

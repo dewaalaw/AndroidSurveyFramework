@@ -9,8 +9,10 @@ import com.example.jaf50.survey.domain.Survey;
 import com.example.jaf50.survey.parser.SurveyModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
 import com.example.jaf50.survey.service.AssessmentUiBuilder;
-import com.orm.query.Condition;
-import com.orm.query.Select;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.List;
 
@@ -21,37 +23,50 @@ public class SurveyActivity extends FragmentActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey);
 
+    ParseQuery<ParseObject> query = ParseQuery.getQuery("Participant");
+    query.whereEqualTo("assignedId", "123");
+    query.fromLocalDatastore();
+    query.findInBackground(new FindCallback<ParseObject>() {
+      @Override
+      public void done(List<ParseObject> parseObjects, ParseException e) {
+        if (e != null) {
+          // TODO - Exception occurred.
+        } else {
+          Participant participant;
+          if (parseObjects.isEmpty()) {
+            participant = new Participant();
+            participant.setAssignedId("123");
+          } else {
+            participant = (Participant) parseObjects.get(0);
+          }
+
+          onQueryCompleted(participant);
+        }
+      }
+    });
+
+  }
+
+  private void onQueryCompleted(Participant participant) {
     AssessmentParserService assessmentParserService = new AssessmentParserService();
     SurveyModel surveyModel = assessmentParserService.parse(getResources().openRawResource(R.raw.survey));
 
-    Survey survey = new Survey().setName("My Survey");
-    survey.save();
+    Survey survey = new Survey();
+    survey.setName("My Survey");
 
-    Assessment assessment = new Assessment()
-        .setDescription(surveyModel.getDescription())
-        .setSurvey(survey)
-        .setParticipant(getParticipant());
+    Assessment assessment = new Assessment();
+    assessment.setSurvey(survey);
+    assessment.setParticipant(participant);
 
     AssessmentUiBuilder assessmentUiBuilder = new AssessmentUiBuilder(this, assessment);
-    List<SurveyScreen> surveyScreens = assessmentUiBuilder.build(surveyModel);
+    final List<SurveyScreen> surveyScreens = assessmentUiBuilder.build(surveyModel);
 
-    SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
+    final SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
     fragment.setCurrentAssessment(assessment);
     for (SurveyScreen screen : surveyScreens) {
       fragment.addSurveyScreen(screen);
     }
 
     fragment.startSurvey(surveyScreens.get(0).getScreenId());
-  }
-
-  // TODO - get the "real" Participant for this AssessmentSession.
-  private static Participant getParticipant() {
-    List<Participant> savedParticipants = Select.from(Participant.class).where(Condition.prop("assigned_id = ?").eq("123")).list();
-    if (savedParticipants.isEmpty()) {
-      Participant participant = new Participant().setAssignedId("123");
-      participant.save();
-      return participant;
-    }
-    return savedParticipants.get(0);
   }
 }

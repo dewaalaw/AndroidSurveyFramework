@@ -50,7 +50,8 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
       calendar.clear();
       calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
       calendar.set(Calendar.MINUTE, minute);
-      selectedTime = new TimeResponse(calendar.getTime());
+      selectedTime = new TimeResponse();
+      selectedTime.setDate(calendar.getTime());
       hourEditText.setText(padZeroes(calendar.get(Calendar.HOUR) == 0 ? 12 : calendar.get(Calendar.HOUR)));
       minuteEditText.setText(padZeroes(minute));
       // Spinner AM index == 1, PM index == 2.

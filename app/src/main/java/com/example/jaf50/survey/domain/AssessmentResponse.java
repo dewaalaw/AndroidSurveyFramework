@@ -1,144 +1,54 @@
 package com.example.jaf50.survey.domain;
 
-import com.google.gson.annotations.Expose;
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AssessmentResponse extends SugarRecord<AssessmentResponse> {
-
-  Assessment assessment;
-  @Expose
-  Date responseDate;
-  @Expose
-  String responseId;
-  @Expose @Ignore
-  List<Value> values = new ArrayList<>();
+@ParseClassName("AssessmentResponse")
+public class AssessmentResponse extends ParseObject {
 
   public AssessmentResponse() {
   }
 
-  public AssessmentResponse(String responseId) {
-    this.responseId = responseId;
-  }
-
   public String getResponseId() {
-    return responseId;
+    return getString("responseId");
   }
 
-  public AssessmentResponse setResponseId(String responseId) {
-    this.responseId = responseId;
-    return this;
+  public void setResponseId(String responseId) {
+    put("responseId", responseId);
   }
 
-  public void eagerLoad() {
-    this.values = loadValues();
+  public List<Object> getValues() {
+    return getList("values");
   }
 
-  private List<Value> loadValues() {
-    if (values == null || values.isEmpty()) {
-      values = Value.find(Value.class, "response = ?", getId() + "");
-    }
-    return values;
+  public void setValues(List<Object> values) {
+    remove("values");
+    addAll("values", values);
   }
 
-  public List<Value> getValues() {
-    return values;
-  }
-
-  public AssessmentResponse setValues(List<Value> values) {
-    for (Value value : values) {
-      value.setResponse(this);
-    }
-    this.values = values;
-    return this;
-  }
-
-  public AssessmentResponse addValue(Value value) {
-    this.values.add(value);
-    value.setResponse(this);
-    return this;
-  }
-
-  public AssessmentResponse addValue(Object value) {
-    Value v = new Value().setValue(value.toString());
-    this.values.add(v);
-    v.setResponse(this);
-    return this;
-  }
-
-  public Assessment getAssessment() {
-    return assessment;
-  }
-
-  public AssessmentResponse setAssessment(Assessment assessment) {
-    this.assessment = assessment;
-    return this;
+  public void addValue(Object value) {
+    add("values", value);
   }
 
   public Date getResponseDate() {
-    return responseDate;
+    return getDate("responseDate");
   }
 
-  public AssessmentResponse setResponseDate(Date responseDate) {
-    this.responseDate = responseDate;
-    return this;
-  }
-
-  @Override
-  public void save() {
-    super.save();
-    for (Value value : values) {
-      value.setResponse(this);
-      value.save();
-    }
-    super.save();
+  public void setResponseDate(Date responseDate) {
+    put("responseDate", responseDate);
   }
 
   public boolean isEmpty() {
-    return values.isEmpty();
+    return getValues().isEmpty();
   }
 
   public boolean contains(AssessmentResponse otherResponse) {
     if (otherResponse == null) {
       return false;
     }
-    return values.containsAll(otherResponse.getValues());
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    AssessmentResponse that = (AssessmentResponse) o;
-
-    if (responseId != null ? !responseId.equals(that.responseId) : that.responseId != null)
-      return false;
-    if (values != null ? !values.equals(that.values) : that.values != null) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = assessment != null ? assessment.hashCode() : 0;
-    result = 31 * result + (responseDate != null ? responseDate.hashCode() : 0);
-    result = 31 * result + (responseId != null ? responseId.hashCode() : 0);
-    result = 31 * result + (values != null ? values.hashCode() : 0);
-    return result;
-  }
-
-  @Override
-  public String toString() {
-    return "SurveyResponse{" +
-        "survey=" + assessment +
-        ", responseDate=" + responseDate +
-        ", responseId='" + responseId + '\'' +
-        ", values=" + values +
-        '}';
+    return getValues().containsAll(otherResponse.getValues());
   }
 }

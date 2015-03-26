@@ -5,7 +5,7 @@ import java.util.List;
 public class ResponseModel {
 
   private String id;
-  private List<String> values;
+  private List<Object> values;
 
   public String getId() {
     return id;
@@ -15,11 +15,11 @@ public class ResponseModel {
     this.id = id;
   }
 
-  public List<String> getValues() {
+  public List<Object> getValues() {
     return values;
   }
 
-  public void setValues(List<String> values) {
+  public void setValues(List<Object> values) {
     this.values = values;
   }
 }

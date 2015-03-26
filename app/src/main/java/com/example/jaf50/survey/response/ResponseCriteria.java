@@ -36,8 +36,8 @@ public class ResponseCriteria {
 
   public void addCondition(ResponseCondition responseCondition) {
     AssessmentResponse expectedResponse = responseCondition.getExpectedResponse();
-    if (variableToResponseConditions.containsKey(expectedResponse.getId())) {
-      List<ResponseCondition> currentExpectedResponseConditions = variableToResponseConditions.get(expectedResponse.getId());
+    if (variableToResponseConditions.containsKey(expectedResponse.getResponseId())) {
+      List<ResponseCondition> currentExpectedResponseConditions = variableToResponseConditions.get(expectedResponse.getResponseId());
       currentExpectedResponseConditions.add(responseCondition);
     } else {
       List<ResponseCondition> conditions = new ArrayList<>();
