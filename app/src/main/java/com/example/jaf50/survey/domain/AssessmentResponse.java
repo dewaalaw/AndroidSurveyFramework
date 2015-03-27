@@ -45,10 +45,36 @@ public class AssessmentResponse extends ParseObject {
     return getValues().isEmpty();
   }
 
-  public boolean contains(AssessmentResponse otherResponse) {
+  public boolean containsResponse(AssessmentResponse otherResponse) {
     if (otherResponse == null) {
       return false;
     }
+
+    String thisResponseId = getResponseId();
+    String otherResponseId = otherResponse.getResponseId();
+    if (thisResponseId != null ? !thisResponseId.equals(otherResponseId) : otherResponseId != null) {
+      return false;
+    }
+
     return getValues().containsAll(otherResponse.getValues());
+  }
+
+  public boolean equalsResponse(AssessmentResponse otherResponse) {
+    if (this == otherResponse) return true;
+    if (otherResponse == null || getClass() != otherResponse.getClass()) return false;
+
+    String thisResponseId = getResponseId();
+    String otherResponseId = otherResponse.getResponseId();
+    if (thisResponseId != null ? !thisResponseId.equals(otherResponseId) : otherResponseId != null) {
+      return false;
+    }
+
+    List<Object> theseValues = getValues();
+    List<Object> otherValues = otherResponse.getValues();
+    if (theseValues != null ? !theseValues.equals(otherValues) : otherValues != null) {
+      return false;
+    }
+
+    return true;
   }
 }

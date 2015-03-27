@@ -19,9 +19,9 @@ public class ResponseCondition {
 
   public boolean isSatisfied(AssessmentResponse response) {
     if (responseConditionOperator.equals(ResponseConditionOperator.EQUALS)) {
-      return expectedResponse.equals(response);
+      return expectedResponse.equalsResponse(response);
     } else if (responseConditionOperator.equals(ResponseConditionOperator.CONTAINS)) {
-      return response.contains(expectedResponse);
+      return response.containsResponse(expectedResponse);
     } else if (responseConditionOperator.equals(ResponseConditionOperator.DEFAULT)) {
       return true;
     } else if (responseConditionOperator.equals(ResponseConditionOperator.COMPLETE)) {

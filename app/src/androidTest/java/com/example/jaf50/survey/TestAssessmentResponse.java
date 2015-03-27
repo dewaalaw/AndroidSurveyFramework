@@ -6,15 +6,34 @@ import com.example.jaf50.survey.domain.AssessmentResponse;
 
 public class TestAssessmentResponse extends AndroidTestCase {
 
+  @Override
+  protected void setUp() throws Exception {
+    SurveyApplication.registerParseClasses();
+  }
+
   public void test() {
-    assertEquals(new AssessmentResponse(), new AssessmentResponse());
+    assertTrue(new AssessmentResponse().equalsResponse(new AssessmentResponse()));
   }
 
   public void test2() {
-    assertEquals(new AssessmentResponse().setResponseId("one"), new AssessmentResponse().setResponseId("one"));
+    AssessmentResponse response1 = new AssessmentResponse();
+    response1.setResponseId("one");
+
+    AssessmentResponse response2 = new AssessmentResponse();
+    response2.setResponseId("one");
+
+    assertTrue(response1.equalsResponse(response2));
   }
 
   public void test3() {
-    assertEquals(new AssessmentResponse().setResponseId("one").addValue("val1"), new AssessmentResponse().setResponseId("one").addValue("val1"));
+    AssessmentResponse response1 = new AssessmentResponse();
+    response1.setResponseId("one");
+    response1.addValue("val1");
+
+    AssessmentResponse response2 = new AssessmentResponse();
+    response2.setResponseId("one");
+    response2.addValue("val1");
+
+    assertTrue(response1.equalsResponse(response2));
   }
 }
