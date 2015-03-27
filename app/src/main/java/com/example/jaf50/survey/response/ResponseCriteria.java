@@ -8,6 +8,8 @@ import java.util.List;
 
 public class ResponseCriteria {
 
+  private boolean isDefault = false;
+
   private HashMap<String, List<ResponseCondition>> variableToResponseConditions = new HashMap<>();
 
   public boolean isSatisfied(List<AssessmentResponse> responses) {
@@ -44,5 +46,13 @@ public class ResponseCriteria {
       conditions.add(responseCondition);
       variableToResponseConditions.put(expectedResponse.getResponseId(), conditions);
     }
+  }
+
+  public void setDefault(boolean isDefault) {
+    this.isDefault = isDefault;
+  }
+
+  public boolean isDefault() {
+    return isDefault;
   }
 }

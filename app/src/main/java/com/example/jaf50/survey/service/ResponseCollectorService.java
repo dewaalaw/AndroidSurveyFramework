@@ -1,6 +1,5 @@
 package com.example.jaf50.survey.service;
 
-import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.response.Response;
 import com.example.jaf50.survey.ui.ISurveyComponent;
@@ -11,7 +10,7 @@ import java.util.List;
 
 public class ResponseCollectorService {
 
-  public List<AssessmentResponse> collectResponses(Assessment assessment, List<ISurveyComponent> surveyComponents) {
+  public List<AssessmentResponse> collectResponses(List<ISurveyComponent> surveyComponents) {
     List<AssessmentResponse> responses = new ArrayList<>();
     Date responseDate = new Date();
     for (ISurveyComponent surveyComponent : surveyComponents) {

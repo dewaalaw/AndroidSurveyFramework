@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
 import com.example.jaf50.survey.actions.Action;
-import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.parser.NavigationButtonModel;
 import com.example.jaf50.survey.response.ResponseCriteria;
@@ -32,8 +31,6 @@ public class SurveyScreen extends LinearLayout {
   private NavigationButtonModel previousButtonModel;
   private NavigationButtonModel nextButtonModel;
 
-  private Assessment currentAssessment;
-
   public SurveyScreen(Context context, AttributeSet attrs) {
     super(context, attrs);
     ButterKnife.inject(this);
@@ -53,7 +50,7 @@ public class SurveyScreen extends LinearLayout {
   }
 
   public List<AssessmentResponse> collectResponses() {
-    return new ResponseCollectorService().collectResponses(currentAssessment, surveyComponents);
+    return new ResponseCollectorService().collectResponses(surveyComponents);
   }
 
   /**
@@ -70,10 +67,19 @@ public class SurveyScreen extends LinearLayout {
   }
 
   public Action getAction() {
-    List<AssessmentResponse> responses = collectResponses();
-    for (ResponseCriteria responseCriteria: actionMap.keySet()) {
-      if (responseCriteria.isSatisfied(responses)) {
-        return actionMap.get(responseCriteria);
+    if (responsesEntered()) {
+      List<AssessmentResponse> responses = collectResponses();
+      for (ResponseCriteria responseCriteria : actionMap.keySet()) {
+        if (responseCriteria.isSatisfied(responses)) {
+          return actionMap.get(responseCriteria);
+        }
+      }
+    } else {
+      // Return the default response criteria, if one exists.
+      for (ResponseCriteria responseCriteria : actionMap.keySet()) {
+        if (responseCriteria.isDefault()) {
+          return actionMap.get(responseCriteria);
+        }
       }
     }
     return null;
@@ -97,9 +103,5 @@ public class SurveyScreen extends LinearLayout {
 
   public void setNextButtonModel(NavigationButtonModel nextButtonModel) {
     this.nextButtonModel = nextButtonModel;
-  }
-
-  public void setCurrentAssessment(Assessment currentAssessment) {
-    this.currentAssessment = currentAssessment;
   }
 }

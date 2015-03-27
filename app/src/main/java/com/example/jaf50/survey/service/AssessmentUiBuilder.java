@@ -60,8 +60,6 @@ public class AssessmentUiBuilder {
     for (SurveyScreenModel surveyScreenModel : surveyModel.getScreens()) {
       SurveyScreen surveyScreen = (SurveyScreen) layoutInflater.inflate(R.layout.survey_content, null);
       surveyScreen.setScreenId(surveyScreenModel.getId());
-      surveyScreen.setCurrentAssessment(assessment);
-
       surveyScreen.setPreviousButtonModel(getButtonModel(surveyScreenModel.getPrevious(), true, "Previous"));
       surveyScreen.setNextButtonModel(getButtonModel(surveyScreenModel.getNext(), true, "Next"));
 
@@ -87,6 +85,7 @@ public class AssessmentUiBuilder {
           surveyScreen.addResponseCriteria(responseCriteria, transition);
         } else if (responseCriteriaModel.getCondition() == ResponseConditionOperator.DEFAULT) {
           ResponseCriteria defaultResponseCriteria = new ResponseCriteria();
+          defaultResponseCriteria.setDefault(true);
           defaultResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.DEFAULT, new AssessmentResponse()));
 
           surveyScreen.addResponseCriteria(defaultResponseCriteria, new DirectContentTransition(null,
