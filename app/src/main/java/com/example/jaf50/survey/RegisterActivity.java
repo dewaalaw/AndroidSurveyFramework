@@ -27,5 +27,6 @@ public class RegisterActivity extends FragmentActivity implements RegisterFragme
   private void openSurveys() {
     Intent surveyIntent = new Intent(this, SurveyActivity.class);
     startActivity(surveyIntent);
+    finish();
   }
 }
