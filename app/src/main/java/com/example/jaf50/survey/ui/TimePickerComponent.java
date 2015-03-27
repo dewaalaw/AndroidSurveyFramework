@@ -14,12 +14,12 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
 import com.example.jaf50.survey.R;
 import com.example.jaf50.survey.response.Response;
-import com.example.jaf50.survey.response.TimeResponse;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.lang.reflect.Field;
 import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -36,7 +36,7 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
   Spinner amPmSpinner;
 
   private PickerStyle pickerStyle;
-  private TimeResponse selectedTime;
+  private Date selectedTime;
   private String responseId;
   private TimePickerDialog timePickerDialog;
   private boolean isViewAttachedToWindow = false;
@@ -50,8 +50,7 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
       calendar.clear();
       calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
       calendar.set(Calendar.MINUTE, minute);
-      selectedTime = new TimeResponse();
-      selectedTime.setDate(calendar.getTime());
+      selectedTime = calendar.getTime();
       hourEditText.setText(padZeroes(calendar.get(Calendar.HOUR) == 0 ? 12 : calendar.get(Calendar.HOUR)));
       minuteEditText.setText(padZeroes(minute));
       // Spinner AM index == 1, PM index == 2.
@@ -128,7 +127,7 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
         if (event.getAction() == MotionEvent.ACTION_UP) {
           Calendar calendar = Calendar.getInstance();
           if (selectedTime != null) {
-            calendar.setTime(selectedTime.getDate());
+            calendar.setTime(selectedTime);
           }
           timePickerDialog = TimePickerDialog.newInstance(
               onTimeSetListener,

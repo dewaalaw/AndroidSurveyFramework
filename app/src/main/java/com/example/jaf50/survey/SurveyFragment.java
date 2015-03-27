@@ -15,8 +15,8 @@ import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
+import com.example.jaf50.survey.parse.sdk.BetterSaveCallback;
 import com.parse.ParseException;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,24 +116,26 @@ public class SurveyFragment extends Fragment {
 
   private void endAssessment() {
     currentAssessment.setResponses(collectResponses());
+    currentAssessment.pinInBackground();
 
-    currentAssessment.saveInBackground(new SaveCallback() {
+    currentAssessment.saveInBackground(new BetterSaveCallback() {
       @Override
-      public void done(ParseException e) {
-        if (e == null) {
-          Toast.makeText(getActivity(), "Data upload succeeded: " + currentAssessment.toString(), Toast.LENGTH_LONG).show();
-          getActivity().finish();
-        } else {
-          Toast.makeText(getActivity(), "Data upload failed: " + e, Toast.LENGTH_LONG).show();
-          Intent i = new Intent(Intent.ACTION_SEND);
-          i.setType("message/rfc822");
-          i.putExtra(Intent.EXTRA_EMAIL, new String[]{"josh7up@gmail.com"});
-          i.putExtra(Intent.EXTRA_SUBJECT, "Survey submission error");
-          i.putExtra(Intent.EXTRA_TEXT, "Failed sending data. Stack trace = " + e);
-          try {
-            startActivity(Intent.createChooser(i, "Send mail..."));
-          } catch (android.content.ActivityNotFoundException ex) {
-          }
+      protected void onSuccess() {
+        Toast.makeText(getActivity(), "Data upload succeeded: " + currentAssessment.toString(), Toast.LENGTH_LONG).show();
+        getActivity().finish();
+      }
+
+      @Override
+      protected void onFailure(ParseException e) {
+        Toast.makeText(getActivity(), "Data upload failed: " + e, Toast.LENGTH_LONG).show();
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{"josh7up@gmail.com"});
+        i.putExtra(Intent.EXTRA_SUBJECT, "Survey submission error");
+        i.putExtra(Intent.EXTRA_TEXT, "Failed sending data. Stack trace = " + e);
+        try {
+          startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
         }
       }
     });
