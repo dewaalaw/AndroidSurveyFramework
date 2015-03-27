@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+              android:padding="20dp"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:layout_marginBottom="2dp"
+        android:text="Username:"/>
+
+    <com.beardedhen.androidbootstrap.BootstrapEditText
+        android:id="@+id/usernameTextBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter username"
+        android:textSize="20dp"
+        android:gravity="center_vertical"
+        android:singleLine="true"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:layout_marginBottom="2dp"
+        android:gravity="center_vertical"
+        android:text="Password:"/>
+
+    <com.beardedhen.androidbootstrap.BootstrapEditText
+        android:id="@+id/passwordTextBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter password"
+        android:textSize="20dp"
+        android:singleLine="true"/>
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/registerButton"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        bootstrap:bb_roundedCorners="true"
+        bootstrap:bb_type="success"
+        android:textSize="20dp"
+        android:text="Register"/>
+
+</LinearLayout>
