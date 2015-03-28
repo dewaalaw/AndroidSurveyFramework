@@ -150,7 +150,7 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
   public Response getResponse() {
     Response response = new Response(responseId);
     if (selectedDate != null) {
-      response.addValue(selectedDate);
+      response.addValue(dateParser.format(selectedDate));
     }
     return response;
   }

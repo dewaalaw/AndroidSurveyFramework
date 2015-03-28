@@ -3,7 +3,6 @@ package com.example.jaf50.survey.domain;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
-import java.util.Date;
 import java.util.List;
 
 @ParseClassName("AssessmentResponse")
@@ -33,11 +32,11 @@ public class AssessmentResponse extends ParseObject {
     add("values", value);
   }
 
-  public Date getResponseDate() {
-    return getDate("responseDate");
+  public String getResponseDate() {
+    return getString("responseDate");
   }
 
-  public void setResponseDate(Date responseDate) {
+  public void setResponseDate(String responseDate) {
     put("responseDate", responseDate);
   }
 

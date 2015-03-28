@@ -18,6 +18,7 @@ import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -42,6 +43,7 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
   private boolean isViewAttachedToWindow = false;
   private String label;
   private int amPmSelectionIndex;
+  private SimpleDateFormat responseFormatter = new SimpleDateFormat("HH:mm");
 
   private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
     @Override
@@ -155,7 +157,7 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
   public Response getResponse() {
     Response response = new Response(responseId);
     if (selectedTime != null) {
-      response.addValue(selectedTime);
+      response.addValue(responseFormatter.format(selectedTime));
     }
     return response;
   }
