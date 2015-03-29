@@ -2,7 +2,6 @@ package com.example.jaf50.survey;
 
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
-import com.example.jaf50.survey.domain.Survey;
 import com.orm.SugarApp;
 import com.parse.Parse;
 import com.parse.ParseObject;
@@ -13,7 +12,6 @@ public class SurveyApplication extends SugarApp {
   private static final String CLIENT_KEY = "JPImlAeJvXtmuaTH1mmzcqe87zuOtXaUvgJTzERX";
 
   public static void registerParseClasses() {
-    ParseObject.registerSubclass(Survey.class);
     ParseObject.registerSubclass(Assessment.class);
     ParseObject.registerSubclass(AssessmentResponse.class);
   }

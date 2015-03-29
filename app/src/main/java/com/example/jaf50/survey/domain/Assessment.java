@@ -13,12 +13,12 @@ public class Assessment extends ParseObject {
   public Assessment() {
   }
 
-  public Survey getSurvey() {
-    return (Survey) get("survey");
+  public String getSurveyName() {
+    return getString("surveyName");
   }
 
-  public void setSurvey(Survey survey) {
-    put("survey", survey);
+  public void setSurveyName(String surveyName) {
+    put("surveyName", surveyName);
   }
 
   public void setResponses(AssessmentResponse... responses) {
