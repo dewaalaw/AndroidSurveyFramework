@@ -1,8 +1,12 @@
 package com.example.jaf50.survey;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
 
+import com.buzzbox.mob.android.scheduler.SchedulerManager;
+import com.example.jaf50.survey.alarm.LaunchSurveyTask;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.parser.SurveyModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
@@ -17,6 +21,9 @@ public class SurveyActivity extends FragmentActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey);
+
+    SchedulerManager.getInstance().saveTask(this, "* * * * *", LaunchSurveyTask.class);
+    SchedulerManager.getInstance().restart(this, LaunchSurveyTask.class);
 
     AssessmentParserService assessmentParserService = new AssessmentParserService();
     final SurveyModel surveyModel = assessmentParserService.parse(getResources().openRawResource(R.raw.survey));
@@ -35,5 +42,11 @@ public class SurveyActivity extends FragmentActivity {
     }
 
     fragment.startSurvey(surveyScreens.get(0).getScreenId());
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    Toast.makeText(this, "In onNewIntent(), intent = " + intent, Toast.LENGTH_LONG).show();
   }
 }
