@@ -1,8 +1,8 @@
 package com.example.jaf50.survey.alarm;
 
 import android.content.ContextWrapper;
+import android.content.Intent;
 
-import com.buzzbox.mob.android.scheduler.NotificationMessage;
 import com.buzzbox.mob.android.scheduler.Task;
 import com.buzzbox.mob.android.scheduler.TaskResult;
 import com.example.jaf50.survey.RegisterActivity;
@@ -11,21 +11,22 @@ public class LaunchSurveyTask implements Task {
 
   @Override
   public TaskResult doWork(ContextWrapper contextWrapper) {
-    TaskResult result = new TaskResult();
-    result.addMessage(
-        new NotificationMessage(
-            "Complete a Survey", "Please complete a survey")
-            .setNotificationClickIntentClass(RegisterActivity.class));
-    return result;
+    try {
+      Intent surveyIntent = new Intent(contextWrapper, RegisterActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      contextWrapper.startActivity(surveyIntent);
+    } catch (Exception e) {
+    }
+
+    return new TaskResult();
   }
 
   @Override
   public String getTitle() {
-    return "Beep!";
+    return "Survey";
   }
 
   @Override
   public String getId() {
-    return "Beep";
+    return "LaunchSurvey";
   }
 }
