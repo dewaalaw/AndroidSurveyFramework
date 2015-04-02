@@ -60,6 +60,8 @@ public class SurveyFragment extends Fragment {
           if (action instanceof DirectContentTransition) {
             transition((DirectContentTransition) action);
           } else if (action instanceof EndAssessmentAction) {
+            previousButton.setEnabled(false);
+            nextButton.setEnabled(false);
             endAssessment();
           }
         }
@@ -127,7 +129,9 @@ public class SurveyFragment extends Fragment {
 
       @Override
       protected void onFailure(ParseException e) {
-        Toast.makeText(getActivity(), "Data upload failed: " + e, Toast.LENGTH_LONG).show();
+        if (getActivity() != null) {
+          Toast.makeText(getActivity(), "Data upload failed: " + e, Toast.LENGTH_LONG).show();
+        }
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL, new String[]{"josh7up@gmail.com"});
