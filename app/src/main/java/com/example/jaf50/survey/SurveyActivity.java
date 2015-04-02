@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
-import com.buzzbox.mob.android.scheduler.SchedulerManager;
-import com.example.jaf50.survey.alarm.LaunchSurveyTask;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.parser.SurveyModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
@@ -22,14 +20,14 @@ public class SurveyActivity extends FragmentActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey);
 
-    SchedulerManager.getInstance().saveTask(this, "* * * * *", LaunchSurveyTask.class);
-    SchedulerManager.getInstance().restart(this, LaunchSurveyTask.class);
+    //SchedulerManager.getInstance().saveTask(this, "* * * * *", LaunchSurveyTask.class);
+    //SchedulerManager.getInstance().restart(this, LaunchSurveyTask.class);
 
     AssessmentParserService assessmentParserService = new AssessmentParserService();
-    final SurveyModel surveyModel = assessmentParserService.parse(getResources().openRawResource(R.raw.survey));
+    final SurveyModel surveyModel = assessmentParserService.parse(getResources().openRawResource(R.raw.real_survey));
 
     Assessment assessment = new Assessment();
-    assessment.setSurveyName("Demo Survey");
+    assessment.setSurveyName("Beeped");
     assessment.setParticipant(ParseUser.getCurrentUser());
 
     AssessmentUiBuilder assessmentUiBuilder = new AssessmentUiBuilder(SurveyActivity.this, assessment);
