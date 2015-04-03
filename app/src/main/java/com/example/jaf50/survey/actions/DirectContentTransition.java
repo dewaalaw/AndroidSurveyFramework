@@ -4,12 +4,12 @@ public class DirectContentTransition implements Action {
 
   private String fromId;
   private String toId;
-  private boolean allowsSkipping;
+  private boolean requiresResponse;
 
-  public DirectContentTransition(String fromId, String toId, boolean allowsSkipping) {
+  public DirectContentTransition(String fromId, String toId, boolean requiresResponse) {
     setFromId(fromId);
     setToId(toId);
-    setAllowsSkipping(allowsSkipping);
+    setRequiresResponse(requiresResponse);
   }
 
   public void setFromId(String fromId) {
@@ -28,12 +28,12 @@ public class DirectContentTransition implements Action {
     return toId;
   }
 
-  public boolean allowsSkipping() {
-    return allowsSkipping;
+  public boolean requiresResponse() {
+    return requiresResponse;
   }
 
-  public void setAllowsSkipping(boolean allowsSkipping) {
-    this.allowsSkipping = allowsSkipping;
+  public void setRequiresResponse(boolean requiresResponse) {
+    this.requiresResponse = requiresResponse;
   }
 
   @Override

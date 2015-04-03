@@ -78,7 +78,7 @@ public class AssessmentUiBuilderService {
           ResponseCondition responseCondition = new ResponseCondition(responseCriteriaModel.getCondition(), assessmentResponse);
           DirectContentTransition transition = new DirectContentTransition(responseCriteriaModel.getResponse().getId(),
               responseCriteriaModel.getTransition(),
-              false);
+              responseCriteriaModel.requiresResponse());
 
           ResponseCriteria responseCriteria = new ResponseCriteria();
           responseCriteria.addCondition(responseCondition);
@@ -91,7 +91,7 @@ public class AssessmentUiBuilderService {
 
           surveyScreen.addResponseCriteria(defaultResponseCriteria, new DirectContentTransition(null,
               responseCriteriaModel.getTransition(),
-              responseCriteriaModel.allowsSkipping()));
+              responseCriteriaModel.requiresResponse()));
         } else if (responseCriteriaModel.getCondition() == ResponseConditionOperator.COMPLETE) {
           ResponseCriteria surveyCompleteResponseCriteria = new ResponseCriteria();
           surveyCompleteResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.COMPLETE, new AssessmentResponse()));

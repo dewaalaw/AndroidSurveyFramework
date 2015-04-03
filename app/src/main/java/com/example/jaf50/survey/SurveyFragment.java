@@ -85,7 +85,7 @@ public class SurveyFragment extends Fragment {
   }
 
   private void transition(final DirectContentTransition action) {
-    if (action.allowsSkipping() && !currentScreen.responsesEntered()) {
+    if (action.requiresResponse() && !currentScreen.responsesEntered()) {
       new SweetAlertDialog(getActivity(), SweetAlertDialog.NORMAL_TYPE)
           .setTitleText("Skip Question?")
           .setContentText("Would you like to skip this question?")
