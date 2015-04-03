@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.parser.SurveyModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
-import com.example.jaf50.survey.service.AssessmentUiBuilder;
+import com.example.jaf50.survey.service.AssessmentUiBuilderService;
 import com.parse.ParseUser;
 
 import java.util.List;
@@ -30,8 +30,8 @@ public class SurveyActivity extends FragmentActivity {
     assessment.setSurveyName("Beeped");
     assessment.setParticipant(ParseUser.getCurrentUser());
 
-    AssessmentUiBuilder assessmentUiBuilder = new AssessmentUiBuilder(SurveyActivity.this, assessment);
-    final List<SurveyScreen> surveyScreens = assessmentUiBuilder.build(surveyModel);
+    AssessmentUiBuilderService assessmentUiBuilderService = new AssessmentUiBuilderService(SurveyActivity.this, assessment);
+    final List<SurveyScreen> surveyScreens = assessmentUiBuilderService.build(surveyModel);
 
     final SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
     fragment.setCurrentAssessment(assessment);

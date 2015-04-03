@@ -10,7 +10,7 @@
             "components": [
                 {
                     "type": "text",
-                    "label": "[b]The following questions ask about how you feel [u]RIGHT NOW[/u].[/b]"
+                    "label": "<b>The following questions ask about how you feel <u>RIGHT NOW</u>.</b>"
                 }
             ],
             "responseCriteria": [
@@ -25,7 +25,7 @@
             "components": [
                 {
                     "type": "text",
-                    "label": "[b]On the following screens are descriptions of [u]specific[/u] feelings you might be experiencing.  Please rate how well each describes what you feel [u]RIGHT NOW[/u].[/b]"
+                    "label": "<b>On the following screens are descriptions of <u>specific</u> feelings you might be experiencing.  Please rate how well each describes what you feel <u>RIGHT NOW</u>.</b>"
                 }
             ],
             "responseCriteria": [
@@ -40,7 +40,7 @@
             "components": [
                 {
                     "type": "text",
-                    "label": "How [b][u]HAPPY[/u][/b] do you feel right now?"
+                    "label": "How <b><u>HAPPY</u></b> do you feel right now?"
                 },
                 {
                   "type": "slider",
@@ -61,7 +61,7 @@
             "components": [
                 {
                     "type": "text",
-                    "label": "How [b][u]TENSE/ANXIOUS[/u][/b] do you feel right now?"
+                    "label": "How <b><u>TENSE/ANXIOUS</u></b> do you feel right now?"
                 },
                 {
                   "type": "slider",
@@ -82,7 +82,7 @@
             "components": [
                 {
                     "type": "text",
-                    "label": "How much [b][u]ENJOYMENT/FUN[/u][/b] do you feel right now?"
+                    "label": "How much <b><u>ENJOYMENT/FUN</u></b> do you feel right now?"
                 },
                 {
                   "type": "slider",
@@ -103,7 +103,7 @@
             "components": [
                 {
                     "type": "text",
-                    "label": "How [b][u]DEPRESSED/BLUE[/u][/b] do you feel right now?"
+                    "label": "How <b><u>DEPRESSED/BLUE</u></b> do you feel right now?"
                 },
                 {
                   "type": "slider",
@@ -124,7 +124,7 @@
             "components": [
                 {
                     "type": "text",
-                    "label": "[b]The next questions ask about significant events that happened [u]since the last assessment[/u].[/b]"
+                    "label": "<b>The next questions ask about significant events that happened <u>since the last assessment</u>.</b>"
                 }
             ],
             "responseCriteria": [
@@ -139,7 +139,7 @@
             "components": [
                 {
                     "type": "text",
-                    "label": "Did anything [b][u]stressful[/u][/b] occur since the last assessment?  A stressful event is any event, even a minor one, which negatively affected you."
+                    "label": "Did anything <b><u>stressful</u></b> occur since the last assessment?  A stressful event is any event, even a minor one, which negatively affected you."
                 },
                 {
                   "type": "radioGroup",
@@ -342,7 +342,7 @@
             "components": [
                 {
                     "type": "text",
-                    "label": "Which of these best describes how you feel [u]right now[/u]?"
+                    "label": "Which of these best describes how you feel <u>right now</u>?"
                 },
                 {
                   "type": "slider",
@@ -363,7 +363,7 @@
             "components": [
                 {
                     "type": "text",
-                    "label": "Which of these best describes your overall mood [u]right now[/u]?"
+                    "label": "Which of these best describes your overall mood <u>right now</u>?"
                 },
                 {
                   "type": "slider",

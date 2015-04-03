@@ -1,6 +1,7 @@
 package com.example.jaf50.survey.service;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
@@ -43,13 +44,13 @@ import com.example.jaf50.survey.ui.TimePickerComponent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AssessmentUiBuilder {
+public class AssessmentUiBuilderService {
 
   private Context context;
   private LayoutInflater layoutInflater;
   private Assessment assessment;
 
-  public AssessmentUiBuilder(Context context, Assessment assessment) {
+  public AssessmentUiBuilderService(Context context, Assessment assessment) {
     this.context = context;
     this.layoutInflater = LayoutInflater.from(context);
     this.assessment = assessment;
@@ -143,7 +144,7 @@ public class AssessmentUiBuilder {
 
   private TextComponent buildTextComponent(TextModel model) {
     TextComponent questionTextComponent = (TextComponent) layoutInflater.inflate(R.layout.text_view, null);
-    questionTextComponent.setText(model.getLabel());
+    questionTextComponent.setText(Html.fromHtml(model.getLabel()));
     return questionTextComponent;
   }
 
