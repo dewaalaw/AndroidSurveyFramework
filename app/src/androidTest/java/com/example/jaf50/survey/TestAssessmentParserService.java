@@ -83,7 +83,7 @@ public class TestAssessmentParserService extends AndroidTestCase {
     ResponseCriteriaModel screen2_responseCriteriaModel1 = screen2.getResponseCriteria().get(0);
     ResponseCriteriaModel screen2_responseCriteriaModel2 = screen2.getResponseCriteria().get(1);
 
-    assertEquals(ResponseConditionOperator.CONTAINS, screen2_responseCriteriaModel1.getCondition());
+    assertEquals(ResponseConditionOperator.CONTAINS_ANY, screen2_responseCriteriaModel1.getCondition());
     assertEquals("absenceType", screen2_responseCriteriaModel1.getResponse().getId());
     assertEquals(2, screen2_responseCriteriaModel1.getResponse().getValues().size());
     assertEquals("1", screen2_responseCriteriaModel1.getResponse().getValues().get(0));

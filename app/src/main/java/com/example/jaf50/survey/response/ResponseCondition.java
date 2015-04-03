@@ -20,8 +20,10 @@ public class ResponseCondition {
   public boolean isSatisfied(AssessmentResponse response) {
     if (responseConditionOperator.equals(ResponseConditionOperator.EQUALS)) {
       return expectedResponse.equalsResponse(response);
-    } else if (responseConditionOperator.equals(ResponseConditionOperator.CONTAINS)) {
-      return response.containsResponse(expectedResponse);
+    } else if (responseConditionOperator.equals(ResponseConditionOperator.CONTAINS_ALL)) {
+      return response.containsAllResponses(expectedResponse);
+    } else if (responseConditionOperator.equals(ResponseConditionOperator.CONTAINS_ANY)) {
+      return response.containsAnyResponses(expectedResponse);
     } else if (responseConditionOperator.equals(ResponseConditionOperator.DEFAULT)) {
       return true;
     } else if (responseConditionOperator.equals(ResponseConditionOperator.COMPLETE)) {

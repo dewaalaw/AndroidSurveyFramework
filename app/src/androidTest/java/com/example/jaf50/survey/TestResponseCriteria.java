@@ -79,7 +79,7 @@ public class TestResponseCriteria extends AndroidTestCase {
     assertTrue(criteria.isSatisfied(Arrays.asList(actualResponse1, actualResponse2)));
   }
 
-  public void test_ContainsCondition_SingleValueContainedInResponse() {
+  public void test_ContainsAnyCondition_SingleValueContainedInResponse() {
     AssessmentResponse conditionResponse = new AssessmentResponse();
     conditionResponse.setResponseId("var5");
     conditionResponse.addValue("one");
@@ -89,11 +89,11 @@ public class TestResponseCriteria extends AndroidTestCase {
     actualResponse.addValue("one");
     actualResponse.addValue("two");
 
-    criteria.addCondition(new ResponseCondition(ResponseConditionOperator.CONTAINS, conditionResponse));
+    criteria.addCondition(new ResponseCondition(ResponseConditionOperator.CONTAINS_ANY, conditionResponse));
     assertTrue(criteria.isSatisfied(Arrays.asList(actualResponse)));
   }
 
-  public void test_ContainsCondition_AllValuesContainedInResponse() {
+  public void test_ContainsAnyCondition_AllValuesContainedInResponse() {
     AssessmentResponse conditionResponse = new AssessmentResponse();
     conditionResponse.setResponseId("var5");
     conditionResponse.addValue("one");
@@ -104,8 +104,80 @@ public class TestResponseCriteria extends AndroidTestCase {
     actualResponse.addValue("one");
     actualResponse.addValue("two");
 
-    criteria.addCondition(new ResponseCondition(ResponseConditionOperator.CONTAINS, conditionResponse));
+    criteria.addCondition(new ResponseCondition(ResponseConditionOperator.CONTAINS_ANY, conditionResponse));
     assertTrue(criteria.isSatisfied(Arrays.asList(actualResponse)));
+  }
+
+  public void test_ContainsAnyCondition_OneValueNotMatching() {
+    AssessmentResponse conditionResponse = new AssessmentResponse();
+    conditionResponse.setResponseId("var5");
+    conditionResponse.addValue("one");
+    conditionResponse.addValue("two");
+
+    AssessmentResponse actualResponse = new AssessmentResponse();
+    actualResponse.setResponseId("var5");
+    actualResponse.addValue("one");
+    actualResponse.addValue("three");
+
+    criteria.addCondition(new ResponseCondition(ResponseConditionOperator.CONTAINS_ANY, conditionResponse));
+    assertTrue(criteria.isSatisfied(Arrays.asList(actualResponse)));
+  }
+
+  public void test_ContainsAnyCondition_NoMatchingValues() {
+    AssessmentResponse conditionResponse = new AssessmentResponse();
+    conditionResponse.setResponseId("var5");
+    conditionResponse.addValue("one");
+
+    AssessmentResponse actualResponse = new AssessmentResponse();
+    actualResponse.setResponseId("var5");
+    actualResponse.addValue("three");
+
+    criteria.addCondition(new ResponseCondition(ResponseConditionOperator.CONTAINS_ANY, conditionResponse));
+    assertFalse(criteria.isSatisfied(Arrays.asList(actualResponse)));
+  }
+
+  public void test_ContainsAllCondition_SingleValueContainedInResponse() {
+    AssessmentResponse conditionResponse = new AssessmentResponse();
+    conditionResponse.setResponseId("var5");
+    conditionResponse.addValue("one");
+
+    AssessmentResponse actualResponse = new AssessmentResponse();
+    actualResponse.setResponseId("var5");
+    actualResponse.addValue("one");
+    actualResponse.addValue("two");
+
+    criteria.addCondition(new ResponseCondition(ResponseConditionOperator.CONTAINS_ALL, conditionResponse));
+    assertTrue(criteria.isSatisfied(Arrays.asList(actualResponse)));
+  }
+
+  public void test_ContainsAllCondition_AllValuesContainedInResponse() {
+    AssessmentResponse conditionResponse = new AssessmentResponse();
+    conditionResponse.setResponseId("var5");
+    conditionResponse.addValue("one");
+    conditionResponse.addValue("two");
+
+    AssessmentResponse actualResponse = new AssessmentResponse();
+    actualResponse.setResponseId("var5");
+    actualResponse.addValue("one");
+    actualResponse.addValue("two");
+
+    criteria.addCondition(new ResponseCondition(ResponseConditionOperator.CONTAINS_ALL, conditionResponse));
+    assertTrue(criteria.isSatisfied(Arrays.asList(actualResponse)));
+  }
+
+  public void test_ContainsAllCondition_OneValueNotMatching() {
+    AssessmentResponse conditionResponse = new AssessmentResponse();
+    conditionResponse.setResponseId("var5");
+    conditionResponse.addValue("one");
+    conditionResponse.addValue("two");
+
+    AssessmentResponse actualResponse = new AssessmentResponse();
+    actualResponse.setResponseId("var5");
+    actualResponse.addValue("one");
+    actualResponse.addValue("three");
+
+    criteria.addCondition(new ResponseCondition(ResponseConditionOperator.CONTAINS_ALL, conditionResponse));
+    assertFalse(criteria.isSatisfied(Arrays.asList(actualResponse)));
   }
 
   public void test_ContainsCondition_NoMatchingValues() {
@@ -117,7 +189,7 @@ public class TestResponseCriteria extends AndroidTestCase {
     actualResponse.setResponseId("var5");
     actualResponse.addValue("three");
 
-    criteria.addCondition(new ResponseCondition(ResponseConditionOperator.CONTAINS, conditionResponse));
+    criteria.addCondition(new ResponseCondition(ResponseConditionOperator.CONTAINS_ALL, conditionResponse));
     assertFalse(criteria.isSatisfied(Arrays.asList(actualResponse)));
   }
 }

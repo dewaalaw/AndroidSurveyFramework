@@ -6,8 +6,10 @@ public enum ResponseConditionOperator {
 
   @SerializedName("=")
   EQUALS("="),
-  @SerializedName("contains")
-  CONTAINS("contains"),
+  @SerializedName("containsAll")
+  CONTAINS_ALL("containsAll"),
+  @SerializedName("containsAny")
+  CONTAINS_ANY("containsAny"),
   @SerializedName("default")
   DEFAULT("default"),
   @SerializedName("complete")

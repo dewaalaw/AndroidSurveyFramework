@@ -119,7 +119,7 @@
       ],
       "responseCriteria": [
         {
-          "condition": "contains",
+          "condition": "containsAny",
           "response": {
             "id": "absenceType",
             "values": [

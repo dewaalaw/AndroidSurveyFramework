@@ -69,7 +69,7 @@ public class AssessmentUiBuilder {
 
       for (ResponseCriteriaModel responseCriteriaModel : surveyScreenModel.getResponseCriteria()) {
         if (responseCriteriaModel.getCondition() == ResponseConditionOperator.EQUALS ||
-            responseCriteriaModel.getCondition() == ResponseConditionOperator.CONTAINS) {
+            responseCriteriaModel.getCondition() == ResponseConditionOperator.CONTAINS_ALL) {
           AssessmentResponse assessmentResponse = new AssessmentResponse();
           assessmentResponse.setResponseId(responseCriteriaModel.getResponse().getId());
           assessmentResponse.setValues(responseCriteriaModel.getResponse().getValues());

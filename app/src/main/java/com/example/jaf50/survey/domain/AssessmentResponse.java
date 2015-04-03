@@ -44,7 +44,7 @@ public class AssessmentResponse extends ParseObject {
     return getValues().isEmpty();
   }
 
-  public boolean containsResponse(AssessmentResponse otherResponse) {
+  public boolean containsAllResponses(AssessmentResponse otherResponse) {
     if (otherResponse == null) {
       return false;
     }
@@ -56,6 +56,27 @@ public class AssessmentResponse extends ParseObject {
     }
 
     return getValues().containsAll(otherResponse.getValues());
+  }
+
+  public boolean containsAnyResponses(AssessmentResponse otherResponse) {
+    if (otherResponse == null) {
+      return false;
+    }
+
+    String thisResponseId = getResponseId();
+    String otherResponseId = otherResponse.getResponseId();
+    if (thisResponseId != null ? !thisResponseId.equals(otherResponseId) : otherResponseId != null) {
+      return false;
+    }
+
+    List<Object> otherValues = otherResponse.getValues();
+    for (Object otherValue : otherValues) {
+      if (getValues().contains(otherValue)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public boolean equalsResponse(AssessmentResponse otherResponse) {
