@@ -27,7 +27,7 @@ public class SurveyScreen extends LinearLayout {
   private LinkedHashMap<ResponseCriteria, Action> actionMap = new LinkedHashMap<>();
 
   private String screenId;
-
+  private String mainText;
   private NavigationButtonModel previousButtonModel;
   private NavigationButtonModel nextButtonModel;
 
@@ -47,6 +47,14 @@ public class SurveyScreen extends LinearLayout {
 
   public String getScreenId() {
     return screenId;
+  }
+
+  public void setMainText(String mainText) {
+    this.mainText = mainText;
+  }
+
+  public String getMainText() {
+    return mainText;
   }
 
   public List<AssessmentResponse> collectResponses() {

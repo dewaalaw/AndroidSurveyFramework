@@ -61,6 +61,7 @@ public class AssessmentUiBuilderService {
     for (SurveyScreenModel surveyScreenModel : surveyModel.getScreens()) {
       SurveyScreen surveyScreen = (SurveyScreen) layoutInflater.inflate(R.layout.survey_content, null);
       surveyScreen.setScreenId(surveyScreenModel.getId());
+      surveyScreen.setMainText(surveyScreenModel.getMainText());
       surveyScreen.setPreviousButtonModel(getButtonModel(surveyScreenModel.getPrevious(), true, "Previous"));
       surveyScreen.setNextButtonModel(getButtonModel(surveyScreenModel.getNext(), true, "Next"));
 
@@ -70,7 +71,8 @@ public class AssessmentUiBuilderService {
 
       for (ResponseCriteriaModel responseCriteriaModel : surveyScreenModel.getResponseCriteria()) {
         if (responseCriteriaModel.getCondition() == ResponseConditionOperator.EQUALS ||
-            responseCriteriaModel.getCondition() == ResponseConditionOperator.CONTAINS_ALL) {
+            responseCriteriaModel.getCondition() == ResponseConditionOperator.CONTAINS_ALL ||
+            responseCriteriaModel.getCondition() == ResponseConditionOperator.CONTAINS_ANY) {
           AssessmentResponse assessmentResponse = new AssessmentResponse();
           assessmentResponse.setResponseId(responseCriteriaModel.getResponse().getId());
           assessmentResponse.setValues(responseCriteriaModel.getResponse().getValues());

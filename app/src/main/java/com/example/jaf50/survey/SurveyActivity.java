@@ -24,10 +24,10 @@ public class SurveyActivity extends FragmentActivity {
     //SchedulerManager.getInstance().restart(this, LaunchSurveyTask.class);
 
     AssessmentParserService assessmentParserService = new AssessmentParserService();
-    final SurveyModel surveyModel = assessmentParserService.parse(getResources().openRawResource(R.raw.real_survey));
+    final SurveyModel surveyModel = assessmentParserService.parse(getResources().openRawResource(R.raw.beeped_survey));
 
     Assessment assessment = new Assessment();
-    assessment.setSurveyName("Beeped");
+    assessment.setSurveyName(surveyModel.getName());
     assessment.setParticipant(ParseUser.getCurrentUser());
 
     AssessmentUiBuilderService assessmentUiBuilderService = new AssessmentUiBuilderService(SurveyActivity.this, assessment);

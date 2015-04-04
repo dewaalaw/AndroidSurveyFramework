@@ -3,10 +3,13 @@ package com.example.jaf50.survey;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -31,6 +34,9 @@ public class SurveyFragment extends Fragment {
 
   @InjectView(R.id.contentPanel)
   LinearLayout contentPanel;
+
+  @InjectView(R.id.mainTextView)
+  TextView mainTextView;
 
   @InjectView(R.id.nextButton)
   BootstrapButton nextButton;
@@ -177,12 +183,18 @@ public class SurveyFragment extends Fragment {
     }
     currentScreen = surveyScreen;
     updateNavigationButtons();
+    updateMainTextView();
     contentPanel.removeAllViews();
     contentPanel.addView(surveyScreen);
   }
 
   public void setCurrentAssessment(Assessment currentAssessment) {
     this.currentAssessment = currentAssessment;
+  }
+
+  private void updateMainTextView() {
+    mainTextView.setText(Html.fromHtml(currentScreen.getMainText()));
+    mainTextView.setVisibility(TextUtils.isEmpty(currentScreen.getMainText()) ? View.INVISIBLE : View.VISIBLE);
   }
 
   private void updateNavigationButtons() {

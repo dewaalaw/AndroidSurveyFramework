@@ -6,6 +6,7 @@ import java.util.List;
 public class SurveyScreenModel {
 
   private String id;
+  private String mainText;
   private NavigationButtonModel previous;
   private NavigationButtonModel next;
   private List<ComponentModel> components;
@@ -17,6 +18,14 @@ public class SurveyScreenModel {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public String getMainText() {
+    return mainText;
+  }
+
+  public void setMainText(String mainText) {
+    this.mainText = mainText;
   }
 
   public List<ComponentModel> getComponents() {
