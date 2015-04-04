@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.example.jaf50.survey.domain.Assessment;
+import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.parser.SurveyModel;
-import com.example.jaf50.survey.service.AssessmentParserService;
 import com.example.jaf50.survey.service.AssessmentUiBuilderService;
 import com.parse.ParseUser;
 
@@ -23,23 +23,38 @@ public class SurveyActivity extends FragmentActivity {
     //SchedulerManager.getInstance().saveTask(this, "* * * * *", LaunchSurveyTask.class);
     //SchedulerManager.getInstance().restart(this, LaunchSurveyTask.class);
 
-    AssessmentParserService assessmentParserService = new AssessmentParserService();
-    final SurveyModel surveyModel = assessmentParserService.parse(getResources().openRawResource(R.raw.beeped_survey));
+    StudyModel studyModel = AssessmentHolder.getInstance().getStudyModel();
+    if (getIntent() != null) {
+      String surveyName = getIntent().getStringExtra("surveyName");
+      SurveyModel surveyModel = getSurveyModel(surveyName, studyModel);
+      Assessment assessment = getAssessment(surveyName);
+      AssessmentUiBuilderService assessmentUiBuilderService = new AssessmentUiBuilderService(this, assessment);
+      final List<SurveyScreen> surveyScreens = assessmentUiBuilderService.build(surveyModel);
 
-    Assessment assessment = new Assessment();
-    assessment.setSurveyName(surveyModel.getName());
-    assessment.setParticipant(ParseUser.getCurrentUser());
+      final SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
+      fragment.setCurrentAssessment(assessment);
+      for (SurveyScreen screen : surveyScreens) {
+        fragment.addSurveyScreen(screen);
+      }
 
-    AssessmentUiBuilderService assessmentUiBuilderService = new AssessmentUiBuilderService(SurveyActivity.this, assessment);
-    final List<SurveyScreen> surveyScreens = assessmentUiBuilderService.build(surveyModel);
-
-    final SurveyFragment fragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.survey_fragment);
-    fragment.setCurrentAssessment(assessment);
-    for (SurveyScreen screen : surveyScreens) {
-      fragment.addSurveyScreen(screen);
+      fragment.startSurvey(surveyScreens.get(0).getScreenId());
     }
+  }
 
-    fragment.startSurvey(surveyScreens.get(0).getScreenId());
+  private SurveyModel getSurveyModel(String surveyName, StudyModel studyModel) {
+    for (SurveyModel surveyModel : studyModel.getSurveys()) {
+      if (surveyModel.getName().equals(surveyName)) {
+        return surveyModel;
+      }
+    }
+    return null;
+  }
+
+  private Assessment getAssessment(String surveyName) {
+    Assessment assessment = new Assessment();
+    assessment.setSurveyName(surveyName);
+    assessment.setParticipant(ParseUser.getCurrentUser());
+    return assessment;
   }
 
   @Override

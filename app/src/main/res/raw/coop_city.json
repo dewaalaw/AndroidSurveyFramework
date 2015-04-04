@@ -1,0 +1,4738 @@
+{
+    "welcomeScreen": {
+        "text": "[b]Welcome to ESCAPE![/b]",
+        "links": [
+            {
+                "surveyName": "Waking",
+                "label": "Waking",
+                "transitionText": "If you would like to take the waking survey, please tap the next button.  If not, please tap the go back button.",
+                "icon": "fa-sun-o",
+                "buttonType": "primary"
+            },
+            {
+                "surveyName": "Bedtime",
+                "label": "Bedtime",
+                "transitionText": "If you would like to take the bedtime survey, please tap the next button.  If not, please tap the go back button.",
+                "icon": "fa-sun-o",
+                "buttonType": "primary"
+            },
+            {
+                "surveyName": "Beeped",
+                "label": "Beeped",
+                "transitionText": "If you would like to take the beeped survey, please tap the next button.  If not, please tap the go back button.",
+                "icon": "fa-sun-o",
+                "buttonType": "primary"
+            }
+        ]
+    },
+    "surveys": [
+        {
+            "description": "",
+            "name": "Beeped",
+            "screens": [
+                {
+                    "id": "feel_rt_now_intro",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The following questions ask about how you feel <u>RIGHT NOW</u>.</b>",
+                    "previous": {
+                        "allowed": false
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "now_sleepy_alert"
+                        }
+                    ]
+                },
+                {
+                    "id": "feelings_intro",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>On the following screens are descriptions of <u>specific</u> feelings you might be experiencing.  Please rate how well each describes what you feel <u>RIGHT NOW</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "tense"
+                        }
+                    ]
+                },
+                {
+                    "id": "happy",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "happy",
+                            "leftLabel": "not at all ",
+                            "rightLabel": "extremely "
+                        }
+                    ],
+                    "mainText": "How <b><u>HAPPY</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "angry"
+                        }
+                    ]
+                },
+                {
+                    "id": "tense",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "tense",
+                            "leftLabel": "not at all ",
+                            "rightLabel": "extremely "
+                        }
+                    ],
+                    "mainText": "How <b><u>TENSE/ANXIOUS</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "happy"
+                        }
+                    ]
+                },
+                {
+                    "id": "enjoyment",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "enjoyment",
+                            "leftLabel": "none at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "How much <b><u>ENJOYMENT/FUN</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "frustrated"
+                        }
+                    ]
+                },
+                {
+                    "id": "depressed",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "depressed",
+                            "leftLabel": "not at all ",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <b><u>DEPRESSED/BLUE</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "enjoyment"
+                        }
+                    ]
+                },
+                {
+                    "id": "stress_ques_intro",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next questions ask about significant events that happened <u>since the last assessment</u>.</b>  ",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "main_stress_ques"
+                        }
+                    ]
+                },
+                {
+                    "id": "main_stress_ques",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "main_stress_ques",
+                            "inputs": [
+                                {
+                                    "label": "YES",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "NO",
+                                    "value": "2"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Did anything <b><u>stressful</u></b> occur since the last assessment?  A stressful event is any event, even a minor one, which negatively affected you.",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "main_stress_ques",
+                                "values": [
+                                    "1"
+                                ]
+                            },
+                            "transition": "classify_stressful_event"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "main_stress_ques",
+                                "values": [
+                                    "2"
+                                ]
+                            },
+                            "transition": "no_to_any_event"
+                        },
+                        {
+                            "condition": "default",
+                            "transition": "no_to_any_event"
+                        }
+                    ]
+                },
+                {
+                    "id": "classify_stressful_event",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "classify_stressful_event",
+                            "inputs": [
+                                {
+                                    "label": "argument/conflict/disagreement",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "financial event",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "home-related event",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "work-related event",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "health or accident",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "event that happened to others",
+                                    "value": "6"
+                                },
+                                {
+                                    "label": "traffic or transportation",
+                                    "value": "7"
+                                },
+                                {
+                                    "label": "other stressor",
+                                    "value": "8"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "How would you describe this stressful event?  If more than one event happened, please pick the most significant event.",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "classify_stressful_event",
+                                "values": [
+                                    "1"
+                                ]
+                            },
+                            "transition": "when_stress_arg"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "classify_stressful_event",
+                                "values": [
+                                    "2"
+                                ]
+                            },
+                            "transition": "when_stress _financial"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "classify_stressful_event",
+                                "values": [
+                                    "3"
+                                ]
+                            },
+                            "transition": "when_stress_home"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "classify_stressful_event",
+                                "values": [
+                                    "4"
+                                ]
+                            },
+                            "transition": "when_stress_work"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "classify_stressful_event",
+                                "values": [
+                                    "5"
+                                ]
+                            },
+                            "transition": "when_stress_health"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "classify_stressful_event",
+                                "values": [
+                                    "6"
+                                ]
+                            },
+                            "transition": "when_stress_others"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "classify_stressful_event",
+                                "values": [
+                                    "7"
+                                ]
+                            },
+                            "transition": "when_stress_traffic"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "classify_stressful_event",
+                                "values": [
+                                    "8"
+                                ]
+                            },
+                            "transition": "when_stress_other"
+                        },
+                        {
+                            "condition": "default",
+                            "transition": "no_to_any_event"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_argument_disagreement",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_argument_disagreement",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this ARGUMENT/CONFLICT/DISAGREEMENT for you?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_argument_disagreement"
+                        }
+                    ]
+                },
+                {
+                    "id": "thought_about_argument_disagreement",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thought_about_argument_disagreement",
+                            "leftLabel": "not at all",
+                            "rightLabel": "a great deal"
+                        }
+                    ],
+                    "mainText": "How much have you thought about this ARGUMENT/CONFLICT/DISAGREEMENT since it happened?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "uplifting_main"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_financial",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_financial",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this FINANCIAL EVENT for you?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_financial"
+                        }
+                    ]
+                },
+                {
+                    "id": "thought_about_financial",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thought_about_financial",
+                            "leftLabel": "not at all",
+                            "rightLabel": "a great deal"
+                        }
+                    ],
+                    "mainText": "How much have you thought about this FINANCIAL EVENT since it happened?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "uplifting_main"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_difficulty_home",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_difficulty_home",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this HOME-RELATED EVENT for you?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_difficulty_home"
+                        }
+                    ]
+                },
+                {
+                    "id": "thought_about_difficulty_home",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thought_about_difficulty_home",
+                            "leftLabel": "not at all",
+                            "rightLabel": "a great deal"
+                        }
+                    ],
+                    "mainText": "How much have you thought about this HOME-RELATED EVENT since it happened?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "uplifting_main"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_difficulty_work",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_difficulty_work",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this WORK-RELATED EVENT for you?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_difficulty_work"
+                        }
+                    ]
+                },
+                {
+                    "id": "thought_about_difficulty_work",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thought_about_difficulty_work",
+                            "leftLabel": "not at all",
+                            "rightLabel": "a great deal"
+                        }
+                    ],
+                    "mainText": "How much have you thought about this WORK-RELATED EVENT since it happened?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "uplifting_main"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_health_problems",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_health_problems",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this HEALTH EVENT OR ACCIDENT for you?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_health_problems"
+                        }
+                    ]
+                },
+                {
+                    "id": "thought_about_health_problems",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thought_about_health_problems",
+                            "leftLabel": "not at all",
+                            "rightLabel": "a great deal"
+                        }
+                    ],
+                    "mainText": "How much have you thought about this HEALTH EVENT OR ACCIDENT since it happened?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "uplifting_main"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_neg_events_others",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_neg_events_others",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this EVENT THAT HAPPENED TO OTHERS for you?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_neg_events_others"
+                        }
+                    ]
+                },
+                {
+                    "id": "thought_about_neg_events_others",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thought_about_neg_events_others",
+                            "leftLabel": "not at all",
+                            "rightLabel": "a great deal"
+                        }
+                    ],
+                    "mainText": "How much have you thought about this EVENT THAT HAPPENED TO OTHERS since it happened?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "uplifting_main"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_other",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_other",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this OTHER EVENT for you?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_other"
+                        }
+                    ]
+                },
+                {
+                    "id": "thought_about_other",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thought_about_other",
+                            "leftLabel": "not at all",
+                            "rightLabel": "a great deal"
+                        }
+                    ],
+                    "mainText": "How much have you thought about this OTHER EVENT since it happened?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "uplifting_main"
+                        }
+                    ]
+                },
+                {
+                    "id": "no_to_any_event",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "no_to_any_event",
+                            "inputs": [
+                                {
+                                    "label": "Stressful things don't usually happen to me",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "I avoided stressful situations",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "I handled situations before they became stressful",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "I was lucky",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "Another reason",
+                                    "value": "5"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Why do you think nothing stressful happened to you since the last assessment?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "difficulties_pile_up"
+                        }
+                    ]
+                },
+                {
+                    "id": "what_doing_when_beeped",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "what_doing_when_beeped",
+                            "inputs": [
+                                {
+                                    "label": "chores",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "work-related activity",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "socializing",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "eating/drinking",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "physical activity",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "recreation",
+                                    "value": "6"
+                                },
+                                {
+                                    "label": "grooming/self-care",
+                                    "value": "7"
+                                },
+                                {
+                                    "label": "resting",
+                                    "value": "8"
+                                },
+                                {
+                                    "label": "other",
+                                    "value": "9"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "In the past 5 minutes...<br>What were you <u>MOSTLY</u> doing? ",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "what_doing_when_beeped",
+                                "values": [
+                                    "1"
+                                ]
+                            },
+                            "transition": "on_mind_chores"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "what_doing_when_beeped",
+                                "values": [
+                                    "2"
+                                ]
+                            },
+                            "transition": "on_mind_work"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "what_doing_when_beeped",
+                                "values": [
+                                    "3"
+                                ]
+                            },
+                            "transition": "on_mind_social"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "what_doing_when_beeped",
+                                "values": [
+                                    "4"
+                                ]
+                            },
+                            "transition": "on_mind_eat"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "what_doing_when_beeped",
+                                "values": [
+                                    "5"
+                                ]
+                            },
+                            "transition": "on_mind_phys"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "what_doing_when_beeped",
+                                "values": [
+                                    "6"
+                                ]
+                            },
+                            "transition": "on_mind_rec"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "what_doing_when_beeped",
+                                "values": [
+                                    "7"
+                                ]
+                            },
+                            "transition": "on_mind_groom"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "what_doing_when_beeped",
+                                "values": [
+                                    "8"
+                                ]
+                            },
+                            "transition": "on_mind_rest"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "what_doing_when_beeped",
+                                "values": [
+                                    "9"
+                                ]
+                            },
+                            "transition": "on_mind_other"
+                        },
+                        {
+                            "condition": "default",
+                            "transition": "un_pleas_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "where_when_beeped",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "where_when_beeped",
+                            "inputs": [
+                                {
+                                    "label": "your home",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "work/school",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "other person's home",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "vehicle",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "outside",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "other",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Where are you <u>right now</u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "who_with"
+                        }
+                    ]
+                },
+                {
+                    "id": "thank_you",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>Now get ready to play a few brain games!</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "complete"
+                        }
+                    ]
+                },
+                {
+                    "id": "now_sleepy_alert",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "now_sleepy_alert",
+                            "leftLabel": "sleepy/tired",
+                            "rightLabel": "alert/active"
+                        }
+                    ],
+                    "mainText": "Which of these best describes how you feel <u>right now</u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "mood_rt_now"
+                        }
+                    ]
+                },
+                {
+                    "id": "difficulties_pile_up",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "difficulties_pile_up",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Since the last assessment...<br>Have difficulties been piling up?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "control_imp_things"
+                        }
+                    ]
+                },
+                {
+                    "id": "unhappy",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "unhappy",
+                            "leftLabel": "not at all",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <b><u>UNHAPPY</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "where_when_beeped"
+                        }
+                    ]
+                },
+                {
+                    "id": "personal_prob_worry",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "personal_prob_worry",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "In the past 5 minutes...<br>Were you thinking about personal problems or worries?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "future_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "unpleasant_few_hours",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "unpleasant_few_hours",
+                            "inputs": [
+                                {
+                                    "label": "YES",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "NO",
+                                    "value": "2"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Do you think anything stressful or unpleasant will happen in the next few hours?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thank_you"
+                        }
+                    ]
+                },
+                {
+                    "id": "activities",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The following questions ask about your activities during the <u>past 5 minutes</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "prob_intro"
+                        }
+                    ]
+                },
+                {
+                    "id": "frustrated",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "frustrated",
+                            "leftLabel": "not at all ",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <b><u>FRUSTRATED</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "joyful"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_traffic",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_traffic",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this TRAFFIC OR TRANSPORTATION EVENT for you?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_traffic"
+                        }
+                    ]
+                },
+                {
+                    "id": "thought_about_traffic",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thought_about_traffic",
+                            "leftLabel": "not at all",
+                            "rightLabel": "a great deal"
+                        }
+                    ],
+                    "mainText": "How much have you thought about this TRAFFIC OR TRANSPORTATION EVENT since it happened?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "uplifting_main"
+                        }
+                    ]
+                },
+                {
+                    "id": "on_mind_chores",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next questions ask about what was on your mind while you were doing chores during the <u>past 5 minutes</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "un_pleas_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "on_mind_work",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next questions ask about what was on your mind while you were doing work-related activities during the <u>past 5 minutes</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "un_pleas_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "on_mind_social",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next questions ask about what was on your mind while you were socializing during the <u>past 5 minutes</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "un_pleas_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "on_mind_eat",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next questions ask about what was on your mind while you were eating/drinking during the <u>past 5 minutes</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "un_pleas_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "on_mind_phys",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next questions ask about what was on your mind while you were being physically active during the <u>past 5 minutes</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "un_pleas_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "on_mind_rec",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next questions ask about what was on your mind while you were involved in recreation during the <u>past 5 minutes</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "un_pleas_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "on_mind_groom",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next questions ask about what was on your mind while you were doing self-care during the <u>past 5 minutes</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "un_pleas_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "on_mind_rest",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next questions ask about what was on your mind while you were resting during the <u>past 5 minutes</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "un_pleas_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "on_mind_other",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next questions ask about what was on your mind while you were doing something else during the <u>past 5 minutes</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "un_pleas_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "control_imp_things",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "control_imp_things",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Since the last assessment...<br>Have you been able to control important things?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "uplifting_main"
+                        }
+                    ]
+                },
+                {
+                    "id": "when_stress_arg",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "when_stress_arg",
+                            "inputs": [
+                                {
+                                    "label": "0-5 minutes ago",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "5-10 minutes ago",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "10-30 minutes ago",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "30-60 minutes ago",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "60+ minutes ago",
+                                    "value": "5"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "When did this ARGUMENT/CONFLICT/DISAGREEMENT happen?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_argument_disagreement"
+                        }
+                    ]
+                },
+                {
+                    "id": "when_stress _financial",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "when_stress_financial",
+                            "inputs": [
+                                {
+                                    "label": "0-5 minutes ago",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "5-10 minutes ago",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "10-30 minutes ago",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "30-60 minutes ago",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "60+ minutes ago",
+                                    "value": "5"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "When did this FINANCIAL EVENT happen?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_financial"
+                        }
+                    ]
+                },
+                {
+                    "id": "when_stress_home",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "when_stress_home",
+                            "inputs": [
+                                {
+                                    "label": "0-5 minutes ago",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "5-10 minutes ago",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "10-30 minutes ago",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "30-60 minutes ago",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "60+ minutes ago",
+                                    "value": "5"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "When did this HOME-RELATED EVENT happen?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_difficulty_home"
+                        }
+                    ]
+                },
+                {
+                    "id": "when_stress_work",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "when_stress_work",
+                            "inputs": [
+                                {
+                                    "label": "0-5 minutes ago",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "5-10 minutes ago",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "10-30 minutes ago",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "30-60 minutes ago",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "60+ minutes ago",
+                                    "value": "5"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "When did this WORK-RELATED EVENT happen?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_difficulty_work"
+                        }
+                    ]
+                },
+                {
+                    "id": "when_stress_health",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "when_stress_health",
+                            "inputs": [
+                                {
+                                    "label": "0-5 minutes ago",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "5-10 minutes ago",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "10-30 minutes ago",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "30-60 minutes ago",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "60+ minutes ago",
+                                    "value": "5"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "When did this HEALTH EVENT OR ACCIDENT happen?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_health_problems"
+                        }
+                    ]
+                },
+                {
+                    "id": "when_stress_others",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "when_stress_others",
+                            "inputs": [
+                                {
+                                    "label": "0-5 minutes ago",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "5-10 minutes ago",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "10-30 minutes ago",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "30-60 minutes ago",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "60+ minutes ago",
+                                    "value": "5"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "When did this EVENT THAT HAPPENED TO OTHERS happen?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_neg_events_others"
+                        }
+                    ]
+                },
+                {
+                    "id": "when_stress_other",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "when_stress_other",
+                            "inputs": [
+                                {
+                                    "label": "0-5 minutes ago",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "5-10 minutes ago",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "10-30 minutes ago",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "30-60 minutes ago",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "60+ minutes ago",
+                                    "value": "5"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "When did this OTHER EVENT happen?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_other"
+                        }
+                    ]
+                },
+                {
+                    "id": "when_stress_traffic",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "when_stress_traffic",
+                            "inputs": [
+                                {
+                                    "label": "0-5 minutes ago",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "5-10 minutes ago",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "10-30 minutes ago",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "30-60 minutes ago",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "60+ minutes ago",
+                                    "value": "5"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "When did this TRAFFIC OR TRANSPORTATION EVENT happen?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_traffic"
+                        }
+                    ]
+                },
+                {
+                    "id": "mood_rt_now",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "mood_rt_now",
+                            "leftLabel": "bad",
+                            "rightLabel": "good"
+                        }
+                    ],
+                    "mainText": "Which of these best describes your overall mood <u>right now</u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "feelings_intro"
+                        }
+                    ]
+                },
+                {
+                    "id": "angry",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "angry",
+                            "leftLabel": "not at all",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <b><u>ANGRY/HOSTILE</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "pleased"
+                        }
+                    ]
+                },
+                {
+                    "id": "pleased",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "pleased",
+                            "leftLabel": "not at all",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <u><b>PLEASED</b></u> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "depressed"
+                        }
+                    ]
+                },
+                {
+                    "id": "joyful",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "joyful",
+                            "leftLabel": "not at all",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <b><u>JOYFUL</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "unhappy"
+                        }
+                    ]
+                },
+                {
+                    "id": "who_with",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "who_with",
+                            "inputs": [
+                                {
+                                    "label": "nobody",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "partner/spouse",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "family",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "friends",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "co-workers",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "pet",
+                                    "value": "6"
+                                },
+                                {
+                                    "label": "other",
+                                    "value": "7"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Who is with you <u>right now</u>? (select all that apply)",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "activities"
+                        }
+                    ]
+                },
+                {
+                    "id": "prob_intro",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "prob_intro",
+                            "inputs": [
+                                {
+                                    "label": "YES",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "NO",
+                                    "value": "2"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "In the past 5 minutes...<br>Were you dealing with a problem?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "prob_intro",
+                                "values": [
+                                    "1"
+                                ]
+                            },
+                            "transition": "prob_stress"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "prob_intro",
+                                "values": [
+                                    "2"
+                                ]
+                            },
+                            "transition": "juggle_tasks"
+                        },
+                        {
+                            "condition": "default",
+                            "transition": "juggle_tasks"
+                        }
+                    ]
+                },
+                {
+                    "id": "prob_stress",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "prob_stress",
+                            "leftLabel": "not at all [br]stressful",
+                            "rightLabel": "extremely [br]stressful"
+                        }
+                    ],
+                    "mainText": "How stressful was this problem?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "what_doing_when_beeped"
+                        }
+                    ]
+                },
+                {
+                    "id": "juggle_tasks",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "juggle_tasks",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "In the past 5 minutes...<br>Were you juggling several tasks at once?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "what_doing_when_beeped"
+                        }
+                    ]
+                },
+                {
+                    "id": "uplifting_main",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "uplifting_main",
+                            "inputs": [
+                                {
+                                    "label": "YES",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "NO",
+                                    "value": "2"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Did anything <b><u>uplifting</u></b> occur since the last assessment?  An uplifting event is any event, even a minor one, which affected you in a positive way.",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "uplifting_main",
+                                "values": [
+                                    "1"
+                                ]
+                            },
+                            "transition": "enjoy_uplift"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "uplifting_main",
+                                "values": [
+                                    "2"
+                                ]
+                            },
+                            "transition": "no_uplift"
+                        },
+                        {
+                            "condition": "default",
+                            "transition": "no_uplift"
+                        }
+                    ]
+                },
+                {
+                    "id": "enjoy_uplift",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "enjoy_uplift",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "How much did you enjoy this uplifting event?  If more than one event happened, please consider the most significant event.  ",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_uplift"
+                        }
+                    ]
+                },
+                {
+                    "id": "thought_about_uplift",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thought_about_uplift",
+                            "leftLabel": "not at all",
+                            "rightLabel": "a great deal"
+                        }
+                    ],
+                    "mainText": "How much have you thought about this uplifting event since it happened?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "unpleasant_few_hours"
+                        }
+                    ]
+                },
+                {
+                    "id": "no_uplift",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "no_uplift",
+                            "inputs": [
+                                {
+                                    "label": "I was too busy",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "I was alone/no one around",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "I was in a bad mood",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "I wasn't feeling well",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "Another reason",
+                                    "value": "5"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Why do you think nothing uplifting happened?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "going_way"
+                        }
+                    ]
+                },
+                {
+                    "id": "going_way",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "going_way",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Do you feel like things are going your way?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "unpleasant_few_hours"
+                        }
+                    ]
+                },
+                {
+                    "id": "un_pleas_thoughts",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "un_pleas_thoughts",
+                            "leftLabel": "unpleasant[br]thoughts",
+                            "rightLabel": "pleasant[br]thoughts"
+                        }
+                    ],
+                    "mainText": "In the past 5 minutes...<br>Overall, which of these best describes the thoughts you had?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "train_thought"
+                        }
+                    ]
+                },
+                {
+                    "id": "train_thought",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "train_thought",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "In the past 5 minutes...<br>Were you experiencing a train of thought that you couldn't get out of your head?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "personal_prob_worry"
+                        }
+                    ]
+                },
+                {
+                    "id": "future_thoughts",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "future_thoughts",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "In the past 5 minutes...<br>Were you preoccupied with thoughts of something about to happen or that might happen in the future?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stress_ques_intro"
+                        }
+                    ]
+                },
+                {
+                    "id": "enthusiastic",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "enthusiastic",
+                            "leftLabel": "not at all [br]enthusiastic",
+                            "rightLabel": "extremely [br]enthusiastic"
+                        }
+                    ],
+                    "mainText": "How <b><u>ENTHUSIASTIC</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "frustrated"
+                        }
+                    ]
+                },
+                {
+                    "id": "sad",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "sad",
+                            "leftLabel": "not at all sad",
+                            "rightLabel": "extremely sad"
+                        }
+                    ],
+                    "mainText": "How <b><u>SAD</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "now_sleepy_alert"
+                        }
+                    ]
+                },
+                {
+                    "id": "content",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "content",
+                            "leftLabel": "not at all [br]content",
+                            "rightLabel": "extremely [br]content"
+                        }
+                    ],
+                    "mainText": "How <b><u>CONTENT</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "upset"
+                        }
+                    ]
+                },
+                {
+                    "id": "disappointed",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "disappointed",
+                            "leftLabel": "not at all [br]disappointed",
+                            "rightLabel": "extremely [br]disappointed"
+                        }
+                    ],
+                    "mainText": "How <b><u>DISAPPOINTED</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "content"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_when_argument_disagreement",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_when_argument_disagreement",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this ARGUMENT/CONFLICT/DISAGREEMENT for you <u><b>when it happened</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_now_argument_disagreement"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_now_argument_disagreement",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_now_argument_disagreement",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant is this ARGUMENT/CONFLICT/DISAGREEMENT for you <u><b>now</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_argument_disagreement"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_when_financial",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_when_financial",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this FINANCIAL EVENT for you <u><b>when it happened</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_now_financial"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_now_financial",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_now_financial",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant is this FINANCIAL EVENT for you <u><b>now</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_financial"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_when_difficulty_home",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_when_difficulty_home",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this HOME-RELATED EVENT for you <u><b>when it happened</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_now_difficulty_home"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_now_difficulty_home",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_now_difficulty_home",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant is this HOME-RELATED EVENT for you <u><b>now</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_difficulty_home"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_when_difficulty_work",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_when_difficulty_work",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this WORK-RELATED EVENT for you <u><b>when it happened</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_now_difficulty_work"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_now_difficulty_work",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_now_difficulty_work",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant is this WORK-RELATED EVENT for you <u><b>now</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_difficulty_work"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_when_health_problems",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_when_health_problems",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this HEALTH EVENT OR ACCIDENT for you <u><b>when it happened</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_now_health_problems"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_now_health_problems",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_now_health_problems",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant is this HEALTH EVENT OR ACCIDENT for you <u><b>now</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_health_problems"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_when_neg_events_others",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_when_neg_events_others",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this EVENT THAT HAPPENED TO OTHERS for you <u><b>when it happened</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_now_neg_events_others"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_now_neg_events_others",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_now_neg_events_others",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant is this EVENT THAT HAPPENED TO OTHERS for you <u><b>now</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_neg_events_others"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_when_other",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_when_other",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this OTHER EVENT for you <u><b>when it happened</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_now_other"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_now_other",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_now_other",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant is this OTHER EVENT for you <u><b>now</b></u>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_other"
+                        }
+                    ]
+                },
+                {
+                    "id": "trouble_concentrate",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "trouble_concentrate",
+                            "leftLabel": "no [br]trouble",
+                            "rightLabel": "a lot of [br]trouble"
+                        }
+                    ],
+                    "mainText": "In the past 5 minutes...<br>Were you having trouble concentrating?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "personal_prob_worry"
+                        }
+                    ]
+                },
+                {
+                    "id": "relaxed",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "relaxed",
+                            "leftLabel": "not at all [br]relaxed",
+                            "rightLabel": "extremely [br]relaxed"
+                        }
+                    ],
+                    "mainText": "How <b><u>RELAXED</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "sad"
+                        }
+                    ]
+                },
+                {
+                    "id": "thoughts_unpleasant",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thoughts_unpleasant",
+                            "leftLabel": "unpleasant [br]thoughts",
+                            "rightLabel": "pleasant [br]thoughts"
+                        }
+                    ],
+                    "mainText": "In the past 5 minutes...<br>What type of thoughts did you have?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "difficult_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "distract_surroundings",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "distract_surroundings",
+                            "leftLabel": "not at all [br]distracting",
+                            "rightLabel": "very [br]distracting"
+                        }
+                    ],
+                    "mainText": "How distracting are your current surroundings?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "mental_physical_activity"
+                        }
+                    ]
+                },
+                {
+                    "id": "felt_physically",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "felt_physically",
+                            "leftLabel": "very unhealthy",
+                            "rightLabel": "very healthy"
+                        }
+                    ],
+                    "mainText": "Since the last survey...<br>How have you felt physically?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "physical_active"
+                        }
+                    ]
+                },
+                {
+                    "id": "upset",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "upset",
+                            "leftLabel": "not at all [br]upset",
+                            "rightLabel": "extremely [br]upset"
+                        }
+                    ],
+                    "mainText": "How <b><u>UPSET</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "enthusiastic"
+                        }
+                    ]
+                },
+                {
+                    "id": "physical_active",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "physical_active",
+                            "leftLabel": "not at all [br]active",
+                            "rightLabel": "very [br]active"
+                        }
+                    ],
+                    "mainText": "Since the last survey...<br>How physically active have you been?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "difficulties_pile_up"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_when_traffic",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_when_traffic",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant was this TRAFFIC OR TRANSPORTATION EVENT for you <b><u>when it happened</u></b>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_now_traffic"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_now_traffic",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_now_traffic",
+                            "leftLabel": "not at all [br]unpleasant",
+                            "rightLabel": "extremely [br]unpleasant"
+                        }
+                    ],
+                    "mainText": "How unpleasant is this TRAFFIC OR TRANSPORTATION EVENT for you <b><u>now</u></b>?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thought_about_traffic"
+                        }
+                    ]
+                },
+                {
+                    "id": "things_you_like",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "things_you_like",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Since the last survey...<br>Have you done things you really like?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "felt_physically"
+                        }
+                    ]
+                },
+                {
+                    "id": "on_your_mind",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "on_your_mind",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "In the past 5 minutes...<br>Did you have a lot on your mind?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thoughts_unpleasant"
+                        }
+                    ]
+                },
+                {
+                    "id": "aspect_arg",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "aspect_arg",
+                            "inputs": [
+                                {
+                                    "label": "Your family",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Your work",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Your friendships",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "Your plans for the future",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "How you feel about yourself",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "None of the above",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Which aspect(s) of your life did this ARGUMENT/CONFLICT/DISAGREEMENT affect? Select all that apply.",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_when_argument_disagreement"
+                        }
+                    ]
+                },
+                {
+                    "id": "aspect _financial",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "aspect_financial",
+                            "inputs": [
+                                {
+                                    "label": "Your family",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Your work",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Your friendships",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "Your plans for the future",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "How you feel about yourself",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "None of the above",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Which aspect(s) of your life did this FINANCIAL EVENT affect?  Select all that apply.",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_when_financial"
+                        }
+                    ]
+                },
+                {
+                    "id": "aspect_home",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "aspect_home",
+                            "inputs": [
+                                {
+                                    "label": "Your family",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Your work",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Your friendships",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "Your plans for the future",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "How you feel about yourself",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "None of the above",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Which aspect(s) of your life did this HOME-RELATED EVENT affect? Select all that apply.",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_when_difficulty_home"
+                        }
+                    ]
+                },
+                {
+                    "id": "aspect_work",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "aspect_work",
+                            "inputs": [
+                                {
+                                    "label": "Your family",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Your work",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Your friendships",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "Your plans for the future",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "How you feel about yourself",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "None of the above",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Which aspect(s) of your life did this WORK-RELATED EVENT affect?  Select all that apply.",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_when_difficulty_work"
+                        }
+                    ]
+                },
+                {
+                    "id": "aspect_health",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "aspect_health",
+                            "inputs": [
+                                {
+                                    "label": "Your family",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Your work",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Your friendships",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "Your plans for the future",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "How you feel about yourself",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "None of the above",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Which aspect(s) of your life did this HEALTH EVENT OR ACCIDENT affect? Select all that apply.",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_when_health_problems"
+                        }
+                    ]
+                },
+                {
+                    "id": "aspect_others",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "aspect_others",
+                            "inputs": [
+                                {
+                                    "label": "Your family",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Your work",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Your friendships",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "Your plans for the future",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "How you feel about yourself",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "None of the above",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Which aspect(s) of your life did this EVENT THAT HAPPENED TO OTHERS affect?  Select all that apply.",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_when_neg_events_others"
+                        }
+                    ]
+                },
+                {
+                    "id": "aspect_other",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "aspect_other",
+                            "inputs": [
+                                {
+                                    "label": "Your family",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Your work",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Your friendships",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "Your plans for the future",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "How you feel about yourself",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "None of the above",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Which aspect(s) of your life did this OTHER EVENT affect?  Select all that apply.",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_when_other"
+                        }
+                    ]
+                },
+                {
+                    "id": "aspect_traffic",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "aspect_traffic",
+                            "inputs": [
+                                {
+                                    "label": "Your family",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Your work",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Your friendships",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "Your plans for the future",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "How you feel about yourself",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "None of the above",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Which aspect(s) of your life did this TRAFFIC OR TRANSPORTATION EVENT affect?  Select all that apply.",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_when_traffic"
+                        }
+                    ]
+                },
+                {
+                    "id": "tense_old",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "tense_old",
+                            "leftLabel": "not at all [br]tense",
+                            "rightLabel": "extremely [br]tense"
+                        }
+                    ],
+                    "mainText": "How <b><u>TENSE</u></b> do you feel right now?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "happy"
+                        }
+                    ]
+                },
+                {
+                    "id": "difficulties_pile_up_old",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "difficulties_pile_up_old",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Since the last survey...<br>Did difficulties seem to be piling up?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "control_imp_things"
+                        }
+                    ]
+                },
+                {
+                    "id": "difficult_thoughts",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "difficult_thoughts",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "In the past 5 minutes...<br>Did you have thoughts that were difficult to let go?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "trouble_concentrate"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": "",
+            "name": "Waking",
+            "screens": [
+                {
+                    "id": "sleep_last_night_intro",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>On the next screens are questions about how you slept last night.</b>",
+                    "previous": {
+                        "allowed": false
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "go_to_bed"
+                        }
+                    ]
+                },
+                {
+                    "id": "go_to_bed",
+                    "components": [
+                        
+                    ],
+                    "mainText": "When did you go to bed last night (that is, get into bed with the intention of sleeping)?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "get_up_morning"
+                        }
+                    ]
+                },
+                {
+                    "id": "get_up_morning",
+                    "components": [
+                        
+                    ],
+                    "mainText": "When did you get up this morning?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "hours_of_sleep"
+                        }
+                    ]
+                },
+                {
+                    "id": "hours_of_sleep",
+                    "components": [
+                        {
+                            "type": "radioGroup",
+                            "responseId": "hours_of_sleep",
+                            "inputs": [
+                                {
+                                    "label": "More than 7 hours",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "6-7 hours",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "5-6 hours",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "Less than 5 hours",
+                                    "value": "4"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "How many hours of actual sleep did you get last night? (this may be different than the number of hours you spend in bed)",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "difficulty_falling_asleep"
+                        }
+                    ]
+                },
+                {
+                    "id": "sleep_quality",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "sleep_quality",
+                            "leftLabel": "very poor",
+                            "rightLabel": "very good"
+                        }
+                    ],
+                    "mainText": "How would you rate your sleep quality last night?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "day_expectations"
+                        }
+                    ]
+                },
+                {
+                    "id": "refreshing_sleep",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "refreshing_sleep",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Was your sleep refreshing?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "sleep_quality"
+                        }
+                    ]
+                },
+                {
+                    "id": "trouble_staying_asleep",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "trouble_staying_asleep",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Did you have trouble staying asleep?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "refreshing_sleep"
+                        }
+                    ]
+                },
+                {
+                    "id": "difficulty_falling_asleep",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "difficulty_falling_asleep",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Did you have difficulty falling asleep?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "trouble_staying_asleep"
+                        }
+                    ]
+                },
+                {
+                    "id": "pleasant_today",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "pleasant_today",
+                            "leftLabel": "not at all [br]pleasant",
+                            "rightLabel": "very [br]pleasant"
+                        }
+                    ],
+                    "mainText": "Overall, how <b><u>PLEASANT</u></b> do you expect today will be?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_today"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_today",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_today",
+                            "leftLabel": "not at all [br]stressful",
+                            "rightLabel": "very [br]stressful"
+                        }
+                    ],
+                    "mainText": "Overall, how <b><u>STRESSFUL</u></b> do you expect today will be?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thank_you"
+                        }
+                    ]
+                },
+                {
+                    "id": "thank_you",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>You have completed your Wake-up survey!  Please carry the smart phone with you today and complete the surveys when you are beeped.  Thank you for completing the survey!</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "complete"
+                        }
+                    ]
+                },
+                {
+                    "id": "day_expectations",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>On the next screens are questions about how you expect your day will be.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "pleasant_today"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": "",
+            "name": "Bedtime",
+            "screens": [
+                {
+                    "id": "feelings_intro",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>On the following screens are descriptions of feelings.  Considering the entire day since you woke up, please rate how you felt <u>today</u>.</b>",
+                    "previous": {
+                        "allowed": false
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "tense"
+                        }
+                    ]
+                },
+                {
+                    "id": "tense",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "tense",
+                            "leftLabel": "not at all",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <b><u>TENSE/ANXIOUS</u></b> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "happy"
+                        }
+                    ]
+                },
+                {
+                    "id": "getting_things_done",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "getting_things_done",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Did you have a hard time getting things done because you were fatigued today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thoughts_intro"
+                        }
+                    ]
+                },
+                {
+                    "id": "phys_symptoms_intro",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next several screens ask questions about your health and physical symptoms <u>TODAY</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "symptoms_experienced"
+                        }
+                    ]
+                },
+                {
+                    "id": "symptoms_experienced",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "symptoms_experienced",
+                            "inputs": [
+                                {
+                                    "label": "cold/flu",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "allergies",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "trembling/shaking",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "shortness of breath",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "rapid heart beat",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "poor appetite",
+                                    "value": "6"
+                                },
+                                {
+                                    "label": "upset stomach",
+                                    "value": "7"
+                                },
+                                {
+                                    "label": "chest pain/tightness",
+                                    "value": "8"
+                                },
+                                {
+                                    "label": "headaches",
+                                    "value": "9"
+                                },
+                                {
+                                    "label": "other pain",
+                                    "value": "10"
+                                },
+                                {
+                                    "label": "hot/cold flashes",
+                                    "value": "11"
+                                },
+                                {
+                                    "label": "other",
+                                    "value": "12"
+                                },
+                                {
+                                    "label": "none",
+                                    "value": "13"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Which symptoms did you experience today? ",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "1"
+                                ]
+                            },
+                            "transition": "symptoms_interfere_activities"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "2"
+                                ]
+                            },
+                            "transition": "symptoms_interfere_activities"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "3"
+                                ]
+                            },
+                            "transition": "symptoms_interfere_activities"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "4"
+                                ]
+                            },
+                            "transition": "symptoms_interfere_activities"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "5"
+                                ]
+                            },
+                            "transition": "symptoms_interfere_activities"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "6"
+                                ]
+                            },
+                            "transition": "symptoms_interfere_activities"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "7"
+                                ]
+                            },
+                            "transition": "symptoms_interfere_activities"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "8"
+                                ]
+                            },
+                            "transition": "symptoms_interfere_activities"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "9"
+                                ]
+                            },
+                            "transition": "symptoms_interfere_activities"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "10"
+                                ]
+                            },
+                            "transition": "symptoms_interfere_activities"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "11"
+                                ]
+                            },
+                            "transition": "symptoms_interfere_activities"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "12"
+                                ]
+                            },
+                            "transition": "symptoms_interfere_activities"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "symptoms_experienced",
+                                "values": [
+                                    "13"
+                                ]
+                            },
+                            "transition": "overall_physical"
+                        },
+                        {
+                            "condition": "default",
+                            "transition": "overall_physical"
+                        }
+                    ]
+                },
+                {
+                    "id": "symptoms_interfere_activities",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "symptoms_interfere_activities",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "How much did these symptoms interfere with or restrict your daily activities today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "overall_physical"
+                        }
+                    ]
+                },
+                {
+                    "id": "overall_physical",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "overall_physical",
+                            "leftLabel": "very unhealthy",
+                            "rightLabel": "very healthy"
+                        }
+                    ],
+                    "mainText": "Overall, how have you felt physically today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "getting_things_done"
+                        }
+                    ]
+                },
+                {
+                    "id": "mind_sharp",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "mind_sharp",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Today, was your mind as sharp as usual?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "memory_usual_today"
+                        }
+                    ]
+                },
+                {
+                    "id": "memory_usual_today",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "memory_usual_today",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Today, was your memory as good as usual?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thinking_fast_usual"
+                        }
+                    ]
+                },
+                {
+                    "id": "thoughts_intro",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>On the next several screens are statements that describe different thoughts that people sometimes have.  For each one, choose the response that best describes the thoughts you had <u>TODAY</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "personal_problems"
+                        }
+                    ]
+                },
+                {
+                    "id": "train_thought",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "train_thought",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very often"
+                        }
+                    ],
+                    "mainText": "Today, how often did you experience a train of thought that was difficult to get out of your head?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thoughts_future"
+                        }
+                    ]
+                },
+                {
+                    "id": "thank_you",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>You have completed the bedtime survey!  Please make sure to connect your smartphone to an outlet so it will be fully charged for tomorrow.  Thank you and good night!</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "complete"
+                        }
+                    ]
+                },
+                {
+                    "id": "happy",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "happy",
+                            "leftLabel": "not at all",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <b><u>HAPPY</u></b> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "angry"
+                        }
+                    ]
+                },
+                {
+                    "id": "personal_problems",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "personal_problems",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very often"
+                        }
+                    ],
+                    "mainText": "Today, how often did you think about personal problems and worries?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "train_thought"
+                        }
+                    ]
+                },
+                {
+                    "id": "mental_intro",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next several pages will ask questions about your mental focus, memory, and attention during the day <u>TODAY</u>.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "mind_sharp"
+                        }
+                    ]
+                },
+                {
+                    "id": "thinking_fast_usual",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thinking_fast_usual",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Today, was your thinking as fast as usual?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "PM_fails"
+                        }
+                    ]
+                },
+                {
+                    "id": "thoughts_future",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thoughts_future",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very often"
+                        }
+                    ],
+                    "mainText": "Today, how often were you preoccupied with thoughts about the future?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "situations_upset_you"
+                        }
+                    ]
+                },
+                {
+                    "id": "PM_fails",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "PM_fails",
+                            "inputs": [
+                                {
+                                    "label": "An errand/chore",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Take a medicine",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Finish a task",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "Appointment",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "Why you entered a room",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "None",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "During the day today did you forget any of the following?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "PM_fails",
+                                "values": [
+                                    "1"
+                                ]
+                            },
+                            "transition": "PM_irr"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "PM_fails",
+                                "values": [
+                                    "2"
+                                ]
+                            },
+                            "transition": "PM_irr"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "PM_fails",
+                                "values": [
+                                    "3"
+                                ]
+                            },
+                            "transition": "PM_irr"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "PM_fails",
+                                "values": [
+                                    "4"
+                                ]
+                            },
+                            "transition": "PM_irr"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "PM_fails",
+                                "values": [
+                                    "5"
+                                ]
+                            },
+                            "transition": "PM_irr"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "PM_fails",
+                                "values": [
+                                    "6"
+                                ]
+                            },
+                            "transition": "PM_no"
+                        },
+                        {
+                            "condition": "default",
+                            "transition": "PM_no"
+                        }
+                    ]
+                },
+                {
+                    "id": "RM_fails",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "RM_fails",
+                            "inputs": [
+                                {
+                                    "label": "Someone's name",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Where something was put",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "A word",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "Important information",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "Other",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "None",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Did you forget any of these other things today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "RM_fails",
+                                "values": [
+                                    "1"
+                                ]
+                            },
+                            "transition": "RM_irr"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "RM_fails",
+                                "values": [
+                                    "2"
+                                ]
+                            },
+                            "transition": "RM_irr"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "RM_fails",
+                                "values": [
+                                    "3"
+                                ]
+                            },
+                            "transition": "RM_irr"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "RM_fails",
+                                "values": [
+                                    "4"
+                                ]
+                            },
+                            "transition": "RM_irr"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "RM_fails",
+                                "values": [
+                                    "5"
+                                ]
+                            },
+                            "transition": "RM_irr"
+                        },
+                        {
+                            "condition": "=",
+                            "response": {
+                                "id": "RM_fails",
+                                "values": [
+                                    "6"
+                                ]
+                            },
+                            "transition": "RM_no"
+                        },
+                        {
+                            "condition": "default",
+                            "transition": "RM_no"
+                        }
+                    ]
+                },
+                {
+                    "id": "PM_irr",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "PM_irr",
+                            "leftLabel": "not at all",
+                            "rightLabel": "a lot"
+                        }
+                    ],
+                    "mainText": "Did forgetting this bother you?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "PM_int"
+                        }
+                    ]
+                },
+                {
+                    "id": "PM_int",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "PM_int",
+                            "leftLabel": "not at all",
+                            "rightLabel": "a lot"
+                        }
+                    ],
+                    "mainText": "Did forgetting this interfere with your daily routine?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "RM_fails"
+                        }
+                    ]
+                },
+                {
+                    "id": "RM_irr",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "RM_irr",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Did forgetting this bother you?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "RM_int"
+                        }
+                    ]
+                },
+                {
+                    "id": "RM_int",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "RM_int",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Did forgetting this interfere with your daily routine?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "difficulties_pile_up"
+                        }
+                    ]
+                },
+                {
+                    "id": "PM_no",
+                    "components": [
+                        {
+                            "type": "checkboxGroup",
+                            "responseId": "PM_no",
+                            "inputs": [
+                                {
+                                    "label": "Lists",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Reminder notes",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Appointment book",
+                                    "value": "3"
+                                },
+                                {
+                                    "label": "Had someone else remind you",
+                                    "value": "4"
+                                },
+                                {
+                                    "label": "Repeat in your head",
+                                    "value": "5"
+                                },
+                                {
+                                    "label": "None of these things",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    ],
+                    "mainText": "Did you use any of the following to help you remember? (Check all that apply)",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "RM_fails"
+                        }
+                    ]
+                },
+                {
+                    "id": "RM_no",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "RM_no",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very"
+                        }
+                    ],
+                    "mainText": "How likely are you to forget these things tomorrow?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "difficulties_pile_up"
+                        }
+                    ]
+                },
+                {
+                    "id": "difficulties_pile_up",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "difficulties_pile_up",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Today, did difficulties seem to be piling up?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "unable_control"
+                        }
+                    ]
+                },
+                {
+                    "id": "unable_control",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "unable_control",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Today, were you able to control important things?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "things_going_your_way"
+                        }
+                    ]
+                },
+                {
+                    "id": "frustrated",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "frustrated",
+                            "leftLabel": "not at all",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <u><b>FRUSTRATED</b></u> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "joyful"
+                        }
+                    ]
+                },
+                {
+                    "id": "situations_upset_you",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "situations_upset_you",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very often"
+                        }
+                    ],
+                    "mainText": "Today, how often did you think about situations that upset you?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "mental_intro"
+                        }
+                    ]
+                },
+                {
+                    "id": "things_going_your_way",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "things_going_your_way",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Today, did you feel like things were going your way?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "pleas_soc_interact"
+                        }
+                    ]
+                },
+                {
+                    "id": "pleas_soc_interact",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "pleas_soc_interact",
+                            "leftLabel": "not at all [br]pleasant",
+                            "rightLabel": "very [br]pleasant"
+                        }
+                    ],
+                    "mainText": "Overall, how pleasant were your social interactions today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "day_expect_intro"
+                        }
+                    ]
+                },
+                {
+                    "id": "day_expect_intro",
+                    "components": [
+                        
+                    ],
+                    "mainText": "<b>The next questions are about what you expect your day will be like tomorrow.</b>",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "pleasant_expect"
+                        }
+                    ]
+                },
+                {
+                    "id": "pleasant_expect",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "pleasant_expect",
+                            "leftLabel": "not at all [br]pleasant",
+                            "rightLabel": "very [br]pleasant"
+                        }
+                    ],
+                    "mainText": "Overall, how <b><u>PLEASANT</u></b> do you expect tomorrow will be?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "stressful_expect"
+                        }
+                    ]
+                },
+                {
+                    "id": "stressful_expect",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "stressful_expect",
+                            "leftLabel": "not at all [br]stressful",
+                            "rightLabel": "very [br]stressful"
+                        }
+                    ],
+                    "mainText": "Overall, how <b><u>STRESSFUL</u></b> do you expect tomorrow will be?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thank_you"
+                        }
+                    ]
+                },
+                {
+                    "id": "angry",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "angry",
+                            "leftLabel": "not at all",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <u><b>ANGRY/HOSTILE</b></u> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "pleased"
+                        }
+                    ]
+                },
+                {
+                    "id": "pleased",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "pleased",
+                            "leftLabel": "not at all",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <u><b>PLEASED</b></u> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "depressed"
+                        }
+                    ]
+                },
+                {
+                    "id": "depressed",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "depressed",
+                            "leftLabel": "not at all",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <u><b>DEPRESSED/BLUE</b></u> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "enjoyment"
+                        }
+                    ]
+                },
+                {
+                    "id": "enjoyment",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "enjoyment",
+                            "leftLabel": "none at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "How much <u><b>ENJOYMENT/FUN</b></u> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "frustrated"
+                        }
+                    ]
+                },
+                {
+                    "id": "joyful",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "joyful",
+                            "leftLabel": "not at all",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <u><b>JOYFUL</b></u> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "unhappy"
+                        }
+                    ]
+                },
+                {
+                    "id": "unhappy",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "unhappy",
+                            "leftLabel": "not at all",
+                            "rightLabel": "extremely"
+                        }
+                    ],
+                    "mainText": "How <b><u>UNHAPPY</u></b> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "phys_symptoms_intro"
+                        }
+                    ]
+                },
+                {
+                    "id": "sad",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "sad",
+                            "leftLabel": "not at all sad",
+                            "rightLabel": "extremely sad"
+                        }
+                    ],
+                    "mainText": "How <b><u>SAD</u></b> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "phys_symptoms_intro"
+                        }
+                    ]
+                },
+                {
+                    "id": "disappointed",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "disappointed",
+                            "leftLabel": "not at all [br]disappointed",
+                            "rightLabel": "extremely [br]disappointed"
+                        }
+                    ],
+                    "mainText": "How <b><u>DISAPPOINTED</u></b> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "content"
+                        }
+                    ]
+                },
+                {
+                    "id": "thoughts_difficult_stop",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "thoughts_difficult_stop",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very often"
+                        }
+                    ],
+                    "mainText": "Today, how often did you experience thoughts that were difficult to stop?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "trouble_concentrating"
+                        }
+                    ]
+                },
+                {
+                    "id": "enthusiastic",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "enthusiastic",
+                            "leftLabel": "not at all [br]enthusiastic",
+                            "rightLabel": "extremely [br]enthusiastic"
+                        }
+                    ],
+                    "mainText": "How <b><u>ENTHUSIASTIC</u></b> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "frustrated"
+                        }
+                    ]
+                },
+                {
+                    "id": "content",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "content",
+                            "leftLabel": "not at all [br]content",
+                            "rightLabel": "extremely [br]content"
+                        }
+                    ],
+                    "mainText": "How <b><u>CONTENT</u></b> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "upset"
+                        }
+                    ]
+                },
+                {
+                    "id": "trouble_concentrating",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "trouble_concentrating",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very often"
+                        }
+                    ],
+                    "mainText": "Today, how often did you have trouble concentrating?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "jumping_thoughts"
+                        }
+                    ]
+                },
+                {
+                    "id": "jumping_thoughts",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "jumping_thoughts",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very often"
+                        }
+                    ],
+                    "mainText": "Today, how often did you have thoughts that kept jumping into your head?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "situations_upset_you"
+                        }
+                    ]
+                },
+                {
+                    "id": "relaxed",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "relaxed",
+                            "leftLabel": "not at all [br]relaxed",
+                            "rightLabel": "extremely [br]relaxed"
+                        }
+                    ],
+                    "mainText": "How <b><u>RELAXED</u></b> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "sad"
+                        }
+                    ]
+                },
+                {
+                    "id": "handle_personal_probs",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "handle_personal_probs",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very much"
+                        }
+                    ],
+                    "mainText": "Today, did you feel confident in your ability to handle personal problems?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "unable_control"
+                        }
+                    ]
+                },
+                {
+                    "id": "upset",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "upset",
+                            "leftLabel": "not at all [br]upset",
+                            "rightLabel": "extremely [br]upset"
+                        }
+                    ],
+                    "mainText": "How <b><u>UPSET</u></b> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "enthusiastic"
+                        }
+                    ]
+                },
+                {
+                    "id": "tense_old",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "tense_old",
+                            "leftLabel": "not at all [br]tense",
+                            "rightLabel": "extremely [br]tense"
+                        }
+                    ],
+                    "mainText": "How <b><u>TENSE</u></b> did you feel today?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "happy"
+                        }
+                    ]
+                },
+                {
+                    "id": "personal_problems_old",
+                    "components": [
+                        {
+                            "type": "slider",
+                            "responseId": "personal_problems_old",
+                            "leftLabel": "not at all",
+                            "rightLabel": "very often"
+                        }
+                    ],
+                    "mainText": "Today, how often did you think about personal problems and concerns?",
+                    "previous": {
+                        "allowed": true
+                    },
+                    "responseCriteria": [
+                        {
+                            "condition": "default",
+                            "transition": "thoughts_difficult_stop"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
