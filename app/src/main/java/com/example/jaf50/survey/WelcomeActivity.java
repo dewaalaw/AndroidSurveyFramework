@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.example.jaf50.survey.parser.StudyModel;
@@ -33,8 +33,6 @@ public class WelcomeActivity extends FragmentActivity {
     setContentView(R.layout.survey_selection_screen);
     ButterKnife.inject(this);
 
-    Toast.makeText(this, "create", Toast.LENGTH_SHORT).show();
-
     AssessmentParserService assessmentParserService = new AssessmentParserService();
     StudyModel studyModel = assessmentParserService.parseStudy(getResources().openRawResource(R.raw.coop_city));
     AssessmentHolder.getInstance().setStudyModel(studyModel);
@@ -44,6 +42,8 @@ public class WelcomeActivity extends FragmentActivity {
     welcomeTextView.setTypeface(typeface);
 
     WelcomeModel welcomeModel = studyModel.getWelcomeScreen();
+    welcomeTextView.setText(Html.fromHtml(welcomeModel.getText()));
+
     for (final WelcomeLinkModel welcomeLinkModel : welcomeModel.getLinks()) {
       BootstrapButton button = (BootstrapButton) inflater.inflate(R.layout.survey_selection_button, null);
       button.setText(welcomeLinkModel.getSurveyName());

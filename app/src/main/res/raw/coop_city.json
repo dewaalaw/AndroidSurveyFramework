@@ -1,6 +1,6 @@
 {
     "welcomeScreen": {
-        "text": "[b]Welcome to ESCAPE![/b]",
+        "text": "<b>Welcome to ESCAPE!</b>",
         "links": [
             {
                 "surveyName": "Waking",
@@ -13,15 +13,15 @@
                 "surveyName": "Bedtime",
                 "label": "Bedtime",
                 "transitionText": "If you would like to take the bedtime survey, please tap the next button.  If not, please tap the go back button.",
-                "icon": "fa-sun-o",
-                "buttonType": "primary"
+                "icon": "fa-moon-o",
+                "buttonType": "info"
             },
             {
                 "surveyName": "Beeped",
                 "label": "Beeped",
                 "transitionText": "If you would like to take the beeped survey, please tap the next button.  If not, please tap the go back button.",
-                "icon": "fa-sun-o",
-                "buttonType": "primary"
+                "icon": "fa-bell",
+                "buttonType": "success"
             }
         ]
     },
@@ -350,8 +350,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_argument_disagreement",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this ARGUMENT/CONFLICT/DISAGREEMENT for you?",
@@ -392,8 +392,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_financial",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this FINANCIAL EVENT for you?",
@@ -434,8 +434,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_difficulty_home",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this HOME-RELATED EVENT for you?",
@@ -476,8 +476,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_difficulty_work",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this WORK-RELATED EVENT for you?",
@@ -518,8 +518,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_health_problems",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this HEALTH EVENT OR ACCIDENT for you?",
@@ -560,8 +560,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_neg_events_others",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this EVENT THAT HAPPENED TO OTHERS for you?",
@@ -602,8 +602,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_other",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this OTHER EVENT for you?",
@@ -1042,8 +1042,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_traffic",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this TRAFFIC OR TRANSPORTATION EVENT for you?",
@@ -1759,8 +1759,8 @@
                         {
                             "type": "slider",
                             "responseId": "prob_stress",
-                            "leftLabel": "not at all [br]stressful",
-                            "rightLabel": "extremely [br]stressful"
+                            "leftLabel": "not at all <br>stressful",
+                            "rightLabel": "extremely <br>stressful"
                         }
                     ],
                     "mainText": "How stressful was this problem?",
@@ -1954,8 +1954,8 @@
                         {
                             "type": "slider",
                             "responseId": "un_pleas_thoughts",
-                            "leftLabel": "unpleasant[br]thoughts",
-                            "rightLabel": "pleasant[br]thoughts"
+                            "leftLabel": "unpleasant<br>thoughts",
+                            "rightLabel": "pleasant<br>thoughts"
                         }
                     ],
                     "mainText": "In the past 5 minutes...<br>Overall, which of these best describes the thoughts you had?",
@@ -2017,8 +2017,8 @@
                         {
                             "type": "slider",
                             "responseId": "enthusiastic",
-                            "leftLabel": "not at all [br]enthusiastic",
-                            "rightLabel": "extremely [br]enthusiastic"
+                            "leftLabel": "not at all <br>enthusiastic",
+                            "rightLabel": "extremely <br>enthusiastic"
                         }
                     ],
                     "mainText": "How <b><u>ENTHUSIASTIC</u></b> do you feel right now?",
@@ -2059,8 +2059,8 @@
                         {
                             "type": "slider",
                             "responseId": "content",
-                            "leftLabel": "not at all [br]content",
-                            "rightLabel": "extremely [br]content"
+                            "leftLabel": "not at all <br>content",
+                            "rightLabel": "extremely <br>content"
                         }
                     ],
                     "mainText": "How <b><u>CONTENT</u></b> do you feel right now?",
@@ -2080,8 +2080,8 @@
                         {
                             "type": "slider",
                             "responseId": "disappointed",
-                            "leftLabel": "not at all [br]disappointed",
-                            "rightLabel": "extremely [br]disappointed"
+                            "leftLabel": "not at all <br>disappointed",
+                            "rightLabel": "extremely <br>disappointed"
                         }
                     ],
                     "mainText": "How <b><u>DISAPPOINTED</u></b> do you feel right now?",
@@ -2101,8 +2101,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_when_argument_disagreement",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this ARGUMENT/CONFLICT/DISAGREEMENT for you <u><b>when it happened</b></u>?",
@@ -2122,8 +2122,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_now_argument_disagreement",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant is this ARGUMENT/CONFLICT/DISAGREEMENT for you <u><b>now</b></u>?",
@@ -2143,8 +2143,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_when_financial",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this FINANCIAL EVENT for you <u><b>when it happened</b></u>?",
@@ -2164,8 +2164,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_now_financial",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant is this FINANCIAL EVENT for you <u><b>now</b></u>?",
@@ -2185,8 +2185,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_when_difficulty_home",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this HOME-RELATED EVENT for you <u><b>when it happened</b></u>?",
@@ -2206,8 +2206,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_now_difficulty_home",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant is this HOME-RELATED EVENT for you <u><b>now</b></u>?",
@@ -2227,8 +2227,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_when_difficulty_work",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this WORK-RELATED EVENT for you <u><b>when it happened</b></u>?",
@@ -2248,8 +2248,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_now_difficulty_work",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant is this WORK-RELATED EVENT for you <u><b>now</b></u>?",
@@ -2269,8 +2269,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_when_health_problems",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this HEALTH EVENT OR ACCIDENT for you <u><b>when it happened</b></u>?",
@@ -2290,8 +2290,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_now_health_problems",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant is this HEALTH EVENT OR ACCIDENT for you <u><b>now</b></u>?",
@@ -2311,8 +2311,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_when_neg_events_others",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this EVENT THAT HAPPENED TO OTHERS for you <u><b>when it happened</b></u>?",
@@ -2332,8 +2332,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_now_neg_events_others",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant is this EVENT THAT HAPPENED TO OTHERS for you <u><b>now</b></u>?",
@@ -2353,8 +2353,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_when_other",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this OTHER EVENT for you <u><b>when it happened</b></u>?",
@@ -2374,8 +2374,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_now_other",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant is this OTHER EVENT for you <u><b>now</b></u>?",
@@ -2395,8 +2395,8 @@
                         {
                             "type": "slider",
                             "responseId": "trouble_concentrate",
-                            "leftLabel": "no [br]trouble",
-                            "rightLabel": "a lot of [br]trouble"
+                            "leftLabel": "no <br>trouble",
+                            "rightLabel": "a lot of <br>trouble"
                         }
                     ],
                     "mainText": "In the past 5 minutes...<br>Were you having trouble concentrating?",
@@ -2416,8 +2416,8 @@
                         {
                             "type": "slider",
                             "responseId": "relaxed",
-                            "leftLabel": "not at all [br]relaxed",
-                            "rightLabel": "extremely [br]relaxed"
+                            "leftLabel": "not at all <br>relaxed",
+                            "rightLabel": "extremely <br>relaxed"
                         }
                     ],
                     "mainText": "How <b><u>RELAXED</u></b> do you feel right now?",
@@ -2437,8 +2437,8 @@
                         {
                             "type": "slider",
                             "responseId": "thoughts_unpleasant",
-                            "leftLabel": "unpleasant [br]thoughts",
-                            "rightLabel": "pleasant [br]thoughts"
+                            "leftLabel": "unpleasant <br>thoughts",
+                            "rightLabel": "pleasant <br>thoughts"
                         }
                     ],
                     "mainText": "In the past 5 minutes...<br>What type of thoughts did you have?",
@@ -2458,8 +2458,8 @@
                         {
                             "type": "slider",
                             "responseId": "distract_surroundings",
-                            "leftLabel": "not at all [br]distracting",
-                            "rightLabel": "very [br]distracting"
+                            "leftLabel": "not at all <br>distracting",
+                            "rightLabel": "very <br>distracting"
                         }
                     ],
                     "mainText": "How distracting are your current surroundings?",
@@ -2500,8 +2500,8 @@
                         {
                             "type": "slider",
                             "responseId": "upset",
-                            "leftLabel": "not at all [br]upset",
-                            "rightLabel": "extremely [br]upset"
+                            "leftLabel": "not at all <br>upset",
+                            "rightLabel": "extremely <br>upset"
                         }
                     ],
                     "mainText": "How <b><u>UPSET</u></b> do you feel right now?",
@@ -2521,8 +2521,8 @@
                         {
                             "type": "slider",
                             "responseId": "physical_active",
-                            "leftLabel": "not at all [br]active",
-                            "rightLabel": "very [br]active"
+                            "leftLabel": "not at all <br>active",
+                            "rightLabel": "very <br>active"
                         }
                     ],
                     "mainText": "Since the last survey...<br>How physically active have you been?",
@@ -2542,8 +2542,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_when_traffic",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant was this TRAFFIC OR TRANSPORTATION EVENT for you <b><u>when it happened</u></b>?",
@@ -2563,8 +2563,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_now_traffic",
-                            "leftLabel": "not at all [br]unpleasant",
-                            "rightLabel": "extremely [br]unpleasant"
+                            "leftLabel": "not at all <br>unpleasant",
+                            "rightLabel": "extremely <br>unpleasant"
                         }
                     ],
                     "mainText": "How unpleasant is this TRAFFIC OR TRANSPORTATION EVENT for you <b><u>now</u></b>?",
@@ -2986,8 +2986,8 @@
                         {
                             "type": "slider",
                             "responseId": "tense_old",
-                            "leftLabel": "not at all [br]tense",
-                            "rightLabel": "extremely [br]tense"
+                            "leftLabel": "not at all <br>tense",
+                            "rightLabel": "extremely <br>tense"
                         }
                     ],
                     "mainText": "How <b><u>TENSE</u></b> do you feel right now?",
@@ -3224,8 +3224,8 @@
                         {
                             "type": "slider",
                             "responseId": "pleasant_today",
-                            "leftLabel": "not at all [br]pleasant",
-                            "rightLabel": "very [br]pleasant"
+                            "leftLabel": "not at all <br>pleasant",
+                            "rightLabel": "very <br>pleasant"
                         }
                     ],
                     "mainText": "Overall, how <b><u>PLEASANT</u></b> do you expect today will be?",
@@ -3245,8 +3245,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_today",
-                            "leftLabel": "not at all [br]stressful",
-                            "rightLabel": "very [br]stressful"
+                            "leftLabel": "not at all <br>stressful",
+                            "rightLabel": "very <br>stressful"
                         }
                     ],
                     "mainText": "Overall, how <b><u>STRESSFUL</u></b> do you expect today will be?",
@@ -4281,8 +4281,8 @@
                         {
                             "type": "slider",
                             "responseId": "pleas_soc_interact",
-                            "leftLabel": "not at all [br]pleasant",
-                            "rightLabel": "very [br]pleasant"
+                            "leftLabel": "not at all <br>pleasant",
+                            "rightLabel": "very <br>pleasant"
                         }
                     ],
                     "mainText": "Overall, how pleasant were your social interactions today?",
@@ -4318,8 +4318,8 @@
                         {
                             "type": "slider",
                             "responseId": "pleasant_expect",
-                            "leftLabel": "not at all [br]pleasant",
-                            "rightLabel": "very [br]pleasant"
+                            "leftLabel": "not at all <br>pleasant",
+                            "rightLabel": "very <br>pleasant"
                         }
                     ],
                     "mainText": "Overall, how <b><u>PLEASANT</u></b> do you expect tomorrow will be?",
@@ -4339,8 +4339,8 @@
                         {
                             "type": "slider",
                             "responseId": "stressful_expect",
-                            "leftLabel": "not at all [br]stressful",
-                            "rightLabel": "very [br]stressful"
+                            "leftLabel": "not at all <br>stressful",
+                            "rightLabel": "very <br>stressful"
                         }
                     ],
                     "mainText": "Overall, how <b><u>STRESSFUL</u></b> do you expect tomorrow will be?",
@@ -4507,8 +4507,8 @@
                         {
                             "type": "slider",
                             "responseId": "disappointed",
-                            "leftLabel": "not at all [br]disappointed",
-                            "rightLabel": "extremely [br]disappointed"
+                            "leftLabel": "not at all <br>disappointed",
+                            "rightLabel": "extremely <br>disappointed"
                         }
                     ],
                     "mainText": "How <b><u>DISAPPOINTED</u></b> did you feel today?",
@@ -4549,8 +4549,8 @@
                         {
                             "type": "slider",
                             "responseId": "enthusiastic",
-                            "leftLabel": "not at all [br]enthusiastic",
-                            "rightLabel": "extremely [br]enthusiastic"
+                            "leftLabel": "not at all <br>enthusiastic",
+                            "rightLabel": "extremely <br>enthusiastic"
                         }
                     ],
                     "mainText": "How <b><u>ENTHUSIASTIC</u></b> did you feel today?",
@@ -4570,8 +4570,8 @@
                         {
                             "type": "slider",
                             "responseId": "content",
-                            "leftLabel": "not at all [br]content",
-                            "rightLabel": "extremely [br]content"
+                            "leftLabel": "not at all <br>content",
+                            "rightLabel": "extremely <br>content"
                         }
                     ],
                     "mainText": "How <b><u>CONTENT</u></b> did you feel today?",
@@ -4633,8 +4633,8 @@
                         {
                             "type": "slider",
                             "responseId": "relaxed",
-                            "leftLabel": "not at all [br]relaxed",
-                            "rightLabel": "extremely [br]relaxed"
+                            "leftLabel": "not at all <br>relaxed",
+                            "rightLabel": "extremely <br>relaxed"
                         }
                     ],
                     "mainText": "How <b><u>RELAXED</u></b> did you feel today?",
@@ -4675,8 +4675,8 @@
                         {
                             "type": "slider",
                             "responseId": "upset",
-                            "leftLabel": "not at all [br]upset",
-                            "rightLabel": "extremely [br]upset"
+                            "leftLabel": "not at all <br>upset",
+                            "rightLabel": "extremely <br>upset"
                         }
                     ],
                     "mainText": "How <b><u>UPSET</u></b> did you feel today?",
@@ -4696,8 +4696,8 @@
                         {
                             "type": "slider",
                             "responseId": "tense_old",
-                            "leftLabel": "not at all [br]tense",
-                            "rightLabel": "extremely [br]tense"
+                            "leftLabel": "not at all <br>tense",
+                            "rightLabel": "extremely <br>tense"
                         }
                     ],
                     "mainText": "How <b><u>TENSE</u></b> did you feel today?",

@@ -1,6 +1,7 @@
 package com.example.jaf50.survey.ui;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -51,11 +52,11 @@ public class SliderComponent extends LinearLayout implements ISurveyComponent {
   }
 
   public void setLeftLabelText(String text) {
-    this.leftLabelTextView.setText(text);
+    this.leftLabelTextView.setText(Html.fromHtml(text));
   }
 
   public void setRightLabelText(String text) {
-    this.rightLabelTextView.setText(text);
+    this.rightLabelTextView.setText(Html.fromHtml(text));
   }
 
   @Override
