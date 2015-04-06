@@ -2,9 +2,13 @@ package com.example.jaf50.survey;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.buzzbox.mob.android.scheduler.SchedulerManager;
+import com.example.jaf50.survey.alarm.LaunchSurveyTask;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.parser.SurveyModel;
@@ -20,12 +24,17 @@ public class SurveyActivity extends FragmentActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey);
 
-    //SchedulerManager.getInstance().saveTask(this, "* * * * *", LaunchSurveyTask.class);
-    //SchedulerManager.getInstance().restart(this, LaunchSurveyTask.class);
+    SchedulerManager.getInstance().saveTask(this, "* * * * *", LaunchSurveyTask.class);
+    SchedulerManager.getInstance().restart(this, LaunchSurveyTask.class);
 
     StudyModel studyModel = AssessmentHolder.getInstance().getStudyModel();
     if (getIntent() != null) {
       String surveyName = getIntent().getStringExtra("surveyName");
+      PreferenceManager.getDefaultSharedPreferences(this).edit()
+          .putBoolean(Constants.Session.IS_IN_SESSION_KEY, true)
+          .putString(Constants.Session.SURVEY_NAME_KEY, surveyName)
+          .commit();
+
       SurveyModel surveyModel = getSurveyModel(surveyName, studyModel);
       Assessment assessment = getAssessment(surveyName);
       AssessmentUiBuilderService assessmentUiBuilderService = new AssessmentUiBuilderService(this, assessment);
@@ -61,5 +70,16 @@ public class SurveyActivity extends FragmentActivity {
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
     Toast.makeText(this, "In onNewIntent(), intent = " + intent, Toast.LENGTH_LONG).show();
+    Log.d(getClass().getName(), "In onNewIntent().");
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    SurveyApplication.setCurrentActivityClass(getClass());
+  }
+
+  @Override
+  public void onBackPressed() {
   }
 }

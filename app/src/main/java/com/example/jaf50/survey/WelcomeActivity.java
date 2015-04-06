@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,21 @@ public class WelcomeActivity extends FragmentActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    if (SurveyActivity.class.equals(SurveyApplication.getCurrentActivityClass())) {
+      startSurveyActivity(null);
+      finish();
+    } else {
+      initWelcomeScreen();
+    }
+  }
+
+  private void startSurveyActivity(String surveyName) {
+    Intent intent = new Intent(WelcomeActivity.this, SurveyActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    intent.putExtra("surveyName", surveyName);
+    startActivity(intent);
+  }
+
+  private void initWelcomeScreen() {
     setContentView(R.layout.survey_selection_screen);
     ButterKnife.inject(this);
 
@@ -53,14 +69,45 @@ public class WelcomeActivity extends FragmentActivity {
       button.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          Intent intent = new Intent(WelcomeActivity.this, AssessmentWelcomeActivity.class)
-              .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-              .putExtra("welcomeText", welcomeLinkModel.getTransitionText())
-              .putExtra("surveyName", welcomeLinkModel.getSurveyName());
-          startActivity(intent);
+          showAssessmentWelcomeScreen(welcomeLinkModel);
         }
       });
       contentPanel.addView(button);
     }
+  }
+
+  private void showAssessmentWelcomeScreen(final WelcomeLinkModel welcomeLinkModel) {
+    setContentView(R.layout.activity_welcome);
+    TextView mainTextView = ButterKnife.findById(this, R.id.mainTextView);
+    mainTextView.setText(welcomeLinkModel.getTransitionText());
+
+    BootstrapButton previousButton = ButterKnife.findById(this, R.id.previousButton);
+    previousButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        initWelcomeScreen();
+      }
+    });
+
+    BootstrapButton nextButton = ButterKnife.findById(this, R.id.nextButton);
+    nextButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        startSurveyActivity(welcomeLinkModel.getSurveyName());
+        finish();
+      }
+    });
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    Log.d(getClass().getName(), "In onNewIntent().");
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    SurveyApplication.setCurrentActivityClass(getClass());
   }
 }
