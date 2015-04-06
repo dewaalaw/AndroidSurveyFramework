@@ -2,7 +2,6 @@ package com.example.jaf50.survey;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -30,10 +29,6 @@ public class SurveyActivity extends FragmentActivity {
     StudyModel studyModel = AssessmentHolder.getInstance().getStudyModel();
     if (getIntent() != null) {
       String surveyName = getIntent().getStringExtra("surveyName");
-      PreferenceManager.getDefaultSharedPreferences(this).edit()
-          .putBoolean(Constants.Session.IS_IN_SESSION_KEY, true)
-          .putString(Constants.Session.SURVEY_NAME_KEY, surveyName)
-          .commit();
 
       SurveyModel surveyModel = getSurveyModel(surveyName, studyModel);
       Assessment assessment = getAssessment(surveyName);
@@ -69,8 +64,9 @@ public class SurveyActivity extends FragmentActivity {
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
+    setIntent(intent);
     Toast.makeText(this, "In onNewIntent(), intent = " + intent, Toast.LENGTH_LONG).show();
-    Log.d(getClass().getName(), "In onNewIntent().");
+    Log.d(getClass().getName(), "In onNewIntent(), surveyName = " + getIntent().getStringExtra("surveyName"));
   }
 
   @Override

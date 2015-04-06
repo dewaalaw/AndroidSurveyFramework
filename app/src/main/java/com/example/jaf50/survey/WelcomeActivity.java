@@ -32,7 +32,7 @@ public class WelcomeActivity extends FragmentActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (SurveyActivity.class.equals(SurveyApplication.getCurrentActivityClass())) {
-      startSurveyActivity(null);
+      startSurveyActivity(getIntent().getStringExtra("surveyName"));
       finish();
     } else {
       initWelcomeScreen();
@@ -102,6 +102,7 @@ public class WelcomeActivity extends FragmentActivity {
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
+    setIntent(intent);
     Log.d(getClass().getName(), "In onNewIntent().");
   }
 
