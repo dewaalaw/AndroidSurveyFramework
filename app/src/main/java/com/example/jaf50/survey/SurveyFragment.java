@@ -18,14 +18,16 @@ import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
-import com.example.jaf50.survey.parse.sdk.BetterSaveCallback;
 import com.parse.ParseException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.Callable;
 
+import bolts.Continuation;
+import bolts.Task;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -49,6 +51,7 @@ public class SurveyFragment extends Fragment {
   private Stack<SurveyScreen> screenStack = new Stack<>();
 
   private Assessment currentAssessment;
+  private AssessmentState assessmentState;
 
   public SurveyFragment() {
   }
@@ -66,8 +69,6 @@ public class SurveyFragment extends Fragment {
           if (action instanceof DirectContentTransition) {
             transition((DirectContentTransition) action);
           } else if (action instanceof EndAssessmentAction) {
-            previousButton.setEnabled(false);
-            nextButton.setEnabled(false);
             endAssessment();
           }
         }
@@ -88,6 +89,52 @@ public class SurveyFragment extends Fragment {
     });
 
     return view;
+  }
+
+  private void endAssessment() {
+    setAssessmentState(AssessmentState.Ending);
+
+    Task.callInBackground(new Callable<Void>() {
+      @Override
+      public Void call() throws Exception {
+        saveAssessmentNow();
+        return null;
+      }
+    }).continueWith(new Continuation<Void, Object>() {
+      @Override
+      public Object then(Task<Void> task) throws Exception {
+        if (task.isFaulted()) {
+          if (getActivity() != null) {
+            Toast.makeText(getActivity(), "Data upload failed: " + task.getError(), Toast.LENGTH_LONG).show();
+          }
+          Intent i = new Intent(Intent.ACTION_SEND);
+          i.setType("message/rfc822");
+          i.putExtra(Intent.EXTRA_EMAIL, new String[]{"josh7up@gmail.com"});
+          i.putExtra(Intent.EXTRA_SUBJECT, "Survey submission error");
+          i.putExtra(Intent.EXTRA_TEXT, "Failed sending data. Stack trace = " + task.getError());
+          try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+          } catch (android.content.ActivityNotFoundException ex) {
+          }
+        }
+        return null;
+      }
+    });
+  }
+
+  public void saveAssessmentNow() throws ParseException {
+    saveAssessment();
+    currentAssessment.save();
+  }
+
+  public void saveAssessmentEventually() throws ParseException {
+    saveAssessment();
+    currentAssessment.saveEventually();
+  }
+
+  private void saveAssessment() {
+    currentAssessment.setResponses(collectResponses());
+    currentAssessment.pinInBackground();
   }
 
   private void transition(final DirectContentTransition action) {
@@ -122,33 +169,18 @@ public class SurveyFragment extends Fragment {
     screenStack.push(surveyScreen);
   }
 
-  private void endAssessment() {
-    currentAssessment.setResponses(collectResponses());
-    currentAssessment.pinInBackground();
-
-    currentAssessment.saveInBackground(new BetterSaveCallback() {
-      @Override
-      protected void onSuccess() {
-        Toast.makeText(getActivity(), "Data upload succeeded: " + currentAssessment.toString(), Toast.LENGTH_LONG).show();
-        getActivity().finish();
-      }
-
-      @Override
-      protected void onFailure(ParseException e) {
-        if (getActivity() != null) {
-          Toast.makeText(getActivity(), "Data upload failed: " + e, Toast.LENGTH_LONG).show();
-        }
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL, new String[]{"josh7up@gmail.com"});
-        i.putExtra(Intent.EXTRA_SUBJECT, "Survey submission error");
-        i.putExtra(Intent.EXTRA_TEXT, "Failed sending data. Stack trace = " + e);
-        try {
-          startActivity(Intent.createChooser(i, "Send mail..."));
-        } catch (android.content.ActivityNotFoundException ex) {
-        }
-      }
-    });
+  public void setAssessmentState(final AssessmentState assessmentState) {
+    SurveyFragment.this.assessmentState = assessmentState;
+    switch (assessmentState) {
+      case Starting:
+        previousButton.setEnabled(true);
+        nextButton.setEnabled(true);
+        break;
+      case Ending:
+        previousButton.setEnabled(false);
+        nextButton.setEnabled(false);
+        break;
+    }
   }
 
   private List<AssessmentResponse> collectResponses() {
@@ -164,16 +196,21 @@ public class SurveyFragment extends Fragment {
     return assessmentResponses;
   }
 
-  public void addSurveyScreen(SurveyScreen surveyScreen) {
-    // TODO - throw exception if this has already been added as a warning of possible duplicate ids.
-    surveyScreens.put(surveyScreen.getScreenId(), surveyScreen);
+  public void setSurveyScreens(List<SurveyScreen> surveyScreens) {
+    this.surveyScreens.clear();
+    for (SurveyScreen surveyScreen : surveyScreens) {
+      this.surveyScreens.put(surveyScreen.getScreenId(), surveyScreen);
+    }
   }
 
   public void startSurvey(String startScreenId) {
+    screenStack.clear();
     // TODO - any other setup upon survey start (e.g. capture start timestamp).
     setCurrentScreen(startScreenId);
     SurveyScreen startSurveyScreen = surveyScreens.get(startScreenId);
     screenStack.push(startSurveyScreen);
+
+    setAssessmentState(AssessmentState.Starting);
   }
 
   public void setCurrentScreen(String screenId) {

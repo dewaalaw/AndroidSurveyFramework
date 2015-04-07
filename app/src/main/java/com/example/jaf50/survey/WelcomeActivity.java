@@ -103,7 +103,11 @@ public class WelcomeActivity extends FragmentActivity {
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
     setIntent(intent);
-    Log.d(getClass().getName(), "In onNewIntent().");
+
+    String surveyName = intent.getStringExtra("surveyName");
+    Log.d(getClass().getName(), "In onNewIntent(), surveyName = " + surveyName);
+
+    startSurveyActivity(surveyName);
   }
 
   @Override
