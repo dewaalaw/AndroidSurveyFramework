@@ -55,8 +55,8 @@ public class SurveyActivity extends FragmentActivity {
       String surveyName = getIntent().getStringExtra("surveyName");
       surveyActivityService.initAssessment(surveyName, AssessmentHolder.getInstance().getStudyModel(), this);
       surveyActivityService.startSurvey();
-      UI_setCurrentScreen(surveyActivityService.getStartScreenId());
-      UI_setAssessmentState(AssessmentState.Starting);
+      setCurrentScreen(surveyActivityService.getStartScreenId());
+      setAssessmentState(AssessmentState.Starting);
     }
   }
 
@@ -64,7 +64,7 @@ public class SurveyActivity extends FragmentActivity {
   public void onPrevious() {
     if (surveyActivityService.hasPrevious()) {
       SurveyScreen previousSurveyScreen = surveyActivityService.previous();
-      UI_setCurrentScreen(previousSurveyScreen.getScreenId());
+      setCurrentScreen(previousSurveyScreen.getScreenId());
     }
   }
 
@@ -73,14 +73,14 @@ public class SurveyActivity extends FragmentActivity {
     Action action = surveyActivityService.getCurrentScreenAction();
     if (action != null) {
       if (action instanceof DirectContentTransition) {
-        UI_transition((DirectContentTransition) action);
+        transition((DirectContentTransition) action);
       } else if (action instanceof EndAssessmentAction) {
         endAssessment();
       }
     }
   }
 
-  private void UI_transition(final DirectContentTransition action) {
+  private void transition(final DirectContentTransition action) {
     if (action.requiresResponse() && !surveyActivityService.getCurrentScreen().responsesEntered()) {
       new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
           .setTitleText("Skip Question?")
@@ -93,7 +93,7 @@ public class SurveyActivity extends FragmentActivity {
               // TODO - Need to mark this screen as being "skipped".
               sweetAlertDialog.dismissWithAnimation();
               surveyActivityService.transitionToScreen(action.getToId());
-              UI_setCurrentScreen(action.getToId());
+              setCurrentScreen(action.getToId());
             }
           })
           .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -104,11 +104,11 @@ public class SurveyActivity extends FragmentActivity {
           }).show();
     } else {
       surveyActivityService.transitionToScreen(action.getToId());
-      UI_setCurrentScreen(action.getToId());
+      setCurrentScreen(action.getToId());
     }
   }
 
-  public void UI_setAssessmentState(final AssessmentState assessmentState) {
+  public void setAssessmentState(final AssessmentState assessmentState) {
     switch (assessmentState) {
       case Starting:
         previousButton.setEnabled(true);
@@ -121,19 +121,19 @@ public class SurveyActivity extends FragmentActivity {
     }
   }
 
-  private void UI_setCurrentScreen(String screenId) {
-    UI_updateNavigationButtons(surveyActivityService.getCurrentScreen());
-    UI_updateMainTextView(surveyActivityService.getCurrentScreen());
+  private void setCurrentScreen(String screenId) {
+    updateNavigationButtons(surveyActivityService.getCurrentScreen());
+    updateMainTextView(surveyActivityService.getCurrentScreen());
     contentPanel.removeAllViews();
     contentPanel.addView(surveyActivityService.getScreen(screenId));
   }
 
-  private void UI_updateMainTextView(SurveyScreen currentScreen) {
+  private void updateMainTextView(SurveyScreen currentScreen) {
     mainTextView.setText(Html.fromHtml(currentScreen.getMainText()));
     mainTextView.setVisibility(TextUtils.isEmpty(currentScreen.getMainText()) ? View.INVISIBLE : View.VISIBLE);
   }
 
-  private void UI_updateNavigationButtons(SurveyScreen currentScreen) {
+  private void updateNavigationButtons(SurveyScreen currentScreen) {
     if (currentScreen.getPreviousButtonModel().getLabel() != null) {
       setPreviousButtonLabel(currentScreen.getPreviousButtonModel().getLabel());
     }
@@ -182,22 +182,20 @@ public class SurveyActivity extends FragmentActivity {
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
     setIntent(intent);
-
-    final String surveyName = getIntent().getStringExtra("surveyName");
+    String surveyName = getIntent().getStringExtra("surveyName");
 
     Toast.makeText(this, "In onNewIntent(), intent = " + intent, Toast.LENGTH_LONG).show();
     Log.d(getClass().getName(), "In onNewIntent(), surveyName = " + surveyName);
 
     if (surveyName != null) {
-      // This method was called in response to an alarm. Save the existing assessment's data and start the alarmed survey.
-      endAssessmentForAlarm(surveyName);
+      onAlarm(surveyName);
     } else {
       Log.d(getClass().getName(), "In onNewIntent(), can't start the assessment because the surveyName is null.");
     }
   }
 
   private void endAssessment() {
-    UI_setAssessmentState(AssessmentState.Ending);
+    setAssessmentState(AssessmentState.Ending);
 
     Task.callInBackground(new Callable<Void>() {
       @Override
@@ -220,9 +218,9 @@ public class SurveyActivity extends FragmentActivity {
     }, Task.UI_THREAD_EXECUTOR);
   }
 
-  private void endAssessmentForAlarm(final String surveyName) {
+  private void onAlarm(final String surveyName) {
     // This method was called in response to an alarm. Save the existing assessment's data and start the alarmed survey.
-    UI_setAssessmentState(AssessmentState.Ending);
+    setAssessmentState(AssessmentState.Ending);
 
     Task.callInBackground(new Callable<Void>() {
       @Override
@@ -238,8 +236,8 @@ public class SurveyActivity extends FragmentActivity {
         } else {
           surveyActivityService.initAssessment(surveyName, AssessmentHolder.getInstance().getStudyModel(), SurveyActivity.this);
           surveyActivityService.startSurvey();
-          UI_setCurrentScreen(surveyActivityService.getStartScreenId());
-          UI_setAssessmentState(AssessmentState.Starting);
+          setCurrentScreen(surveyActivityService.getStartScreenId());
+          setAssessmentState(AssessmentState.Starting);
         }
         return null;
       }
