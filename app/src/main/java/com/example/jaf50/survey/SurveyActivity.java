@@ -213,6 +213,7 @@ public class SurveyActivity extends FragmentActivity {
 
   public void startSurvey(String startScreenId) {
     screenStack.clear();
+    responseStack.clear();
     // TODO - any other setup upon survey start (e.g. capture start timestamp).
     setCurrentScreen(startScreenId);
     SurveyScreen startSurveyScreen = surveyScreens.get(startScreenId);
