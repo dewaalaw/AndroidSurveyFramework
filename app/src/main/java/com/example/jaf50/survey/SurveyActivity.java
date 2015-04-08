@@ -16,23 +16,19 @@ import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
-import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.parser.SurveyModel;
 import com.example.jaf50.survey.service.AssessmentUiBuilderService;
-import com.parse.ParseException;
 import com.parse.ParseUser;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Stack;
 import java.util.concurrent.Callable;
 
 import bolts.Continuation;
 import bolts.Task;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class SurveyActivity extends FragmentActivity {
@@ -49,13 +45,8 @@ public class SurveyActivity extends FragmentActivity {
   @InjectView(R.id.previousButton)
   BootstrapButton previousButton;
 
-  private HashMap<String, SurveyScreen> surveyScreens = new HashMap<>();
-  private SurveyScreen currentScreen;
-  private Stack<SurveyScreen> screenStack = new Stack<>();
-  private Stack<List<AssessmentResponse>> responseStack = new Stack<>();
-
-  private Assessment currentAssessment;
   private AssessmentState assessmentState;
+  private SurveyActivityService surveyActivityService = new SurveyActivityService();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -67,48 +58,39 @@ public class SurveyActivity extends FragmentActivity {
 
     ButterKnife.inject(this);
 
-    nextButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Action action = currentScreen.getAction();
-        if (action != null) {
-          if (action instanceof DirectContentTransition) {
-            transition((DirectContentTransition) action);
-          } else if (action instanceof EndAssessmentAction) {
-            endAssessment();
-          }
-        }
-      }
-    });
-
-    previousButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (screenStack.size() >= 2) {
-          // Remove the current screen from the top of the stack.
-          screenStack.pop();
-          responseStack.pop();
-          // Then peek to get the previous screen.
-          SurveyScreen previousSurveyScreen = screenStack.peek();
-          setCurrentScreen(previousSurveyScreen.getScreenId());
-        }
-      }
-    });
-
     if (getIntent() != null) {
       String surveyName = getIntent().getStringExtra("surveyName");
-      StudyModel studyModel = AssessmentHolder.getInstance().getStudyModel();
-      startAssessment(studyModel, surveyName);
+      ASYNC_UI_startAssessment(AssessmentHolder.getInstance().getStudyModel(), surveyName);
     }
   }
 
-  private void endAssessment() {
-    setAssessmentState(AssessmentState.Ending);
+  @OnClick(R.id.previousButton)
+  public void onPrevious() {
+    if (surveyActivityService.hasPrevious()) {
+      SurveyScreen previousSurveyScreen = surveyActivityService.previous();
+      UI_setCurrentScreen(previousSurveyScreen.getScreenId());
+    }
+  }
+
+  @OnClick(R.id.nextButton)
+  public void onNext() {
+    Action action = surveyActivityService.getCurrentScreenAction();
+    if (action != null) {
+      if (action instanceof DirectContentTransition) {
+        UI_transition((DirectContentTransition) action);
+      } else if (action instanceof EndAssessmentAction) {
+        ASYNC_UI_endAssessment();
+      }
+    }
+  }
+
+  private void ASYNC_UI_endAssessment() {
+    UI_setAssessmentState(AssessmentState.Ending);
 
     Task.callInBackground(new Callable<Void>() {
       @Override
       public Void call() throws Exception {
-        saveAssessmentNow();
+        surveyActivityService.ASYNC_saveAssessmentNow();
         return null;
       }
     }).continueWith(new Continuation<Void, Object>() {
@@ -126,6 +108,7 @@ public class SurveyActivity extends FragmentActivity {
           } catch (android.content.ActivityNotFoundException ex) {
           }
         } else {
+          Assessment currentAssessment = surveyActivityService.getCurrentAssessment();
           Toast.makeText(SurveyActivity.this, "Uploaded data to the server for survey " + currentAssessment.getSurveyName() + " and participant " + currentAssessment.getParticipant().getUsername(), Toast.LENGTH_LONG).show();
           SurveyActivity.this.finish();
         }
@@ -134,24 +117,9 @@ public class SurveyActivity extends FragmentActivity {
     }, Task.UI_THREAD_EXECUTOR);
   }
 
-  public void saveAssessmentNow() throws ParseException {
-    saveAssessment();
-    currentAssessment.save();
-  }
-
-  public void saveAssessmentEventually() throws ParseException {
-    saveAssessment();
-    currentAssessment.saveEventually();
-  }
-
-  private void saveAssessment() {
-    currentAssessment.setResponses(collectResponses());
-    currentAssessment.pinInBackground();
-  }
-
-  private void transition(final DirectContentTransition action) {
-    if (action.requiresResponse() && !currentScreen.responsesEntered()) {
-      new SweetAlertDialog(SurveyActivity.this, SweetAlertDialog.NORMAL_TYPE)
+  private void UI_transition(final DirectContentTransition action) {
+    if (action.requiresResponse() && !surveyActivityService.getCurrentScreen().responsesEntered()) {
+      new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
           .setTitleText("Skip Question?")
           .setContentText("Would you like to skip this question?")
           .setCancelText("No")
@@ -161,7 +129,8 @@ public class SurveyActivity extends FragmentActivity {
             public void onClick(SweetAlertDialog sweetAlertDialog) {
               // TODO - Need to mark this screen as being "skipped".
               sweetAlertDialog.dismissWithAnimation();
-              transitionToNextScreen(action.getToId());
+              surveyActivityService.ASYNC_transitionToNextScreen(action.getToId());
+              UI_setCurrentScreen(action.getToId());
             }
           })
           .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -171,18 +140,12 @@ public class SurveyActivity extends FragmentActivity {
             }
           }).show();
     } else {
-      transitionToNextScreen(action.getToId());
+      surveyActivityService.ASYNC_transitionToNextScreen(action.getToId());
+      UI_setCurrentScreen(action.getToId());
     }
   }
 
-  private void transitionToNextScreen(String toScreenId) {
-    responseStack.push(currentScreen.collectResponses());
-    setCurrentScreen(toScreenId);
-    SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
-    screenStack.push(surveyScreen);
-  }
-
-  public void setAssessmentState(final AssessmentState assessmentState) {
+  public void UI_setAssessmentState(final AssessmentState assessmentState) {
     this.assessmentState = assessmentState;
     switch (assessmentState) {
       case Starting:
@@ -196,132 +159,85 @@ public class SurveyActivity extends FragmentActivity {
     }
   }
 
-  private List<AssessmentResponse> collectResponses() {
-    List<AssessmentResponse> assessmentResponses = new ArrayList<>();
-    for (List<AssessmentResponse> responses : responseStack) {
-      assessmentResponses.addAll(responses);
-    }
-    return assessmentResponses;
-  }
-
-  public void setSurveyScreens(List<SurveyScreen> surveyScreens) {
-    this.surveyScreens.clear();
-    for (SurveyScreen surveyScreen : surveyScreens) {
-      this.surveyScreens.put(surveyScreen.getScreenId(), surveyScreen);
-    }
-  }
-
-  public void startSurvey(String startScreenId) {
-    screenStack.clear();
-    responseStack.clear();
-    // TODO - any other setup upon survey start (e.g. capture start timestamp).
-    setCurrentScreen(startScreenId);
-    SurveyScreen startSurveyScreen = surveyScreens.get(startScreenId);
-    screenStack.push(startSurveyScreen);
-
-    setAssessmentState(AssessmentState.Starting);
-  }
-
-  public void setCurrentScreen(String screenId) {
-    SurveyScreen surveyScreen = surveyScreens.get(screenId);
-    if (surveyScreen == null) {
-      throw new IllegalArgumentException("Invalid survey screen id specified: '" + screenId + "'.");
-    }
-    currentScreen = surveyScreen;
-    updateNavigationButtons();
-    updateMainTextView();
+  private void UI_setCurrentScreen(String screenId) {
+    UI_updateNavigationButtons(surveyActivityService.getCurrentScreen());
+    UI_updateMainTextView(surveyActivityService.getCurrentScreen());
     contentPanel.removeAllViews();
-    contentPanel.addView(surveyScreen);
+    contentPanel.addView(surveyActivityService.getScreen(screenId));
   }
 
-  public void setCurrentAssessment(Assessment currentAssessment) {
-    this.currentAssessment = currentAssessment;
-  }
-
-  private void updateMainTextView() {
+  private void UI_updateMainTextView(SurveyScreen currentScreen) {
     mainTextView.setText(Html.fromHtml(currentScreen.getMainText()));
     mainTextView.setVisibility(TextUtils.isEmpty(currentScreen.getMainText()) ? View.INVISIBLE : View.VISIBLE);
   }
 
-  private void updateNavigationButtons() {
+  private void UI_updateNavigationButtons(SurveyScreen currentScreen) {
     if (currentScreen.getPreviousButtonModel().getLabel() != null) {
-      setPreviousButtonLabel(currentScreen.getPreviousButtonModel().getLabel());
+      UI_setPreviousButtonLabel(currentScreen.getPreviousButtonModel().getLabel());
     }
     if (currentScreen.getNextButtonModel().getLabel() != null) {
-      setNextButtonLabel(currentScreen.getNextButtonModel().getLabel());
+      UI_setNextButtonLabel(currentScreen.getNextButtonModel().getLabel());
     }
 
     if (currentScreen.getPreviousButtonModel().isAllowed()) {
-      showPreviousButton();
+      UI_showPreviousButton();
     } else {
-      hidePreviousButton();
+      UI_hidePreviousButton();
     }
 
     if (currentScreen.getNextButtonModel().isAllowed()) {
-      showNextButton();
+      UI_showNextButton();
     } else {
-      hideNextButton();
+      UI_hideNextButton();
     }
   }
 
-  public void showPreviousButton() {
+  public void UI_showPreviousButton() {
     previousButton.setVisibility(View.VISIBLE);
   }
 
-  public void showNextButton() {
+  public void UI_showNextButton() {
     nextButton.setVisibility(View.VISIBLE);
   }
 
-  public void hidePreviousButton() {
+  public void UI_hidePreviousButton() {
     previousButton.setVisibility(View.INVISIBLE);
   }
 
-  public void hideNextButton() {
+  public void UI_hideNextButton() {
     nextButton.setVisibility(View.INVISIBLE);
   }
 
-  public void setPreviousButtonLabel(String label) {
+  public void UI_setPreviousButtonLabel(String label) {
     previousButton.setText(label);
   }
 
-  public void setNextButtonLabel(String label) {
+  public void UI_setNextButtonLabel(String label) {
     nextButton.setText(label);
   }
 
-  private void startAssessment(StudyModel studyModel, String surveyName) {
-    SurveyModel surveyModel = getSurveyModel(surveyName, studyModel);
-    Assessment assessment = createAssessment(surveyName);
+  private void ASYNC_UI_startAssessment(StudyModel studyModel, String surveyName) {
+    SurveyModel surveyModel = surveyActivityService.ASYNC_getSurveyModel(surveyName, studyModel);
+    Assessment assessment = new Assessment();
+    assessment.setSurveyName(surveyName);
+    assessment.setParticipant(ParseUser.getCurrentUser());
     AssessmentUiBuilderService assessmentUiBuilderService = new AssessmentUiBuilderService(this, assessment);
     final List<SurveyScreen> surveyScreens = assessmentUiBuilderService.build(surveyModel);
 
-    setCurrentAssessment(assessment);
-    setSurveyScreens(surveyScreens);
+    surveyActivityService.ASYNC_setCurrentAssessment(assessment);
+    surveyActivityService.ASYNC_setSurveyScreens(surveyScreens);
 
     Log.d(getClass().getName(), "About to start assessment " + surveyName + ", start screen id = " + surveyScreens.get(0).getScreenId());
 
     Task.call(new Callable<Object>() {
       @Override
       public Object call() throws Exception {
-        startSurvey(surveyScreens.get(0).getScreenId());
+        surveyActivityService.ASYNC_startSurvey(surveyScreens.get(0).getScreenId());
+        UI_setCurrentScreen(surveyScreens.get(0).getScreenId());
+        UI_setAssessmentState(AssessmentState.Starting);
         return null;
       }
     }, Task.UI_THREAD_EXECUTOR);
-  }
-
-  private SurveyModel getSurveyModel(String surveyName, StudyModel studyModel) {
-    for (SurveyModel surveyModel : studyModel.getSurveys()) {
-      if (surveyModel.getName().equals(surveyName)) {
-        return surveyModel;
-      }
-    }
-    return null;
-  }
-
-  private Assessment createAssessment(String surveyName) {
-    Assessment assessment = new Assessment();
-    assessment.setSurveyName(surveyName);
-    assessment.setParticipant(ParseUser.getCurrentUser());
-    return assessment;
   }
 
   @Override
@@ -336,12 +252,12 @@ public class SurveyActivity extends FragmentActivity {
 
     if (surveyName != null) {
       // This method was called in response to an alarm. Save the existing assessment's data and start the alarmed survey.
-      setAssessmentState(AssessmentState.Ending);
+      UI_setAssessmentState(AssessmentState.Ending);
 
       Task.callInBackground(new Callable<Void>() {
         @Override
         public Void call() throws Exception {
-          saveAssessmentEventually();
+          surveyActivityService.ASYNC_saveAssessmentEventually();
           return null;
         }
       }).continueWith(new Continuation<Void, Object>() {
@@ -351,7 +267,7 @@ public class SurveyActivity extends FragmentActivity {
             // TODO - exception handling.
           } else {
             StudyModel studyModel = AssessmentHolder.getInstance().getStudyModel();
-            startAssessment(studyModel, surveyName);
+            ASYNC_UI_startAssessment(studyModel, surveyName);
           }
           return null;
         }
