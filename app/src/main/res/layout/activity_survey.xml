@@ -8,10 +8,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SurveyActivity">
 
-    <fragment
-        android:name="com.example.jaf50.survey.SurveyFragment"
+    <include layout="@layout/fragment_survey"
         android:id="@+id/survey_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_survey" />
+        android:layout_height="match_parent" />
 </RelativeLayout>
