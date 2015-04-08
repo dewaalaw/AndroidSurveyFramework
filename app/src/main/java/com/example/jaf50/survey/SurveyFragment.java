@@ -49,6 +49,7 @@ public class SurveyFragment extends Fragment {
   private HashMap<String, SurveyScreen> surveyScreens = new HashMap<>();
   private SurveyScreen currentScreen;
   private Stack<SurveyScreen> screenStack = new Stack<>();
+  private Stack<List<AssessmentResponse>> responseStack = new Stack<>();
 
   private Assessment currentAssessment;
   private AssessmentState assessmentState;
@@ -81,6 +82,7 @@ public class SurveyFragment extends Fragment {
         if (screenStack.size() >= 2) {
           // Remove the current screen from the top of the stack.
           screenStack.pop();
+          responseStack.pop();
           // Then peek to get the previous screen.
           SurveyScreen previousSurveyScreen = screenStack.peek();
           setCurrentScreen(previousSurveyScreen.getScreenId());
@@ -116,10 +118,13 @@ public class SurveyFragment extends Fragment {
             startActivity(Intent.createChooser(i, "Send mail..."));
           } catch (android.content.ActivityNotFoundException ex) {
           }
+        } else {
+          Toast.makeText(getActivity(), "Uploaded data to the server for survey " + currentAssessment.getSurveyName() + " and participant " + currentAssessment.getParticipant().getUsername(), Toast.LENGTH_LONG).show();
+          getActivity().finish();
         }
         return null;
       }
-    });
+    }, Task.UI_THREAD_EXECUTOR);
   }
 
   public void saveAssessmentNow() throws ParseException {
@@ -164,6 +169,7 @@ public class SurveyFragment extends Fragment {
   }
 
   private void transitionToNextScreen(String toScreenId) {
+    responseStack.push(currentScreen.collectResponses());
     setCurrentScreen(toScreenId);
     SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
     screenStack.push(surveyScreen);
@@ -185,14 +191,9 @@ public class SurveyFragment extends Fragment {
 
   private List<AssessmentResponse> collectResponses() {
     List<AssessmentResponse> assessmentResponses = new ArrayList<>();
-
-    SurveyScreen[] screensCopy = new SurveyScreen[screenStack.size()];
-    screenStack.copyInto(screensCopy);
-
-    for (SurveyScreen screen : screensCopy) {
-      assessmentResponses.addAll(screen.collectResponses());
+    for (List<AssessmentResponse> responses : responseStack) {
+      assessmentResponses.addAll(responses);
     }
-
     return assessmentResponses;
   }
 
