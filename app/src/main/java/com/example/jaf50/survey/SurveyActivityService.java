@@ -1,20 +1,24 @@
 package com.example.jaf50.survey;
 
+import android.content.Context;
+
 import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.parser.SurveyModel;
+import com.example.jaf50.survey.service.AssessmentUiBuilderService;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Stack;
 
 public class SurveyActivityService {
 
-  private HashMap<String, SurveyScreen> surveyScreens = new HashMap<>();
+  private LinkedHashMap<String, SurveyScreen> surveyScreens = new LinkedHashMap<>();
   private SurveyScreen currentScreen;
   private Stack<SurveyScreen> screenStack = new Stack<>();
   private Stack<List<AssessmentResponse>> responseStack = new Stack<>();
@@ -30,12 +34,12 @@ public class SurveyActivityService {
     responseStack.pop();
     // Then peek to get the previous screen.
     SurveyScreen previousSurveyScreen = screenStack.peek();
-    ASYNC_setCurrentScreen(previousSurveyScreen.getScreenId());
+    setCurrentScreen(previousSurveyScreen.getScreenId());
 
     return previousSurveyScreen;
   }
 
-  public void ASYNC_setCurrentScreen(String screenId) {
+  public void setCurrentScreen(String screenId) {
     SurveyScreen surveyScreen = surveyScreens.get(screenId);
     if (surveyScreen == null) {
       throw new IllegalArgumentException("Invalid survey screen id specified: '" + screenId + "'.");
@@ -47,19 +51,19 @@ public class SurveyActivityService {
     return currentScreen.getAction();
   }
 
-  public void ASYNC_saveAssessmentNow() throws ParseException {
-    currentAssessment.setResponses(ASYNC_collectResponses());
+  public void saveAssessmentNow() throws ParseException {
+    currentAssessment.setResponses(collectResponses());
     currentAssessment.pinInBackground();
     currentAssessment.save();
   }
 
-  public void ASYNC_saveAssessmentEventually() throws ParseException {
-    currentAssessment.setResponses(ASYNC_collectResponses());
+  public void saveAssessmentEventually() throws ParseException {
+    currentAssessment.setResponses(collectResponses());
     currentAssessment.pinInBackground();
     currentAssessment.saveEventually();
   }
 
-  private List<AssessmentResponse> ASYNC_collectResponses() {
+  private List<AssessmentResponse> collectResponses() {
     List<AssessmentResponse> assessmentResponses = new ArrayList<>();
     for (List<AssessmentResponse> responses : responseStack) {
       assessmentResponses.addAll(responses);
@@ -67,44 +71,27 @@ public class SurveyActivityService {
     return assessmentResponses;
   }
 
-  public void ASYNC_transitionToNextScreen(String toScreenId) {
+  public void transitionToScreen(String toScreenId) {
     responseStack.push(currentScreen.collectResponses());
-    ASYNC_setCurrentScreen(toScreenId);
+    setCurrentScreen(toScreenId);
     SurveyScreen surveyScreen = surveyScreens.get(toScreenId);
     screenStack.push(surveyScreen);
-    //UI_setCurrentScreen(toScreenId);
   }
 
-  public void ASYNC_setSurveyScreens(List<SurveyScreen> surveyScreens) {
-    this.surveyScreens.clear();
-    for (SurveyScreen surveyScreen : surveyScreens) {
-      this.surveyScreens.put(surveyScreen.getScreenId(), surveyScreen);
-    }
+  public void startSurvey() {
+    startSurvey(getStartScreenId());
   }
 
-  public void ASYNC_startSurvey(String startScreenId) {
+  public String getStartScreenId() {
+    return surveyScreens.keySet().iterator().next();
+  }
+
+  public void startSurvey(String startScreenId) {
     screenStack.clear();
     responseStack.clear();
     // TODO - any other setup upon survey start (e.g. capture start timestamp).
-    ASYNC_setCurrentScreen(startScreenId);
-    SurveyScreen startSurveyScreen = surveyScreens.get(startScreenId);
-    screenStack.push(startSurveyScreen);
-
-//    UI_setCurrentScreen(startScreenId);
-//    UI_setAssessmentState(AssessmentState.Starting);
-  }
-
-  public void ASYNC_setCurrentAssessment(Assessment currentAssessment) {
-    this.currentAssessment = currentAssessment;
-  }
-
-  public SurveyModel ASYNC_getSurveyModel(String surveyName, StudyModel studyModel) {
-    for (SurveyModel surveyModel : studyModel.getSurveys()) {
-      if (surveyModel.getName().equals(surveyName)) {
-        return surveyModel;
-      }
-    }
-    return null;
+    setCurrentScreen(startScreenId);
+    screenStack.push(surveyScreens.get(startScreenId));
   }
 
   public SurveyScreen getCurrentScreen() {
@@ -117,5 +104,30 @@ public class SurveyActivityService {
 
   public Assessment getCurrentAssessment() {
     return currentAssessment;
+  }
+
+  public void initAssessment(String surveyName, StudyModel studyModel, Context context) {
+    Assessment assessment = new Assessment();
+    assessment.setSurveyName(surveyName);
+    assessment.setParticipant(ParseUser.getCurrentUser());
+    this.currentAssessment = assessment;
+
+    AssessmentUiBuilderService assessmentUiBuilderService = new AssessmentUiBuilderService(context, assessment);
+    SurveyModel surveyModel = getSurveyModel(surveyName, studyModel);
+    List<SurveyScreen> surveyScreens = assessmentUiBuilderService.build(surveyModel);
+
+    this.surveyScreens.clear();
+    for (SurveyScreen surveyScreen : surveyScreens) {
+      this.surveyScreens.put(surveyScreen.getScreenId(), surveyScreen);
+    }
+  }
+
+  private SurveyModel getSurveyModel(String surveyName, StudyModel studyModel) {
+    for (SurveyModel surveyModel : studyModel.getSurveys()) {
+      if (surveyModel.getName().equals(surveyName)) {
+        return surveyModel;
+      }
+    }
+    return null;
   }
 }

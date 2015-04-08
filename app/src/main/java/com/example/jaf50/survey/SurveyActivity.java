@@ -16,12 +16,7 @@ import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
-import com.example.jaf50.survey.parser.StudyModel;
-import com.example.jaf50.survey.parser.SurveyModel;
-import com.example.jaf50.survey.service.AssessmentUiBuilderService;
-import com.parse.ParseUser;
 
-import java.util.List;
 import java.util.concurrent.Callable;
 
 import bolts.Continuation;
@@ -45,22 +40,23 @@ public class SurveyActivity extends FragmentActivity {
   @InjectView(R.id.previousButton)
   BootstrapButton previousButton;
 
-  private AssessmentState assessmentState;
   private SurveyActivityService surveyActivityService = new SurveyActivityService();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey);
+    ButterKnife.inject(this);
 
 //    SchedulerManager.getInstance().saveTask(this, "* * * * *", LaunchSurveyTask.class);
 //    SchedulerManager.getInstance().restart(this, LaunchSurveyTask.class);
 
-    ButterKnife.inject(this);
-
     if (getIntent() != null) {
       String surveyName = getIntent().getStringExtra("surveyName");
-      ASYNC_UI_startAssessment(AssessmentHolder.getInstance().getStudyModel(), surveyName);
+      surveyActivityService.initAssessment(surveyName, AssessmentHolder.getInstance().getStudyModel(), this);
+      surveyActivityService.startSurvey();
+      UI_setCurrentScreen(surveyActivityService.getStartScreenId());
+      UI_setAssessmentState(AssessmentState.Starting);
     }
   }
 
@@ -79,42 +75,9 @@ public class SurveyActivity extends FragmentActivity {
       if (action instanceof DirectContentTransition) {
         UI_transition((DirectContentTransition) action);
       } else if (action instanceof EndAssessmentAction) {
-        ASYNC_UI_endAssessment();
+        endAssessment();
       }
     }
-  }
-
-  private void ASYNC_UI_endAssessment() {
-    UI_setAssessmentState(AssessmentState.Ending);
-
-    Task.callInBackground(new Callable<Void>() {
-      @Override
-      public Void call() throws Exception {
-        surveyActivityService.ASYNC_saveAssessmentNow();
-        return null;
-      }
-    }).continueWith(new Continuation<Void, Object>() {
-      @Override
-      public Object then(Task<Void> task) throws Exception {
-        if (task.isFaulted()) {
-          Toast.makeText(SurveyActivity.this, "Data upload failed: " + task.getError(), Toast.LENGTH_LONG).show();
-          Intent i = new Intent(Intent.ACTION_SEND);
-          i.setType("message/rfc822");
-          i.putExtra(Intent.EXTRA_EMAIL, new String[]{"josh7up@gmail.com"});
-          i.putExtra(Intent.EXTRA_SUBJECT, "Survey submission error");
-          i.putExtra(Intent.EXTRA_TEXT, "Failed sending data. Stack trace = " + task.getError());
-          try {
-            startActivity(Intent.createChooser(i, "Send mail..."));
-          } catch (android.content.ActivityNotFoundException ex) {
-          }
-        } else {
-          Assessment currentAssessment = surveyActivityService.getCurrentAssessment();
-          Toast.makeText(SurveyActivity.this, "Uploaded data to the server for survey " + currentAssessment.getSurveyName() + " and participant " + currentAssessment.getParticipant().getUsername(), Toast.LENGTH_LONG).show();
-          SurveyActivity.this.finish();
-        }
-        return null;
-      }
-    }, Task.UI_THREAD_EXECUTOR);
   }
 
   private void UI_transition(final DirectContentTransition action) {
@@ -129,7 +92,7 @@ public class SurveyActivity extends FragmentActivity {
             public void onClick(SweetAlertDialog sweetAlertDialog) {
               // TODO - Need to mark this screen as being "skipped".
               sweetAlertDialog.dismissWithAnimation();
-              surveyActivityService.ASYNC_transitionToNextScreen(action.getToId());
+              surveyActivityService.transitionToScreen(action.getToId());
               UI_setCurrentScreen(action.getToId());
             }
           })
@@ -140,13 +103,12 @@ public class SurveyActivity extends FragmentActivity {
             }
           }).show();
     } else {
-      surveyActivityService.ASYNC_transitionToNextScreen(action.getToId());
+      surveyActivityService.transitionToScreen(action.getToId());
       UI_setCurrentScreen(action.getToId());
     }
   }
 
   public void UI_setAssessmentState(final AssessmentState assessmentState) {
-    this.assessmentState = assessmentState;
     switch (assessmentState) {
       case Starting:
         previousButton.setEnabled(true);
@@ -173,71 +135,47 @@ public class SurveyActivity extends FragmentActivity {
 
   private void UI_updateNavigationButtons(SurveyScreen currentScreen) {
     if (currentScreen.getPreviousButtonModel().getLabel() != null) {
-      UI_setPreviousButtonLabel(currentScreen.getPreviousButtonModel().getLabel());
+      setPreviousButtonLabel(currentScreen.getPreviousButtonModel().getLabel());
     }
     if (currentScreen.getNextButtonModel().getLabel() != null) {
-      UI_setNextButtonLabel(currentScreen.getNextButtonModel().getLabel());
+      setNextButtonLabel(currentScreen.getNextButtonModel().getLabel());
     }
 
     if (currentScreen.getPreviousButtonModel().isAllowed()) {
-      UI_showPreviousButton();
+      showPreviousButton();
     } else {
-      UI_hidePreviousButton();
+      hidePreviousButton();
     }
 
     if (currentScreen.getNextButtonModel().isAllowed()) {
-      UI_showNextButton();
+      showNextButton();
     } else {
-      UI_hideNextButton();
+      hideNextButton();
     }
   }
 
-  public void UI_showPreviousButton() {
+  public void showPreviousButton() {
     previousButton.setVisibility(View.VISIBLE);
   }
 
-  public void UI_showNextButton() {
+  public void showNextButton() {
     nextButton.setVisibility(View.VISIBLE);
   }
 
-  public void UI_hidePreviousButton() {
+  public void hidePreviousButton() {
     previousButton.setVisibility(View.INVISIBLE);
   }
 
-  public void UI_hideNextButton() {
+  public void hideNextButton() {
     nextButton.setVisibility(View.INVISIBLE);
   }
 
-  public void UI_setPreviousButtonLabel(String label) {
+  public void setPreviousButtonLabel(String label) {
     previousButton.setText(label);
   }
 
-  public void UI_setNextButtonLabel(String label) {
+  public void setNextButtonLabel(String label) {
     nextButton.setText(label);
-  }
-
-  private void ASYNC_UI_startAssessment(StudyModel studyModel, String surveyName) {
-    SurveyModel surveyModel = surveyActivityService.ASYNC_getSurveyModel(surveyName, studyModel);
-    Assessment assessment = new Assessment();
-    assessment.setSurveyName(surveyName);
-    assessment.setParticipant(ParseUser.getCurrentUser());
-    AssessmentUiBuilderService assessmentUiBuilderService = new AssessmentUiBuilderService(this, assessment);
-    final List<SurveyScreen> surveyScreens = assessmentUiBuilderService.build(surveyModel);
-
-    surveyActivityService.ASYNC_setCurrentAssessment(assessment);
-    surveyActivityService.ASYNC_setSurveyScreens(surveyScreens);
-
-    Log.d(getClass().getName(), "About to start assessment " + surveyName + ", start screen id = " + surveyScreens.get(0).getScreenId());
-
-    Task.call(new Callable<Object>() {
-      @Override
-      public Object call() throws Exception {
-        surveyActivityService.ASYNC_startSurvey(surveyScreens.get(0).getScreenId());
-        UI_setCurrentScreen(surveyScreens.get(0).getScreenId());
-        UI_setAssessmentState(AssessmentState.Starting);
-        return null;
-      }
-    }, Task.UI_THREAD_EXECUTOR);
   }
 
   @Override
@@ -252,29 +190,60 @@ public class SurveyActivity extends FragmentActivity {
 
     if (surveyName != null) {
       // This method was called in response to an alarm. Save the existing assessment's data and start the alarmed survey.
-      UI_setAssessmentState(AssessmentState.Ending);
-
-      Task.callInBackground(new Callable<Void>() {
-        @Override
-        public Void call() throws Exception {
-          surveyActivityService.ASYNC_saveAssessmentEventually();
-          return null;
-        }
-      }).continueWith(new Continuation<Void, Object>() {
-        @Override
-        public Object then(Task<Void> task) throws Exception {
-          if (task.isFaulted()) {
-            // TODO - exception handling.
-          } else {
-            StudyModel studyModel = AssessmentHolder.getInstance().getStudyModel();
-            ASYNC_UI_startAssessment(studyModel, surveyName);
-          }
-          return null;
-        }
-      });
+      endAssessmentForAlarm(surveyName);
     } else {
       Log.d(getClass().getName(), "In onNewIntent(), can't start the assessment because the surveyName is null.");
     }
+  }
+
+  private void endAssessment() {
+    UI_setAssessmentState(AssessmentState.Ending);
+
+    Task.callInBackground(new Callable<Void>() {
+      @Override
+      public Void call() throws Exception {
+        surveyActivityService.saveAssessmentNow();
+        return null;
+      }
+    }).continueWith(new Continuation<Void, Object>() {
+      @Override
+      public Object then(Task<Void> task) throws Exception {
+        if (task.isFaulted()) {
+          Toast.makeText(SurveyActivity.this, "Data upload failed: " + task.getError(), Toast.LENGTH_LONG).show();
+        } else {
+          Assessment currentAssessment = surveyActivityService.getCurrentAssessment();
+          Toast.makeText(SurveyActivity.this, "Uploaded data to the server for survey " + currentAssessment.getSurveyName() + " and participant " + currentAssessment.getParticipant().getUsername(), Toast.LENGTH_LONG).show();
+          SurveyActivity.this.finish();
+        }
+        return null;
+      }
+    }, Task.UI_THREAD_EXECUTOR);
+  }
+
+  private void endAssessmentForAlarm(final String surveyName) {
+    // This method was called in response to an alarm. Save the existing assessment's data and start the alarmed survey.
+    UI_setAssessmentState(AssessmentState.Ending);
+
+    Task.callInBackground(new Callable<Void>() {
+      @Override
+      public Void call() throws Exception {
+        surveyActivityService.saveAssessmentEventually();
+        return null;
+      }
+    }).continueWith(new Continuation<Void, Object>() {
+      @Override
+      public Object then(Task<Void> task) throws Exception {
+        if (task.isFaulted()) {
+          Toast.makeText(SurveyActivity.this, "Data upload failed when ending assessment for alarm: " + task.getError(), Toast.LENGTH_LONG).show();
+        } else {
+          surveyActivityService.initAssessment(surveyName, AssessmentHolder.getInstance().getStudyModel(), SurveyActivity.this);
+          surveyActivityService.startSurvey();
+          UI_setCurrentScreen(surveyActivityService.getStartScreenId());
+          UI_setAssessmentState(AssessmentState.Starting);
+        }
+        return null;
+      }
+    });
   }
 
   @Override
