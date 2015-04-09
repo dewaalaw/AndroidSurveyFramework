@@ -12,19 +12,9 @@ public class SurveyApplication extends Application {
   private static final String APPLICATION_ID = "M8rcJZvA3poUvvJofyS4t5K0vtpHVLg3biM1NgVK";
   private static final String CLIENT_KEY = "JPImlAeJvXtmuaTH1mmzcqe87zuOtXaUvgJTzERX";
 
-  private static Class currentActivityClass;
-
   public static void registerParseClasses() {
     ParseObject.registerSubclass(Assessment.class);
     ParseObject.registerSubclass(AssessmentResponse.class);
-  }
-
-  public static void setCurrentActivityClass(Class activityClass) {
-    currentActivityClass = activityClass;
-  }
-
-  public static Class getCurrentActivityClass() {
-    return currentActivityClass;
   }
 
   @Override

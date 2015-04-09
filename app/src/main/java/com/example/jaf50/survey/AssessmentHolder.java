@@ -6,6 +6,7 @@ public class AssessmentHolder {
 
   private static AssessmentHolder instance;
   private StudyModel studyModel;
+  private boolean isAssessmentInProgress;
 
   private AssessmentHolder() {
   }
@@ -23,5 +24,13 @@ public class AssessmentHolder {
 
   public StudyModel getStudyModel() {
     return studyModel;
+  }
+
+  public boolean isAssessmentInProgress() {
+    return isAssessmentInProgress;
+  }
+
+  public void setAssessmentInProgress(boolean isAssessmentInProgress) {
+    this.isAssessmentInProgress = isAssessmentInProgress;
   }
 }

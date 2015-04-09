@@ -31,7 +31,8 @@ public class WelcomeActivity extends FragmentActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    if (SurveyActivity.class.equals(SurveyApplication.getCurrentActivityClass())) {
+    if (AssessmentHolder.getInstance().isAssessmentInProgress() || getIntent().getStringExtra("surveyName") != null) {
+      Log.d(getClass().getName(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName"));
       startSurveyActivity(getIntent().getStringExtra("surveyName"));
       finish();
     } else {
@@ -40,8 +41,8 @@ public class WelcomeActivity extends FragmentActivity {
   }
 
   private void startSurveyActivity(String surveyName) {
-    Intent intent = new Intent(WelcomeActivity.this, SurveyActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    intent.putExtra("surveyName", surveyName);
+    Intent intent = new Intent(this, SurveyActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                                          .putExtra("surveyName", surveyName);
     startActivity(intent);
   }
 
@@ -49,15 +50,13 @@ public class WelcomeActivity extends FragmentActivity {
     setContentView(R.layout.survey_selection_screen);
     ButterKnife.inject(this);
 
-    AssessmentParserService assessmentParserService = new AssessmentParserService();
-    StudyModel studyModel = assessmentParserService.parseStudy(getResources().openRawResource(R.raw.coop_city));
-    AssessmentHolder.getInstance().setStudyModel(studyModel);
-
     LayoutInflater inflater = LayoutInflater.from(this);
     final Typeface typeface = Typeface.createFromAsset(getAssets(), "OpenSans-Bold.ttf");
     welcomeTextView.setTypeface(typeface);
 
-    WelcomeModel welcomeModel = studyModel.getWelcomeScreen();
+    initStudyModel();
+
+    WelcomeModel welcomeModel = AssessmentHolder.getInstance().getStudyModel().getWelcomeScreen();
     welcomeTextView.setText(Html.fromHtml(welcomeModel.getText()));
 
     for (final WelcomeLinkModel welcomeLinkModel : welcomeModel.getLinks()) {
@@ -74,6 +73,12 @@ public class WelcomeActivity extends FragmentActivity {
       });
       contentPanel.addView(button);
     }
+  }
+
+  private void initStudyModel() {
+    AssessmentParserService assessmentParserService = new AssessmentParserService();
+    StudyModel studyModel = assessmentParserService.parseStudy(getResources().openRawResource(R.raw.coop_city));
+    AssessmentHolder.getInstance().setStudyModel(studyModel);
   }
 
   private void showAssessmentWelcomeScreen(final WelcomeLinkModel welcomeLinkModel) {
@@ -105,14 +110,8 @@ public class WelcomeActivity extends FragmentActivity {
     setIntent(intent);
 
     String surveyName = intent.getStringExtra("surveyName");
-    Log.d(getClass().getName(), "In onNewIntent(), surveyName = " + surveyName);
+    Log.d(getClass().getName(), "In WelcomeActivity.onNewIntent(), surveyName = " + surveyName);
 
     startSurveyActivity(surveyName);
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    SurveyApplication.setCurrentActivityClass(getClass());
   }
 }

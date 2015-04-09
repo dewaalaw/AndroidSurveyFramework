@@ -12,10 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.buzzbox.mob.android.scheduler.SchedulerManager;
 import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
+import com.example.jaf50.survey.alarm.LaunchSurveyTask;
 import com.example.jaf50.survey.domain.Assessment;
+import com.example.jaf50.survey.parser.StudyModel;
+import com.example.jaf50.survey.service.AssessmentParserService;
 
 import java.util.concurrent.Callable;
 
@@ -48,16 +52,26 @@ public class SurveyActivity extends FragmentActivity {
     setContentView(R.layout.activity_survey);
     ButterKnife.inject(this);
 
-//    SchedulerManager.getInstance().saveTask(this, "* * * * *", LaunchSurveyTask.class);
-//    SchedulerManager.getInstance().restart(this, LaunchSurveyTask.class);
+    SchedulerManager.getInstance().saveTask(this, "* * * * *", LaunchSurveyTask.class);
+    SchedulerManager.getInstance().restart(this, LaunchSurveyTask.class);
 
-    if (getIntent() != null) {
-      String surveyName = getIntent().getStringExtra("surveyName");
-      surveyActivityService.initAssessment(surveyName, AssessmentHolder.getInstance().getStudyModel(), this);
-      surveyActivityService.startSurvey();
-      setCurrentScreen(surveyActivityService.getStartScreenId());
-      setAssessmentState(AssessmentState.Starting);
+    String surveyName = getIntent().getStringExtra("surveyName");
+    Log.d(getClass().getName(), "In onCreate(), surveyName = " + surveyName);
+
+    if (AssessmentHolder.getInstance().getStudyModel() == null) {
+      initStudyModel();
     }
+
+    surveyActivityService.initAssessment(surveyName, AssessmentHolder.getInstance().getStudyModel(), this);
+    surveyActivityService.startSurvey();
+    setCurrentScreen(surveyActivityService.getStartScreenId());
+    setAssessmentState(AssessmentState.Starting);
+  }
+
+  private void initStudyModel() {
+    AssessmentParserService assessmentParserService = new AssessmentParserService();
+    StudyModel studyModel = assessmentParserService.parseStudy(getResources().openRawResource(R.raw.coop_city));
+    AssessmentHolder.getInstance().setStudyModel(studyModel);
   }
 
   @OnClick(R.id.previousButton)
@@ -178,13 +192,14 @@ public class SurveyActivity extends FragmentActivity {
     nextButton.setText(label);
   }
 
+  // NOTE: this will also be called if the user taps HOME and then taps the application icon again.
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
     setIntent(intent);
     String surveyName = getIntent().getStringExtra("surveyName");
 
-    Toast.makeText(this, "In onNewIntent(), intent = " + intent, Toast.LENGTH_LONG).show();
+    Toast.makeText(this, "In SurveyActivity.onNewIntent(), intent = " + intent, Toast.LENGTH_LONG).show();
     Log.d(getClass().getName(), "In onNewIntent(), surveyName = " + surveyName);
 
     if (surveyName != null) {
@@ -211,6 +226,7 @@ public class SurveyActivity extends FragmentActivity {
         } else {
           Assessment currentAssessment = surveyActivityService.getCurrentAssessment();
           Toast.makeText(SurveyActivity.this, "Uploaded data to the server for survey " + currentAssessment.getSurveyName() + " and participant " + currentAssessment.getParticipant().getUsername(), Toast.LENGTH_LONG).show();
+          AssessmentHolder.getInstance().setAssessmentInProgress(false);
           SurveyActivity.this.finish();
         }
         return null;
@@ -241,13 +257,13 @@ public class SurveyActivity extends FragmentActivity {
         }
         return null;
       }
-    });
+    }, Task.UI_THREAD_EXECUTOR);
   }
 
   @Override
-  protected void onResume() {
-    super.onResume();
-    SurveyApplication.setCurrentActivityClass(getClass());
+  protected void onStart() {
+    super.onStart();
+    AssessmentHolder.getInstance().setAssessmentInProgress(true);
   }
 
   @Override

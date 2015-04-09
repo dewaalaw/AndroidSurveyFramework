@@ -27,11 +27,11 @@ public class RegisterActivity extends FragmentActivity implements RegisterFragme
 
   private void openSurveys() {
     Intent surveyIntent = new Intent(this, WelcomeActivity.class)
-        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    if (getIntent() != null) {
-      surveyIntent.putExtra("surveyName", getIntent().getStringExtra("surveyName"));
-    }
+        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        .putExtra("surveyName", getIntent().getStringExtra("surveyName"));
+
     Log.d(getClass().getName(), "In openSurveys(), surveyName = " + getIntent().getStringExtra("surveyName"));
+
     startActivity(surveyIntent);
     finish();
   }
