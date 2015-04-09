@@ -11,7 +11,9 @@ import com.example.jaf50.survey.service.AssessmentUiBuilderService;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Stack;
@@ -23,6 +25,7 @@ public class SurveyActivityService {
   private Stack<SurveyScreen> screenStack = new Stack<>();
   private Stack<List<AssessmentResponse>> responseStack = new Stack<>();
   private Assessment currentAssessment;
+  private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
   public boolean hasPrevious() {
     return screenStack.size() >= 2;
@@ -52,15 +55,19 @@ public class SurveyActivityService {
   }
 
   public void saveAssessmentNow() throws ParseException {
-    currentAssessment.setResponses(collectResponses());
-    currentAssessment.pinInBackground();
+    saveAssessmentLocally();
     currentAssessment.save();
   }
 
   public void saveAssessmentEventually() throws ParseException {
-    currentAssessment.setResponses(collectResponses());
-    currentAssessment.pinInBackground();
+    saveAssessmentLocally();
     currentAssessment.saveEventually();
+  }
+
+  private void saveAssessmentLocally() {
+    currentAssessment.setResponses(collectResponses());
+    currentAssessment.put("assessmentEndDate", dateFormatter.format(new Date()));
+    currentAssessment.pinInBackground();
   }
 
   private List<AssessmentResponse> collectResponses() {
@@ -89,9 +96,10 @@ public class SurveyActivityService {
   public void startSurvey(String startScreenId) {
     screenStack.clear();
     responseStack.clear();
-    // TODO - any other setup upon survey start (e.g. capture start timestamp).
     setCurrentScreen(startScreenId);
     screenStack.push(surveyScreens.get(startScreenId));
+
+    currentAssessment.put("assessmentStartDate", dateFormatter.format(new Date()));
   }
 
   public SurveyScreen getCurrentScreen() {
