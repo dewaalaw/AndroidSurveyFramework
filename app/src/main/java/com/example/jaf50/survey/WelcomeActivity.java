@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.example.jaf50.survey.alarm.SurveyAlarmScheduler;
 import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.parser.WelcomeLinkModel;
 import com.example.jaf50.survey.parser.WelcomeModel;
@@ -113,5 +114,13 @@ public class WelcomeActivity extends FragmentActivity {
     Log.d(getClass().getName(), "In WelcomeActivity.onNewIntent(), surveyName = " + surveyName);
 
     startSurveyActivity(surveyName);
+    finish();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    new SurveyAlarmScheduler().scheduleAll(this);
+    Log.d(getClass().getName(), "In onResume(), restarting tasks...");
   }
 }

@@ -12,11 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.buzzbox.mob.android.scheduler.SchedulerManager;
 import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
-import com.example.jaf50.survey.alarm.LaunchSurveyTask;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
@@ -51,9 +49,6 @@ public class SurveyActivity extends FragmentActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey);
     ButterKnife.inject(this);
-
-    SchedulerManager.getInstance().saveTask(this, "* * * * *", LaunchSurveyTask.class);
-    SchedulerManager.getInstance().restart(this, LaunchSurveyTask.class);
 
     String surveyName = getIntent().getStringExtra("surveyName");
     Log.d(getClass().getName(), "In onCreate(), surveyName = " + surveyName);
@@ -268,5 +263,11 @@ public class SurveyActivity extends FragmentActivity {
 
   @Override
   public void onBackPressed() {
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    Log.d(getClass().getName(), "In onPause()");
   }
 }
