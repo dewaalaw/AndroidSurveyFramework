@@ -111,6 +111,7 @@ public class WelcomeActivity extends FragmentActivity {
     setIntent(intent);
 
     String surveyName = intent.getStringExtra("surveyName");
+    new SurveyAlarmScheduler().scheduleAll(this, getResources().openRawResource(R.raw.coop_alarm_schedule));
     Log.d(getClass().getName(), "In WelcomeActivity.onNewIntent(), surveyName = " + surveyName);
 
     startSurveyActivity(surveyName);
@@ -120,7 +121,7 @@ public class WelcomeActivity extends FragmentActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    new SurveyAlarmScheduler().scheduleAll(this);
+    new SurveyAlarmScheduler().scheduleAll(this, getResources().openRawResource(R.raw.coop_alarm_schedule));
     Log.d(getClass().getName(), "In onResume(), restarting tasks...");
   }
 }

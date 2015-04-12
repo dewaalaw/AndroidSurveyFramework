@@ -1,0 +1,12 @@
+{
+    "alarms": [
+        {
+            "scheduleExpression": "*/3 * * * *",
+            "surveyName": "Beeped"
+        },
+        {
+            "scheduleExpression": "*/2 * * * *",
+            "surveyName": "Bedtime"
+        }
+    ]
+}
