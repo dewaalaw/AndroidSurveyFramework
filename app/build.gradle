@@ -28,6 +28,7 @@ dependencies {
     compile 'cn.pedant.sweetalert:library:1.3'
     compile 'com.joanzapata.android:android-iconify:1.0.9'
     compile project(':DiscreteSeekBar')
+    compile project(':ambience')
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])

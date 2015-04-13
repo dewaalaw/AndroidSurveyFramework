@@ -1,6 +1,7 @@
 package com.example.jaf50.survey;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
@@ -18,6 +19,8 @@ import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
+import com.tonyostudios.ambience.Ambience;
+import com.tonyostudios.ambience.AmbientTrack;
 
 import java.util.concurrent.Callable;
 
@@ -269,5 +272,17 @@ public class SurveyActivity extends FragmentActivity {
   protected void onPause() {
     super.onPause();
     Log.d(getClass().getName(), "In onPause()");
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    if (getIntent().getStringExtra("surveyName") != null) {
+      Log.d(getClass().getName(), "In onResume(), surveyName = " + getIntent().getStringExtra("surveyName") + " and this is considered an alarmed survey.");
+      Ambience.turnOn(this);
+      Uri uri =  Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.laid_back_sunday);
+      Ambience.activeInstance().addTrackToPlaylist(AmbientTrack.newInstance().setAudioUri(uri));
+      Ambience.activeInstance().play();
+    }
   }
 }
