@@ -2,10 +2,11 @@
     "alarms": [
         {
             "scheduleExpression": "*/3 * * * *",
-            "surveyName": "Beeped"
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
         },
         {
-            "scheduleExpression": "*/2 * * * *",
+            "scheduleExpression": "46 * * * *",
             "surveyName": "Bedtime"
         }
     ]

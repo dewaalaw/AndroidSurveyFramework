@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.buzzbox.mob.android.scheduler.SchedulerManager;
 import com.example.jaf50.survey.parser.alarm.AlarmModel;
 import com.example.jaf50.survey.parser.alarm.ScheduleModel;
 import com.google.gson.Gson;
@@ -24,15 +23,19 @@ public class SurveyAlarmScheduler {
                                       scheduleModel.getAlarms().size() + " are specified.");
     }
 
-    SchedulerManager.getInstance().stopAll(context);
+    SurveySchedulerManager.getInstance().stopAll(context);
 
     int taskNumber = 1;
     SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
     for (AlarmModel alarmModel : scheduleModel.getAlarms()) {
       Class<? extends LaunchSurveyTask> taskClass = LaunchSurveyTask.getTask(taskNumber++);
       editor.putString(taskClass.getSimpleName(), alarmModel.getSurveyName());
-      SchedulerManager.getInstance().saveTask(context, alarmModel.getScheduleExpression(), taskClass);
-      SchedulerManager.getInstance().restart(context, taskClass);
+
+      if (alarmModel.getMinuteRandomness() > 0) {
+        SurveySchedulerManager.getInstance().saveRandomnessMillis(context, taskClass, alarmModel.getMinuteRandomness() * 60 * 1000);
+      }
+      SurveySchedulerManager.getInstance().saveTask(context, alarmModel.getScheduleExpression(), taskClass);
+      SurveySchedulerManager.getInstance().restart(context, taskClass);
 
       Log.d(getClass().getName(), "Scheduled alarm " + alarmModel.getScheduleExpression() + " for survey " + alarmModel.getSurveyName());
     }
