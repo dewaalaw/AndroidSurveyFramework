@@ -41,7 +41,7 @@ import android.support.annotation.NonNull;
  */
 public class ThumbDrawable extends StateDrawable implements Animatable {
     //The current size for this drawable. Must be converted to real DPs
-    public static final int DEFAULT_SIZE_DP = 12;
+    public static final int DEFAULT_SIZE_DP = 17;
     private final int mSize;
     private boolean mOpen;
     private boolean mRunning;

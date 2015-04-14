@@ -174,8 +174,8 @@ public class DiscreteSeekBar extends View {
 
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         float density = context.getResources().getDisplayMetrics().density;
-        mTrackHeight = (int) (1 * density);
-        mScrubberHeight = (int) (4 * density);
+        mTrackHeight = (int) (3 * density);
+        mScrubberHeight = (int) (7 * density);
         int thumbSize = (int) (density * ThumbDrawable.DEFAULT_SIZE_DP);
 
         //Extra pixels for a touch area of 48dp
@@ -271,7 +271,9 @@ public class DiscreteSeekBar extends View {
     }
 
     public void setShouldDisplayValueIndicator(boolean shouldDisplay) {
-      mIndicator.setShouldDisplayValueIndicator(shouldDisplay);
+      if (!isInEditMode()) {
+        mIndicator.setShouldDisplayValueIndicator(shouldDisplay);
+      }
     }
 
     /**
