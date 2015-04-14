@@ -33,17 +33,21 @@ public class WelcomeActivity extends FragmentActivity {
     super.onCreate(savedInstanceState);
     if (AssessmentHolder.getInstance().isAssessmentInProgress() || getIntent().getStringExtra("surveyName") != null) {
       Log.d(getClass().getName(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName"));
-      startSurveyActivity(getIntent().getStringExtra("surveyName"));
+      startSurveyActivity(getIntent());
       finish();
     } else {
       initWelcomeScreen();
     }
   }
 
+  private void startSurveyActivity(Intent surveyLaunchIntent) {
+    startActivity(new Intent(this, SurveyActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                                        .putExtras(surveyLaunchIntent));
+  }
+
   private void startSurveyActivity(String surveyName) {
-    Intent intent = new Intent(this, SurveyActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                                          .putExtra("surveyName", surveyName);
-    startActivity(intent);
+    startActivity(new Intent(this, SurveyActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                                        .putExtra("surveyName", surveyName));
   }
 
   private void initWelcomeScreen() {
@@ -112,7 +116,7 @@ public class WelcomeActivity extends FragmentActivity {
     String surveyName = intent.getStringExtra("surveyName");
     Log.d(getClass().getName(), "In WelcomeActivity.onNewIntent(), surveyName = " + surveyName);
 
-    startSurveyActivity(surveyName);
+    startSurveyActivity(intent);
     finish();
   }
 }

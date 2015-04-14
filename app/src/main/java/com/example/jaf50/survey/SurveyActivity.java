@@ -1,7 +1,6 @@
 package com.example.jaf50.survey;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
@@ -19,8 +18,7 @@ import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
-import com.tonyostudios.ambience.Ambience;
-import com.tonyostudios.ambience.AmbientTrack;
+import com.example.jaf50.survey.service.AudioPlayerService;
 
 import java.util.concurrent.Callable;
 
@@ -54,12 +52,21 @@ public class SurveyActivity extends FragmentActivity {
     ButterKnife.inject(this);
 
     String surveyName = getIntent().getStringExtra("surveyName");
-    Log.d(getClass().getName(), "In onCreate(), surveyName = " + surveyName);
+    boolean isAlarm = getIntent().getBooleanExtra("isAlarm", false);
+    Log.d(getClass().getName(), "In onCreate(), surveyName = " + surveyName + ", isAlarm = " + isAlarm);
 
     if (AssessmentHolder.getInstance().getStudyModel() == null) {
       initStudyModel();
     }
 
+    if (isAlarm) {
+      onAlarmForNewActivity(surveyName);
+    } else {
+      startSurvey(surveyName);
+    }
+  }
+
+  private void startSurvey(String surveyName) {
     surveyActivityService.initAssessment(surveyName, AssessmentHolder.getInstance().getStudyModel(), this);
     surveyActivityService.startSurvey();
     setCurrentScreen(surveyActivityService.getStartScreenId());
@@ -196,12 +203,13 @@ public class SurveyActivity extends FragmentActivity {
     super.onNewIntent(intent);
     setIntent(intent);
     String surveyName = getIntent().getStringExtra("surveyName");
+    boolean isAlarm = getIntent().getBooleanExtra("isAlarm", false);
 
     Toast.makeText(this, "In SurveyActivity.onNewIntent(), intent = " + intent, Toast.LENGTH_LONG).show();
-    Log.d(getClass().getName(), "In onNewIntent(), surveyName = " + surveyName);
+    Log.d(getClass().getName(), "In onNewIntent(), surveyName = " + surveyName + ", isAlarm = " + isAlarm);
 
-    if (surveyName != null) {
-      onAlarm(surveyName);
+    if (surveyName != null && isAlarm) {
+      onAlarmForExistingActivity(surveyName);
     } else {
       Log.d(getClass().getName(), "In onNewIntent(), can't start the assessment because the surveyName is null.");
     }
@@ -232,7 +240,7 @@ public class SurveyActivity extends FragmentActivity {
     }, Task.UI_THREAD_EXECUTOR);
   }
 
-  private void onAlarm(final String surveyName) {
+  private void onAlarmForExistingActivity(final String surveyName) {
     // This method was called in response to an alarm. Save the existing assessment's data and start the alarmed survey.
     setAssessmentState(AssessmentState.Ending);
 
@@ -248,14 +256,22 @@ public class SurveyActivity extends FragmentActivity {
         if (task.isFaulted()) {
           Toast.makeText(SurveyActivity.this, "Data upload failed when ending assessment for alarm: " + task.getError(), Toast.LENGTH_LONG).show();
         } else {
-          surveyActivityService.initAssessment(surveyName, AssessmentHolder.getInstance().getStudyModel(), SurveyActivity.this);
-          surveyActivityService.startSurvey();
-          setCurrentScreen(surveyActivityService.getStartScreenId());
-          setAssessmentState(AssessmentState.Starting);
+          startSurvey(surveyName);
+          playAlarmAudio();
         }
         return null;
       }
     }, Task.UI_THREAD_EXECUTOR);
+  }
+
+  private void onAlarmForNewActivity(String surveyName) {
+    startSurvey(surveyName);
+    playAlarmAudio();
+  }
+
+  private void playAlarmAudio() {
+    Log.d(getClass().getName(), "In playAlarmAudio(), surveyName = " + getIntent().getStringExtra("surveyName"));
+    AudioPlayerService.getInstance().play(this, R.raw.laid_back_sunday);
   }
 
   @Override
@@ -275,14 +291,8 @@ public class SurveyActivity extends FragmentActivity {
   }
 
   @Override
-  protected void onResume() {
-    super.onResume();
-    if (getIntent().getStringExtra("surveyName") != null) {
-      Log.d(getClass().getName(), "In onResume(), surveyName = " + getIntent().getStringExtra("surveyName") + " and this is considered an alarmed survey.");
-      Ambience.turnOn(this);
-      Uri uri =  Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.laid_back_sunday);
-      Ambience.activeInstance().addTrackToPlaylist(AmbientTrack.newInstance().setAudioUri(uri));
-      Ambience.activeInstance().play();
-    }
+  protected void onStop() {
+    AudioPlayerService.getInstance().stop();
+    super.onStop();
   }
 }

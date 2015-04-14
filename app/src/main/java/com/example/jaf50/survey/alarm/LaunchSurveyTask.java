@@ -20,7 +20,8 @@ public abstract class LaunchSurveyTask implements Task {
 
       Intent surveyIntent = new Intent(contextWrapper, RegisterActivity.class)
           .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK)
-          .putExtra("surveyName", getSurveyName(contextWrapper));
+          .putExtra("surveyName", getSurveyName(contextWrapper))
+          .putExtra("isAlarm", true);
       contextWrapper.startActivity(surveyIntent);
     } catch (Exception e) {
       Log.d(getClass().getName(), "In doWork(), exception occurred: " + e);
