@@ -59,9 +59,7 @@ public class SurveyActivity extends FragmentActivity {
     boolean isTimeout = getIntent().getBooleanExtra("isTimeout", false);
     Log.d(getClass().getName(), "In onCreate(), surveyName = " + surveyName + ", isAlarm = " + isAlarm);
 
-    if (AssessmentHolder.getInstance().getStudyModel() == null) {
-      initStudyModel();
-    }
+    surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.coop_city));
 
     if (isAlarm) {
       onAlarmForNewActivity(surveyName);

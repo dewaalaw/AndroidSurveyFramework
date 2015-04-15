@@ -10,10 +10,12 @@ import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.domain.AssessmentSaveOptions;
 import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.parser.SurveyModel;
+import com.example.jaf50.survey.service.AssessmentParserService;
 import com.example.jaf50.survey.service.AssessmentUiBuilderService;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -27,6 +29,14 @@ public class SurveyActivityService {
   private Stack<SurveyScreen> screenStack = new Stack<>();
   private Stack<List<AssessmentResponse>> responseStack = new Stack<>();
   private Assessment currentAssessment;
+
+  public void initStudyModel(InputStream surveyInputStream) {
+    if (AssessmentHolder.getInstance().getStudyModel() == null) {
+      AssessmentParserService assessmentParserService = new AssessmentParserService();
+      StudyModel studyModel = assessmentParserService.parseStudy(surveyInputStream);
+      AssessmentHolder.getInstance().setStudyModel(studyModel);
+    }
+  }
 
   public boolean hasPrevious() {
     return screenStack.size() >= 2;
