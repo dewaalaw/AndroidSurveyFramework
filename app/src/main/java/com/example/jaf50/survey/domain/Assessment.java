@@ -4,11 +4,15 @@ import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @ParseClassName("Assessment")
 public class Assessment extends ParseObject {
+
+  private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
   public Assessment() {
   }
@@ -39,5 +43,29 @@ public class Assessment extends ParseObject {
 
   public void setParticipant(ParseUser participant) {
     put("participant", participant);
+  }
+
+  public void setAssessmentStartDate(Date date) {
+    put("assessmentStartDate", dateFormatter.format(date));
+  }
+
+  public String getAssessmentStartDate() {
+    return getString("assessmentStartDate");
+  }
+
+  public void setAssessmentEndDate(Date date) {
+    put("assessmentEndDate", dateFormatter.format(date));
+  }
+
+  public String getAssessmentEndDate() {
+    return getString("assessmentEndDate");
+  }
+
+  public void setAssessmentTimeoutDate(Date date) {
+    put("assessmentTimeoutDate", dateFormatter.format(date));
+  }
+
+  public String getAssessmentTimeoutDate() {
+    return getString("assessmentTimeoutDate");
   }
 }

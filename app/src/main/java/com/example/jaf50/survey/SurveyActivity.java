@@ -15,7 +15,10 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
+import com.example.jaf50.survey.alarm.AssessmentTimeoutTask;
+import com.example.jaf50.survey.alarm.SurveySchedulerManager;
 import com.example.jaf50.survey.domain.Assessment;
+import com.example.jaf50.survey.domain.AssessmentSaveOptions;
 import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
 import com.example.jaf50.survey.service.AudioPlayerService;
@@ -43,6 +46,8 @@ public class SurveyActivity extends FragmentActivity {
   @InjectView(R.id.previousButton)
   BootstrapButton previousButton;
 
+  private static final long timeoutMillis = 60000 * 5;
+
   private SurveyActivityService surveyActivityService = new SurveyActivityService();
 
   @Override
@@ -53,6 +58,7 @@ public class SurveyActivity extends FragmentActivity {
 
     String surveyName = getIntent().getStringExtra("surveyName");
     boolean isAlarm = getIntent().getBooleanExtra("isAlarm", false);
+    boolean isTimeout = getIntent().getBooleanExtra("isTimeout", false);
     Log.d(getClass().getName(), "In onCreate(), surveyName = " + surveyName + ", isAlarm = " + isAlarm);
 
     if (AssessmentHolder.getInstance().getStudyModel() == null) {
@@ -61,6 +67,8 @@ public class SurveyActivity extends FragmentActivity {
 
     if (isAlarm) {
       onAlarmForNewActivity(surveyName);
+    } else if (isTimeout) {
+      finish();
     } else {
       startSurvey(surveyName);
     }
@@ -71,6 +79,13 @@ public class SurveyActivity extends FragmentActivity {
     surveyActivityService.startSurvey();
     setCurrentScreen(surveyActivityService.getStartScreenId());
     setAssessmentState(AssessmentState.Starting);
+    scheduleAssessmentTimeout();
+  }
+
+  private void scheduleAssessmentTimeout() {
+    SurveySchedulerManager.getInstance().stop(this, AssessmentTimeoutTask.class);
+    SurveySchedulerManager.getInstance().saveTask(this, "* * * * *", AssessmentTimeoutTask.class);
+    SurveySchedulerManager.getInstance().runNow(this, AssessmentTimeoutTask.class, timeoutMillis);
   }
 
   private void initStudyModel() {
@@ -204,15 +219,41 @@ public class SurveyActivity extends FragmentActivity {
     setIntent(intent);
     String surveyName = getIntent().getStringExtra("surveyName");
     boolean isAlarm = getIntent().getBooleanExtra("isAlarm", false);
+    boolean isTimeout = getIntent().getBooleanExtra("isTimeout", false);
 
     Toast.makeText(this, "In SurveyActivity.onNewIntent(), intent = " + intent, Toast.LENGTH_LONG).show();
-    Log.d(getClass().getName(), "In onNewIntent(), surveyName = " + surveyName + ", isAlarm = " + isAlarm);
+    Log.d(getClass().getName(), "In onNewIntent(), surveyName = " + surveyName + ", isAlarm = " + isAlarm + ", isTimeout = " + isTimeout);
 
-    if (surveyName != null && isAlarm) {
+    if (isTimeout) {
+      Toast.makeText(this, "Timeout occurred!", Toast.LENGTH_LONG).show();
+      onTimeout();
+    } else if (surveyName != null && isAlarm) {
       onAlarmForExistingActivity(surveyName);
     } else {
       Log.d(getClass().getName(), "In onNewIntent(), can't start the assessment because the surveyName is null.");
     }
+  }
+
+  private void onTimeout() {
+    setAssessmentState(AssessmentState.Ending);
+
+    Task.callInBackground(new Callable<Void>() {
+      @Override
+      public Void call() throws Exception {
+        surveyActivityService.saveAssessmentEventually(new AssessmentSaveOptions().setTimeout(true));
+        return null;
+      }
+    }).continueWith(new Continuation<Void, Object>() {
+      @Override
+      public Object then(Task<Void> task) throws Exception {
+        if (task.isFaulted()) {
+          Log.d(getClass().getName(), "Data upload failed while uploading data for timeout: " + task.toString());
+        }
+        AssessmentHolder.getInstance().setAssessmentInProgress(false);
+        finish();
+        return null;
+      }
+    }, Task.UI_THREAD_EXECUTOR);
   }
 
   private void endAssessment() {
@@ -221,7 +262,7 @@ public class SurveyActivity extends FragmentActivity {
     Task.callInBackground(new Callable<Void>() {
       @Override
       public Void call() throws Exception {
-        surveyActivityService.saveAssessmentNow();
+        surveyActivityService.saveAssessmentNow(new AssessmentSaveOptions());
         return null;
       }
     }).continueWith(new Continuation<Void, Object>() {
@@ -233,7 +274,7 @@ public class SurveyActivity extends FragmentActivity {
           Assessment currentAssessment = surveyActivityService.getCurrentAssessment();
           Toast.makeText(SurveyActivity.this, "Uploaded data to the server for survey " + currentAssessment.getSurveyName() + " and participant " + currentAssessment.getParticipant().getUsername(), Toast.LENGTH_LONG).show();
           AssessmentHolder.getInstance().setAssessmentInProgress(false);
-          SurveyActivity.this.finish();
+          finish();
         }
         return null;
       }
@@ -247,7 +288,7 @@ public class SurveyActivity extends FragmentActivity {
     Task.callInBackground(new Callable<Void>() {
       @Override
       public Void call() throws Exception {
-        surveyActivityService.saveAssessmentEventually();
+        surveyActivityService.saveAssessmentEventually(new AssessmentSaveOptions());
         return null;
       }
     }).continueWith(new Continuation<Void, Object>() {

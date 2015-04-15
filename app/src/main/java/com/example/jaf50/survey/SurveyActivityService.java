@@ -5,13 +5,13 @@ import android.content.Context;
 import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
+import com.example.jaf50.survey.domain.AssessmentSaveOptions;
 import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.parser.SurveyModel;
 import com.example.jaf50.survey.service.AssessmentUiBuilderService;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -25,7 +25,6 @@ public class SurveyActivityService {
   private Stack<SurveyScreen> screenStack = new Stack<>();
   private Stack<List<AssessmentResponse>> responseStack = new Stack<>();
   private Assessment currentAssessment;
-  private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
   public boolean hasPrevious() {
     return screenStack.size() >= 2;
@@ -54,19 +53,23 @@ public class SurveyActivityService {
     return currentScreen.getAction();
   }
 
-  public void saveAssessmentNow() throws ParseException {
-    saveAssessmentLocally();
+  public void saveAssessmentNow(AssessmentSaveOptions assessmentSaveOptions) throws ParseException {
+    saveAssessmentLocally(assessmentSaveOptions);
     currentAssessment.save();
   }
 
-  public void saveAssessmentEventually() throws ParseException {
-    saveAssessmentLocally();
+  public void saveAssessmentEventually(AssessmentSaveOptions assessmentSaveOptions) throws ParseException {
+    saveAssessmentLocally(assessmentSaveOptions);
     currentAssessment.saveEventually();
   }
 
-  private void saveAssessmentLocally() {
+  private void saveAssessmentLocally(AssessmentSaveOptions assessmentSaveOptions) {
     currentAssessment.setResponses(collectResponses());
-    currentAssessment.put("assessmentEndDate", dateFormatter.format(new Date()));
+    Date date = new Date();
+    currentAssessment.setAssessmentEndDate(date);
+    if (assessmentSaveOptions.isTimeout()) {
+      currentAssessment.setAssessmentTimeoutDate(date);
+    }
     currentAssessment.pinInBackground();
   }
 
@@ -99,7 +102,7 @@ public class SurveyActivityService {
     setCurrentScreen(startScreenId);
     screenStack.push(surveyScreens.get(startScreenId));
 
-    currentAssessment.put("assessmentStartDate", dateFormatter.format(new Date()));
+    currentAssessment.setAssessmentStartDate(new Date());
   }
 
   public SurveyScreen getCurrentScreen() {
