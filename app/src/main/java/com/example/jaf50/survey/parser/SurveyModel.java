@@ -6,6 +6,7 @@ public class SurveyModel {
 
   private String description;
   private String name;
+  private int timeoutMinutes;
   private List<SurveyScreenModel> screens;
 
   public String getDescription() {
@@ -30,5 +31,13 @@ public class SurveyModel {
 
   public void setScreens(List<SurveyScreenModel> screens) {
     this.screens = screens;
+  }
+
+  public int getTimeoutMinutes() {
+    return timeoutMinutes;
+  }
+
+  public void setTimeoutMinutes(int timeoutMinutes) {
+    this.timeoutMinutes = timeoutMinutes;
   }
 }

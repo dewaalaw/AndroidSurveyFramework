@@ -3,6 +3,8 @@ package com.example.jaf50.survey;
 import android.content.Context;
 
 import com.example.jaf50.survey.actions.Action;
+import com.example.jaf50.survey.alarm.AssessmentTimeoutTask;
+import com.example.jaf50.survey.alarm.SurveySchedulerManager;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.domain.AssessmentSaveOptions;
@@ -88,21 +90,46 @@ public class SurveyActivityService {
     screenStack.push(surveyScreen);
   }
 
-  public void startSurvey() {
-    startSurvey(getStartScreenId());
+  public void startSurvey(String surveyName, StudyModel studyModel, Context context) {
+    Assessment assessment = new Assessment();
+    assessment.setSurveyName(surveyName);
+    assessment.setParticipant(ParseUser.getCurrentUser());
+    this.currentAssessment = assessment;
+
+    SurveyModel surveyModel = getSurveyModel(surveyName, studyModel);
+    List<SurveyScreen> surveyScreensList = buildSurveyScreens(surveyModel, context, assessment);
+    this.surveyScreens.clear();
+    for (SurveyScreen surveyScreen : surveyScreensList) {
+      this.surveyScreens.put(surveyScreen.getScreenId(), surveyScreen);
+    }
+
+    String startScreenId = getStartScreenId();
+    screenStack.clear();
+    responseStack.clear();
+    setCurrentScreen(startScreenId);
+    screenStack.push(this.surveyScreens.get(startScreenId));
+
+    currentAssessment.setAssessmentStartDate(new Date());
+
+    if (surveyModel.getTimeoutMinutes() > 0) {
+      scheduleAssessmentTimeout(context, surveyModel.getTimeoutMinutes());
+    }
+  }
+
+  private List<SurveyScreen> buildSurveyScreens(SurveyModel surveyModel, Context context, Assessment assessment) {
+    AssessmentUiBuilderService assessmentUiBuilderService = new AssessmentUiBuilderService(context, assessment);
+    return assessmentUiBuilderService.build(surveyModel);
   }
 
   public String getStartScreenId() {
     return surveyScreens.keySet().iterator().next();
   }
 
-  public void startSurvey(String startScreenId) {
-    screenStack.clear();
-    responseStack.clear();
-    setCurrentScreen(startScreenId);
-    screenStack.push(surveyScreens.get(startScreenId));
-
-    currentAssessment.setAssessmentStartDate(new Date());
+  private void scheduleAssessmentTimeout(Context context, int timeoutMinutes) {
+    SurveySchedulerManager.getInstance().stop(context, AssessmentTimeoutTask.class);
+    // Need to save the timeout task with a valid cron expression, even though the task will be scheduled as a "one shot".
+    SurveySchedulerManager.getInstance().saveTask(context, "0 0 1 1 *", AssessmentTimeoutTask.class);
+    SurveySchedulerManager.getInstance().runNow(context, AssessmentTimeoutTask.class, timeoutMinutes * 60 * 1000);
   }
 
   public SurveyScreen getCurrentScreen() {
@@ -115,22 +142,6 @@ public class SurveyActivityService {
 
   public Assessment getCurrentAssessment() {
     return currentAssessment;
-  }
-
-  public void initAssessment(String surveyName, StudyModel studyModel, Context context) {
-    Assessment assessment = new Assessment();
-    assessment.setSurveyName(surveyName);
-    assessment.setParticipant(ParseUser.getCurrentUser());
-    this.currentAssessment = assessment;
-
-    AssessmentUiBuilderService assessmentUiBuilderService = new AssessmentUiBuilderService(context, assessment);
-    SurveyModel surveyModel = getSurveyModel(surveyName, studyModel);
-    List<SurveyScreen> surveyScreens = assessmentUiBuilderService.build(surveyModel);
-
-    this.surveyScreens.clear();
-    for (SurveyScreen surveyScreen : surveyScreens) {
-      this.surveyScreens.put(surveyScreen.getScreenId(), surveyScreen);
-    }
   }
 
   private SurveyModel getSurveyModel(String surveyName, StudyModel studyModel) {

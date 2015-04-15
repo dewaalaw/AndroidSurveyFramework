@@ -15,8 +15,6 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
-import com.example.jaf50.survey.alarm.AssessmentTimeoutTask;
-import com.example.jaf50.survey.alarm.SurveySchedulerManager;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentSaveOptions;
 import com.example.jaf50.survey.parser.StudyModel;
@@ -75,17 +73,9 @@ public class SurveyActivity extends FragmentActivity {
   }
 
   private void startSurvey(String surveyName) {
-    surveyActivityService.initAssessment(surveyName, AssessmentHolder.getInstance().getStudyModel(), this);
-    surveyActivityService.startSurvey();
+    surveyActivityService.startSurvey(surveyName, AssessmentHolder.getInstance().getStudyModel(), this);
     setCurrentScreen(surveyActivityService.getStartScreenId());
     setAssessmentState(AssessmentState.Starting);
-    scheduleAssessmentTimeout();
-  }
-
-  private void scheduleAssessmentTimeout() {
-    SurveySchedulerManager.getInstance().stop(this, AssessmentTimeoutTask.class);
-    SurveySchedulerManager.getInstance().saveTask(this, "* * * * *", AssessmentTimeoutTask.class);
-    SurveySchedulerManager.getInstance().runNow(this, AssessmentTimeoutTask.class, timeoutMillis);
   }
 
   private void initStudyModel() {
@@ -235,6 +225,8 @@ public class SurveyActivity extends FragmentActivity {
   }
 
   private void onTimeout() {
+    Log.d(getClass().getName(), "In onTimeout()");
+
     setAssessmentState(AssessmentState.Ending);
 
     Task.callInBackground(new Callable<Void>() {
@@ -246,6 +238,7 @@ public class SurveyActivity extends FragmentActivity {
     }).continueWith(new Continuation<Void, Object>() {
       @Override
       public Object then(Task<Void> task) throws Exception {
+        Log.d(getClass().getName(), "In onTimeout(), continueWith block, task error? " + task.isFaulted());
         if (task.isFaulted()) {
           Log.d(getClass().getName(), "Data upload failed while uploading data for timeout: " + task.toString());
         }

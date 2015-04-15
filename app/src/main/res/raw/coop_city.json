@@ -29,6 +29,7 @@
         {
             "description": "",
             "name": "Beeped",
+            "timeoutMinutes": 10,
             "screens": [
                 {
                     "id": "feel_rt_now_intro",
@@ -3048,6 +3049,7 @@
         {
             "description": "",
             "name": "Waking",
+            "timeoutMinutes": 10,
             "screens": [
                 {
                     "id": "sleep_last_night_intro",
@@ -3296,6 +3298,7 @@
         {
             "description": "",
             "name": "Bedtime",
+            "timeoutMinutes": 10,
             "screens": [
                 {
                     "id": "feelings_intro",
