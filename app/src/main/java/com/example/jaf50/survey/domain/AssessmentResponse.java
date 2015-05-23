@@ -3,6 +3,8 @@ package com.example.jaf50.survey.domain;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 @ParseClassName("AssessmentResponse")
@@ -25,7 +27,11 @@ public class AssessmentResponse extends ParseObject {
 
   public void setValues(List<Object> values) {
     remove("values");
-    addAll("values", values);
+    if (values != null) {
+      addAll("values", values);
+    } else {
+      put("values", JSONObject.NULL);
+    }
   }
 
   public void addValue(Object value) {
@@ -37,7 +43,11 @@ public class AssessmentResponse extends ParseObject {
   }
 
   public void setResponseDate(String responseDate) {
-    put("responseDate", responseDate);
+    if (responseDate != null) {
+      put("responseDate", responseDate);
+    } else {
+      put("responseDate", JSONObject.NULL);
+    }
   }
 
   public boolean isEmpty() {

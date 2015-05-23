@@ -1,5 +1,7 @@
 package com.example.jaf50.survey.parser;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class SurveyModel {
@@ -8,6 +10,16 @@ public class SurveyModel {
   private String name;
   private int timeoutMinutes;
   private List<SurveyScreenModel> screens;
+
+  public List<String> getResponseIds() {
+    LinkedHashSet<String> responseIds = new LinkedHashSet<>();
+    for (SurveyScreenModel model : screens) {
+      if (model.getResponseCriteria().size() > 0) {
+        responseIds.add(model.getId());
+      }
+    }
+    return new ArrayList<String>(responseIds);
+  }
 
   public String getDescription() {
     return description;

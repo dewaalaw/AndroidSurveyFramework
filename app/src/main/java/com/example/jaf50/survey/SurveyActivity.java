@@ -17,14 +17,12 @@ import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentSaveOptions;
-import com.example.jaf50.survey.parser.StudyModel;
-import com.example.jaf50.survey.service.AssessmentParserService;
+import com.example.jaf50.survey.service.AssessmentService;
 import com.example.jaf50.survey.service.AudioPlayerService;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import java.util.concurrent.Callable;
+import org.apache.http.Header;
 
-import bolts.Continuation;
-import bolts.Task;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -74,12 +72,6 @@ public class SurveyActivity extends FragmentActivity {
     surveyActivityService.startSurvey(surveyName, AssessmentHolder.getInstance().getStudyModel(), this);
     setCurrentScreen(surveyActivityService.getStartScreenId());
     setAssessmentState(AssessmentState.Starting);
-  }
-
-  private void initStudyModel() {
-    AssessmentParserService assessmentParserService = new AssessmentParserService();
-    StudyModel studyModel = assessmentParserService.parseStudy(getResources().openRawResource(R.raw.coop_city));
-    AssessmentHolder.getInstance().setStudyModel(studyModel);
   }
 
   @OnClick(R.id.previousButton)
@@ -227,73 +219,67 @@ public class SurveyActivity extends FragmentActivity {
 
     setAssessmentState(AssessmentState.Ending);
 
-    Task.callInBackground(new Callable<Void>() {
+    AssessmentService service = new AssessmentService();
+    final Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions().setTimeout(true));
+    service.save(currentAssessment, this, new AsyncHttpResponseHandler() {
       @Override
-      public Void call() throws Exception {
-        surveyActivityService.saveAssessmentEventually(new AssessmentSaveOptions().setTimeout(true));
-        return null;
-      }
-    }).continueWith(new Continuation<Void, Object>() {
-      @Override
-      public Object then(Task<Void> task) throws Exception {
-        Log.d(getClass().getName(), "In onTimeout(), continueWith block, task error? " + task.isFaulted());
-        if (task.isFaulted()) {
-          Log.d(getClass().getName(), "Data upload failed while uploading data for timeout: " + task.toString());
-        }
+      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        Log.d(getClass().getName(), "In onTimeout(), saved assessment.");
+        Toast.makeText(SurveyActivity.this, "Uploaded data to the server for survey " + currentAssessment.getSurveyName() + " and participant " + currentAssessment.getParticipant().getUsername(), Toast.LENGTH_LONG).show();
         AssessmentHolder.getInstance().setAssessmentInProgress(false);
         finish();
-        return null;
       }
-    }, Task.UI_THREAD_EXECUTOR);
+
+      @Override
+      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+        Log.e(AssessmentService.class.getName(), "Error posting assessment in onTimeout(): " + new String(responseBody));
+      }
+    });
   }
 
   private void endAssessment() {
     setAssessmentState(AssessmentState.Ending);
 
-    Task.callInBackground(new Callable<Void>() {
+    AssessmentService service = new AssessmentService();
+    final Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions());
+    service.save(currentAssessment, this, new AsyncHttpResponseHandler() {
       @Override
-      public Void call() throws Exception {
-        surveyActivityService.saveAssessmentNow(new AssessmentSaveOptions());
-        return null;
+      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        Log.d(AssessmentService.class.getName(), "Saved assessment successfully: " + new String(responseBody));
+        Toast.makeText(SurveyActivity.this, "Uploaded data to the server for survey " + currentAssessment.getSurveyName() + " and participant " + currentAssessment.getParticipant().getUsername(), Toast.LENGTH_LONG).show();
+        AssessmentHolder.getInstance().setAssessmentInProgress(false);
+        finish();
       }
-    }).continueWith(new Continuation<Void, Object>() {
+
       @Override
-      public Object then(Task<Void> task) throws Exception {
-        if (task.isFaulted()) {
-          Toast.makeText(SurveyActivity.this, "Data upload failed: " + task.getError(), Toast.LENGTH_LONG).show();
-        } else {
-          Assessment currentAssessment = surveyActivityService.getCurrentAssessment();
-          Toast.makeText(SurveyActivity.this, "Uploaded data to the server for survey " + currentAssessment.getSurveyName() + " and participant " + currentAssessment.getParticipant().getUsername(), Toast.LENGTH_LONG).show();
-          AssessmentHolder.getInstance().setAssessmentInProgress(false);
-          finish();
-        }
-        return null;
+      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+        Log.e(AssessmentService.class.getName(), "Error posting assessment: " + new String(responseBody));
+        Toast.makeText(SurveyActivity.this, "Data upload failed: " + error, Toast.LENGTH_LONG).show();
       }
-    }, Task.UI_THREAD_EXECUTOR);
+    });
   }
 
   private void onAlarmForExistingActivity(final String surveyName) {
     // This method was called in response to an alarm. Save the existing assessment's data and start the alarmed survey.
     setAssessmentState(AssessmentState.Ending);
 
-    Task.callInBackground(new Callable<Void>() {
+    AssessmentService service = new AssessmentService();
+    final Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions());
+    // TODO - don't wait for this assessment to save before moving on to the alarmed assessment.
+    service.save(currentAssessment, this, new AsyncHttpResponseHandler() {
       @Override
-      public Void call() throws Exception {
-        surveyActivityService.saveAssessmentEventually(new AssessmentSaveOptions());
-        return null;
+      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        Log.d(AssessmentService.class.getName(), "Saved assessment successfully: " + new String(responseBody));
+        startSurvey(surveyName);
+        playAlarmAudio();
       }
-    }).continueWith(new Continuation<Void, Object>() {
+
       @Override
-      public Object then(Task<Void> task) throws Exception {
-        if (task.isFaulted()) {
-          Toast.makeText(SurveyActivity.this, "Data upload failed when ending assessment for alarm: " + task.getError(), Toast.LENGTH_LONG).show();
-        } else {
-          startSurvey(surveyName);
-          playAlarmAudio();
-        }
-        return null;
+      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+        Log.e(AssessmentService.class.getName(), "Error posting assessment: " + new String(responseBody));
+        Toast.makeText(SurveyActivity.this, "Data upload failed when ending assessment for alarm: " + error, Toast.LENGTH_LONG).show();
       }
-    }, Task.UI_THREAD_EXECUTOR);
+    });
   }
 
   private void onAlarmForNewActivity(String surveyName) {
