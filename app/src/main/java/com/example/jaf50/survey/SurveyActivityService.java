@@ -12,13 +12,11 @@ import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.parser.SurveyModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
 import com.example.jaf50.survey.service.AssessmentUiBuilderService;
-import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Stack;
@@ -66,11 +64,6 @@ public class SurveyActivityService {
     return currentScreen.getAction();
   }
 
-//  public void saveAssessmentNow(AssessmentSaveOptions assessmentSaveOptions) throws ParseException {
-//    saveAssessmentLocally(assessmentSaveOptions);
-//    currentAssessment.save();
-//  }
-
   public Assessment collectAssessment(AssessmentSaveOptions assessmentSaveOptions) {
     currentAssessment.setResponses(collectResponses());
     Date date = new Date();
@@ -81,40 +74,11 @@ public class SurveyActivityService {
     return currentAssessment;
   }
 
-  public void saveAssessmentEventually(AssessmentSaveOptions assessmentSaveOptions) throws ParseException {
-    saveAssessmentLocally(assessmentSaveOptions);
-    currentAssessment.saveEventually();
-  }
-
-  private void saveAssessmentLocally(AssessmentSaveOptions assessmentSaveOptions) {
-    currentAssessment.setResponses(collectResponses());
-    Date date = new Date();
-    currentAssessment.setAssessmentEndDate(date);
-    if (assessmentSaveOptions.isTimeout()) {
-      currentAssessment.setAssessmentTimeoutDate(date);
-    }
-    currentAssessment.pinInBackground();
-  }
-
   private List<AssessmentResponse> collectResponses() {
-    SurveyModel surveyModel = getSurveyModel(this.currentAssessment.getSurveyName(), AssessmentHolder.getInstance().getStudyModel());
-    List<String> responseIds = surveyModel.getResponseIds();
     List<AssessmentResponse> assessmentResponses = new ArrayList<>();
-    HashMap<String, AssessmentResponse> responseMap = new HashMap<>();
 
     for (List<AssessmentResponse> responses : responseStack) {
       for (AssessmentResponse response : responses) {
-        assessmentResponses.add(response);
-        responseMap.put(response.getResponseId(), response);
-      }
-    }
-
-    for (String responseId : responseIds) {
-      if (!responseMap.containsKey(responseId)) {
-        AssessmentResponse response = new AssessmentResponse();
-        response.setResponseId(responseId);
-        response.setResponseDate(null);
-        response.setValues(null);
         assessmentResponses.add(response);
       }
     }
