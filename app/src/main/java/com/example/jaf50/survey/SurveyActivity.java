@@ -87,39 +87,40 @@ public class SurveyActivity extends FragmentActivity {
     Action action = surveyActivityService.getCurrentScreenAction();
     if (action != null) {
       if (action instanceof DirectContentTransition) {
-        transition((DirectContentTransition) action);
+        DirectContentTransition directContentTransition = (DirectContentTransition) action;
+        if (directContentTransition.requiresResponse() && !surveyActivityService.getCurrentScreen().responsesEntered()) {
+          showSkipDialog(directContentTransition);
+        } else {
+          surveyActivityService.transitionToScreen(directContentTransition.getToId());
+          setCurrentScreen(directContentTransition.getToId());
+        }
       } else if (action instanceof EndAssessmentAction) {
         endAssessment();
       }
     }
   }
 
-  private void transition(final DirectContentTransition action) {
-    if (action.requiresResponse() && !surveyActivityService.getCurrentScreen().responsesEntered()) {
-      new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
-          .setTitleText("Skip Question?")
-          .setContentText("Would you like to skip this question?")
-          .setCancelText("No")
-          .setConfirmText("Yes")
-          .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-              // TODO - Need to mark this screen as being "skipped".
-              sweetAlertDialog.dismissWithAnimation();
-              surveyActivityService.transitionToScreen(action.getToId());
-              setCurrentScreen(action.getToId());
-            }
-          })
-          .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-              sweetAlertDialog.dismissWithAnimation();
-            }
-          }).show();
-    } else {
-      surveyActivityService.transitionToScreen(action.getToId());
-      setCurrentScreen(action.getToId());
-    }
+  private void showSkipDialog(final DirectContentTransition directContentTransition) {
+    new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+        .setTitleText("Skip Question?")
+        .setContentText("Would you like to skip this question?")
+        .setCancelText("No")
+        .setConfirmText("Yes")
+        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+          @Override
+          public void onClick(SweetAlertDialog sweetAlertDialog) {
+            sweetAlertDialog.dismissWithAnimation();
+            surveyActivityService.transitionToScreen(directContentTransition.getToId());
+            setCurrentScreen(directContentTransition.getToId());
+          }
+        })
+        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+          @Override
+          public void onClick(SweetAlertDialog sweetAlertDialog) {
+            sweetAlertDialog.dismissWithAnimation();
+          }
+        })
+        .show();
   }
 
   public void setAssessmentState(final AssessmentState assessmentState) {

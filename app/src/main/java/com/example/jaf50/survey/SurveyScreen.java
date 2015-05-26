@@ -30,6 +30,7 @@ public class SurveyScreen extends LinearLayout {
   private String mainText;
   private NavigationButtonModel previousButtonModel;
   private NavigationButtonModel nextButtonModel;
+  private ResponseCollectorService responseCollectorService = new ResponseCollectorService();
 
   public SurveyScreen(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -58,7 +59,7 @@ public class SurveyScreen extends LinearLayout {
   }
 
   public List<AssessmentResponse> collectResponses() {
-    return new ResponseCollectorService().collectResponses(surveyComponents);
+    return responseCollectorService.collectResponses(surveyComponents);
   }
 
   /**
