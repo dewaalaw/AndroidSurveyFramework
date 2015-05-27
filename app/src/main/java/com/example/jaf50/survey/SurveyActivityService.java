@@ -95,6 +95,7 @@ public class SurveyActivityService {
 
   public void startSurvey(String surveyName, StudyModel studyModel, Context context) {
     Assessment assessment = new Assessment();
+    assessment.setSynced(false);
     assessment.setSurveyName(surveyName);
     assessment.setParticipant(ParseUser.getCurrentUser());
     this.currentAssessment = assessment;

@@ -45,6 +45,7 @@ public class SurveyActivity extends FragmentActivity {
   private static final long timeoutMillis = 60000 * 5;
 
   private SurveyActivityService surveyActivityService = new SurveyActivityService();
+  private AssessmentService assessmentService = new AssessmentService();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,17 @@ public class SurveyActivity extends FragmentActivity {
   }
 
   private void startSurvey(String surveyName) {
+    assessmentService.uploadUnsyncedAssessments(this, new AsyncHttpResponseHandler() {
+      @Override
+      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        onAssessmentSaveSuccess(statusCode, headers, responseBody);
+      }
+      @Override
+      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+        onAssessmentSaveFailure(statusCode, headers, responseBody, error);
+      }
+    });
+
     surveyActivityService.startSurvey(surveyName, AssessmentHolder.getInstance().getStudyModel(), this);
     setCurrentScreen(surveyActivityService.getStartScreenId());
     setAssessmentState(AssessmentState.Starting);
@@ -219,43 +231,48 @@ public class SurveyActivity extends FragmentActivity {
     Log.d(getClass().getName(), "In onTimeout()");
 
     setAssessmentState(AssessmentState.Ending);
-
-    AssessmentService service = new AssessmentService();
-    final Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions().setTimeout(true));
-    service.save(currentAssessment, this, new AsyncHttpResponseHandler() {
+    Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions().setTimeout(true));
+    assessmentService.save(currentAssessment, this, new AsyncHttpResponseHandler() {
       @Override
       public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-        Log.d(getClass().getName(), "In onTimeout(), saved assessment.");
-        Toast.makeText(SurveyActivity.this, "Uploaded data to the server for survey " + currentAssessment.getSurveyName() + " and participant " + currentAssessment.getParticipant().getUsername(), Toast.LENGTH_LONG).show();
-        AssessmentHolder.getInstance().setAssessmentInProgress(false);
+        onAssessmentSaveSuccess(statusCode, headers, responseBody);
         finish();
       }
-
       @Override
       public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-        Log.e(AssessmentService.class.getName(), "Error posting assessment in onTimeout(): " + new String(responseBody));
+        onAssessmentSaveFailure(statusCode, headers, responseBody, error);
+        finish();
       }
     });
   }
 
-  private void endAssessment() {
-    setAssessmentState(AssessmentState.Ending);
+  private void onAssessmentSaveSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+    Log.d(AssessmentService.class.getName(), "Saved assessment successfully: " + new String(responseBody));
+    Toast.makeText(SurveyActivity.this, "Synced data successfully: " + new String(responseBody), Toast.LENGTH_LONG).show();
+    AssessmentHolder.getInstance().setAssessmentInProgress(false);
+  }
 
-    AssessmentService service = new AssessmentService();
-    final Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions());
-    service.save(currentAssessment, this, new AsyncHttpResponseHandler() {
+  private void onAssessmentSaveFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+    String response = responseBody != null ? new String(responseBody) : "";
+    Log.e(AssessmentService.class.getName(), "Error posting assessment: " + response, error);
+    Toast.makeText(SurveyActivity.this, "Data sync failed: " + error, Toast.LENGTH_LONG).show();
+  }
+
+  private void endAssessment() {
+    Log.d(getClass().getName(), "In endAssessment(), about to save data.");
+
+    setAssessmentState(AssessmentState.Ending);
+    Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions());
+    assessmentService.save(currentAssessment, this, new AsyncHttpResponseHandler() {
       @Override
       public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-        Log.d(AssessmentService.class.getName(), "Saved assessment successfully: " + new String(responseBody));
-        Toast.makeText(SurveyActivity.this, "Uploaded data to the server for survey " + currentAssessment.getSurveyName() + " and participant " + currentAssessment.getParticipant().getUsername(), Toast.LENGTH_LONG).show();
-        AssessmentHolder.getInstance().setAssessmentInProgress(false);
+        onAssessmentSaveSuccess(statusCode, headers, responseBody);
         finish();
       }
-
       @Override
       public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-        Log.e(AssessmentService.class.getName(), "Error posting assessment: " + new String(responseBody));
-        Toast.makeText(SurveyActivity.this, "Data upload failed: " + error, Toast.LENGTH_LONG).show();
+        onAssessmentSaveFailure(statusCode, headers, responseBody, error);
+        finish();
       }
     });
   }
@@ -264,10 +281,9 @@ public class SurveyActivity extends FragmentActivity {
     // This method was called in response to an alarm. Save the existing assessment's data and start the alarmed survey.
     setAssessmentState(AssessmentState.Ending);
 
-    AssessmentService service = new AssessmentService();
     final Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions());
     // TODO - don't wait for this assessment to save before moving on to the alarmed assessment.
-    service.save(currentAssessment, this, new AsyncHttpResponseHandler() {
+    assessmentService.save(currentAssessment, this, new AsyncHttpResponseHandler() {
       @Override
       public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
         Log.d(AssessmentService.class.getName(), "Saved assessment successfully: " + new String(responseBody));

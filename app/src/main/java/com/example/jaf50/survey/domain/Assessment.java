@@ -17,6 +17,14 @@ public class Assessment extends ParseObject {
   public Assessment() {
   }
 
+  public boolean isSynced() {
+    return getBoolean("synced");
+  }
+
+  public void setSynced(boolean synced) {
+    put("synced", synced);
+  }
+
   public String getSurveyName() {
     return getString("surveyName");
   }
