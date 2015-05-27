@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.parser.WelcomeLinkModel;
 import com.example.jaf50.survey.parser.WelcomeModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
+import com.example.jaf50.survey.util.LogUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -32,7 +32,7 @@ public class WelcomeActivity extends FragmentActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (AssessmentHolder.getInstance().isAssessmentInProgress() || getIntent().getStringExtra("surveyName") != null) {
-      Log.d(getClass().getName(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName"));
+      LogUtils.d(getClass(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName"));
       startSurveyActivity(getIntent());
       finish();
     } else {
@@ -114,7 +114,7 @@ public class WelcomeActivity extends FragmentActivity {
     setIntent(intent);
 
     String surveyName = intent.getStringExtra("surveyName");
-    Log.d(getClass().getName(), "In WelcomeActivity.onNewIntent(), surveyName = " + surveyName);
+    LogUtils.d(getClass(), "In WelcomeActivity.onNewIntent(), surveyName = " + surveyName);
 
     startSurveyActivity(intent);
     finish();

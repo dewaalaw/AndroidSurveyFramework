@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +18,7 @@ import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentSaveOptions;
 import com.example.jaf50.survey.service.AssessmentService;
 import com.example.jaf50.survey.service.AudioPlayerService;
+import com.example.jaf50.survey.util.LogUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -56,7 +56,7 @@ public class SurveyActivity extends FragmentActivity {
     String surveyName = getIntent().getStringExtra("surveyName");
     boolean isAlarm = getIntent().getBooleanExtra("isAlarm", false);
     boolean isTimeout = getIntent().getBooleanExtra("isTimeout", false);
-    Log.d(getClass().getName(), "In onCreate(), surveyName = " + surveyName + ", isAlarm = " + isAlarm);
+    LogUtils.d(getClass(), "In onCreate(), surveyName = " + surveyName + ", isAlarm = " + isAlarm);
 
     surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.coop_city));
 
@@ -215,7 +215,7 @@ public class SurveyActivity extends FragmentActivity {
     boolean isTimeout = getIntent().getBooleanExtra("isTimeout", false);
 
     Toast.makeText(this, "In SurveyActivity.onNewIntent(), intent = " + intent, Toast.LENGTH_LONG).show();
-    Log.d(getClass().getName(), "In onNewIntent(), surveyName = " + surveyName + ", isAlarm = " + isAlarm + ", isTimeout = " + isTimeout);
+    LogUtils.d(getClass(), "In onNewIntent(), surveyName = " + surveyName + ", isAlarm = " + isAlarm + ", isTimeout = " + isTimeout);
 
     if (isTimeout) {
       Toast.makeText(this, "Timeout occurred!", Toast.LENGTH_LONG).show();
@@ -223,12 +223,12 @@ public class SurveyActivity extends FragmentActivity {
     } else if (surveyName != null && isAlarm) {
       onAlarmForExistingActivity(surveyName);
     } else {
-      Log.d(getClass().getName(), "In onNewIntent(), can't start the assessment because the surveyName is null.");
+      LogUtils.d(getClass(), "In onNewIntent(), can't start the assessment because the surveyName is null.");
     }
   }
 
   private void onTimeout() {
-    Log.d(getClass().getName(), "In onTimeout()");
+    LogUtils.d(getClass(), "In onTimeout()");
 
     setAssessmentState(AssessmentState.Ending);
     Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions().setTimeout(true));
@@ -247,19 +247,20 @@ public class SurveyActivity extends FragmentActivity {
   }
 
   private void onAssessmentSaveSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-    Log.d(AssessmentService.class.getName(), "Saved assessment successfully: " + new String(responseBody));
+    LogUtils.d(AssessmentService.class, "Saved assessment successfully: " + new String(responseBody));
     Toast.makeText(SurveyActivity.this, "Synced data successfully: " + new String(responseBody), Toast.LENGTH_LONG).show();
     AssessmentHolder.getInstance().setAssessmentInProgress(false);
   }
 
   private void onAssessmentSaveFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
     String response = responseBody != null ? new String(responseBody) : "";
-    Log.e(AssessmentService.class.getName(), "Error posting assessment: " + response, error);
+    LogUtils.e(AssessmentService.class, "Error posting assessment: " + response, error);
     Toast.makeText(SurveyActivity.this, "Data sync failed: " + error, Toast.LENGTH_LONG).show();
+    AssessmentHolder.getInstance().setAssessmentInProgress(false);
   }
 
   private void endAssessment() {
-    Log.d(getClass().getName(), "In endAssessment(), about to save data.");
+    LogUtils.d(getClass(), "In endAssessment(), about to save data.");
 
     setAssessmentState(AssessmentState.Ending);
     Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions());
@@ -286,14 +287,13 @@ public class SurveyActivity extends FragmentActivity {
     assessmentService.save(currentAssessment, this, new AsyncHttpResponseHandler() {
       @Override
       public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-        Log.d(AssessmentService.class.getName(), "Saved assessment successfully: " + new String(responseBody));
+        LogUtils.d(AssessmentService.class, "Saved assessment successfully: " + new String(responseBody));
         startSurvey(surveyName);
         playAlarmAudio();
       }
-
       @Override
       public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-        Log.e(AssessmentService.class.getName(), "Error posting assessment: " + new String(responseBody));
+        LogUtils.e(AssessmentService.class, "Error posting assessment: " + new String(responseBody));
         Toast.makeText(SurveyActivity.this, "Data upload failed when ending assessment for alarm: " + error, Toast.LENGTH_LONG).show();
       }
     });
@@ -305,7 +305,7 @@ public class SurveyActivity extends FragmentActivity {
   }
 
   private void playAlarmAudio() {
-    Log.d(getClass().getName(), "In playAlarmAudio(), surveyName = " + getIntent().getStringExtra("surveyName"));
+    LogUtils.d(getClass(), "In playAlarmAudio(), surveyName = " + getIntent().getStringExtra("surveyName"));
     AudioPlayerService.getInstance().play(this, R.raw.laid_back_sunday);
   }
 
@@ -322,7 +322,7 @@ public class SurveyActivity extends FragmentActivity {
   @Override
   protected void onPause() {
     super.onPause();
-    Log.d(getClass().getName(), "In onPause()");
+    LogUtils.d(getClass(), "In onPause()");
   }
 
   @Override

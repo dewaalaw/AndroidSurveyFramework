@@ -3,9 +3,9 @@ package com.example.jaf50.survey;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.example.jaf50.survey.alarm.SurveyAlarmScheduler;
+import com.example.jaf50.survey.util.LogUtils;
 import com.parse.ParseUser;
 
 public class RegisterActivity extends FragmentActivity implements RegisterFragment.RegisterationCallback {
@@ -33,7 +33,7 @@ public class RegisterActivity extends FragmentActivity implements RegisterFragme
         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
         .putExtras(getIntent());
 
-    Log.d(getClass().getName(), "In openSurveys(), surveyName = " + getIntent().getStringExtra("surveyName"));
+    LogUtils.d(getClass(), "In openSurveys(), surveyName = " + getIntent().getStringExtra("surveyName"));
 
     startActivity(surveyIntent);
     finish();
@@ -42,7 +42,7 @@ public class RegisterActivity extends FragmentActivity implements RegisterFragme
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    Log.d(getClass().getName(), "In onNewIntent().");
+    LogUtils.d(getClass(), "In onNewIntent().");
     setIntent(intent);
     ParseUser currentUser = ParseUser.getCurrentUser();
     if (currentUser != null) {

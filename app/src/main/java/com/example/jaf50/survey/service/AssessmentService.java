@@ -1,10 +1,10 @@
 package com.example.jaf50.survey.service;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.parse.sdk.BetterFindCallback;
+import com.example.jaf50.survey.util.LogUtils;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.parse.ParseException;
@@ -35,9 +35,10 @@ public class AssessmentService {
                postAssessment(assessment, context, responseHandler);
              }
            }
+
            @Override
            protected void onFailure(ParseException e) {
-             Log.e(AssessmentService.class.getName(), "Error retrieving un-synced assessments.", e);
+             LogUtils.e(AssessmentService.class, "Error retrieving un-synced assessments.", e);
            }
          });
   }
@@ -50,7 +51,7 @@ public class AssessmentService {
   private void postAssessment(Assessment assessment, Context context, AsyncHttpResponseHandler responseHandler) {
     ResponseHandlerDecorator responseHandlerDecorator = new ResponseHandlerDecorator(responseHandler, assessment);
     try {
-      Log.d(AssessmentService.class.getName(), "Syncing assessment for participant " + assessment.getParticipant().getUsername() + ", survey " + assessment.getSurveyName() + ", startDate " + assessment.getAssessmentStartDate());
+      LogUtils.d(AssessmentService.class, "Syncing assessment for participant " + assessment.getParticipant().getUsername() + ", survey " + assessment.getSurveyName() + ", startDate " + assessment.getAssessmentStartDate());
 
       AsyncHttpClient client = new AsyncHttpClient();
       String json = DomainSerializationService.toJson(assessment);
@@ -58,10 +59,10 @@ public class AssessmentService {
       entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
       client.post(context, ASSESSMENT_SAVE_URL, entity, "application/json", responseHandlerDecorator);
     } catch (JSONException e) {
-      Log.e(AssessmentService.class.getName(), "Error posting assessment: ", e);
+      LogUtils.e(AssessmentService.class, "Error posting assessment: ", e);
       responseHandlerDecorator.onFailure(500, null, "Error syncing assessment".getBytes(), e);
     } catch (UnsupportedEncodingException e) {
-      Log.e(AssessmentService.class.getName(), "Error posting assessment: ", e);
+      LogUtils.e(AssessmentService.class, "Error posting assessment: ", e);
       responseHandlerDecorator.onFailure(500, null, "Error syncing assessment".getBytes(), e);
     }
   }

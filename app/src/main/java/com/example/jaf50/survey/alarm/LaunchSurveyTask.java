@@ -3,11 +3,11 @@ package com.example.jaf50.survey.alarm;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.buzzbox.mob.android.scheduler.Task;
 import com.buzzbox.mob.android.scheduler.TaskResult;
 import com.example.jaf50.survey.RegisterActivity;
+import com.example.jaf50.survey.util.LogUtils;
 
 import java.util.HashMap;
 
@@ -16,7 +16,7 @@ public abstract class LaunchSurveyTask implements Task {
   @Override
   public TaskResult doWork(ContextWrapper contextWrapper) {
     try {
-      Log.d(getClass().getName(), "In doWork(), surveyName to launch = " + getSurveyName(contextWrapper));
+      LogUtils.d(getClass(), "In doWork(), surveyName to launch = " + getSurveyName(contextWrapper));
 
       Intent surveyIntent = new Intent(contextWrapper, RegisterActivity.class)
           .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -24,7 +24,7 @@ public abstract class LaunchSurveyTask implements Task {
           .putExtra("isAlarm", true);
       contextWrapper.startActivity(surveyIntent);
     } catch (Exception e) {
-      Log.d(getClass().getName(), "In doWork(), exception occurred: " + e);
+      LogUtils.d(getClass(), "In doWork(), exception occurred: " + e);
     }
 
     return new TaskResult();

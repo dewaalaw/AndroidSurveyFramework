@@ -2,19 +2,19 @@ package com.example.jaf50.survey.alarm;
 
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.util.Log;
 
 import com.buzzbox.mob.android.scheduler.Task;
 import com.buzzbox.mob.android.scheduler.TaskResult;
 import com.example.jaf50.survey.AssessmentHolder;
 import com.example.jaf50.survey.SurveyActivity;
+import com.example.jaf50.survey.util.LogUtils;
 
 public class AssessmentTimeoutTask implements Task {
 
   @Override
   public TaskResult doWork(ContextWrapper contextWrapper) {
     try {
-      Log.d(getClass().getName(), "In doWork()...");
+      LogUtils.d(getClass(), "In doWork()...");
 
       if (AssessmentHolder.getInstance().isAssessmentInProgress()) {
         Intent intent = new Intent(contextWrapper, SurveyActivity.class)
@@ -22,10 +22,10 @@ public class AssessmentTimeoutTask implements Task {
             .putExtra("isTimeout", true);
         contextWrapper.startActivity(intent);
       } else {
-        Log.d(getClass().getName(), "No assessment is currently in progress so the timeout task is not notifying the SurveyActivity.");
+        LogUtils.d(getClass(), "No assessment is currently in progress so the timeout task is not notifying the SurveyActivity.");
       }
     } catch (Exception e) {
-      Log.d(getClass().getName(), "In doWork(), exception occurred: " + e);
+      LogUtils.d(getClass(), "In doWork(), exception occurred: " + e);
     }
     SurveySchedulerManager.getInstance().stop(contextWrapper, getClass());
 
