@@ -19,7 +19,7 @@ public class DomainSerializationService {
     jsonObject.put("timeoutDate", assessment.getAssessmentTimeoutDate());
 
     if (assessment.getParticipant() != null) {
-      jsonObject.put("participantId", assessment.getParticipant().getUsername());
+      jsonObject.put("participantId", assessment.getParticipant().getId());
     }
 
     JSONArray responses = new JSONArray();

@@ -1,41 +1,60 @@
 package com.example.jaf50.survey.domain;
 
-import android.content.Context;
-import android.preference.PreferenceManager;
+import com.example.jaf50.survey.util.LogUtils;
+import com.parse.ParseClassName;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
-import com.google.gson.Gson;
+import java.util.List;
 
-public class Participant {
-
-  private static final String CURRENT_PARTICIPANT_KEY = "currentParticipant";
-  private static Gson gson = new Gson();
-
-  private String id;
-
-  private String password;
+@ParseClassName("Participant")
+public class Participant extends ParseObject {
 
   public String getId() {
-    return id;
+    return getString("id");
   }
 
   public void setId(String id) {
-    this.id = id;
+    put("id", id);
   }
 
-  public String getPassword() {
-    return password;
+  private boolean isActive() {
+    return getBoolean("active");
   }
 
-  public void setPassword(String password) {
-    this.password = password;
+  private void setActive(boolean active) {
+    put("active", active);
   }
 
-  public static void setCurrentParticipant(Context context, Participant participant) {
-    PreferenceManager.getDefaultSharedPreferences(context).edit().putString(CURRENT_PARTICIPANT_KEY, gson.toJson(participant)).commit();
+  public static void setActiveParticipant(Participant participant) {
+    participant.setActive(true);
+    // Inactivate the currently active participant (if applicable).
+    ParseQuery<Participant> query = ParseQuery.getQuery("Participant");
+    try {
+      List<Participant> participants = query.fromLocalDatastore()
+          .whereEqualTo("active", true)
+          .find();
+      for (Participant otherParticipants : participants) {
+        otherParticipants.setActive(false);
+        otherParticipants.pinInBackground();
+      }
+    } catch (ParseException e) {
+      LogUtils.e(Participant.class, "Error setting active participant.", e);
+    }
+    participant.pinInBackground();
   }
 
-  public static Participant getCurrentParticipant(Context context) {
-    String currentParticipantJson = PreferenceManager.getDefaultSharedPreferences(context).getString(CURRENT_PARTICIPANT_KEY, null);
-    return gson.fromJson(currentParticipantJson, Participant.class);
+  public static Participant getActiveParticipant() {
+    ParseQuery<Participant> query = ParseQuery.getQuery("Participant");
+    try {
+      List<Participant> participants = query.fromLocalDatastore()
+          .whereEqualTo("active", true)
+          .find();
+      return !participants.isEmpty() ? participants.get(0) : null;
+    } catch (ParseException e) {
+      LogUtils.e(Participant.class, "Error retrieving active participant.", e);
+    }
+    return null;
   }
 }

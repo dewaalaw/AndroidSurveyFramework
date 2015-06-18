@@ -51,7 +51,7 @@ public class AssessmentService {
   private void postAssessment(Assessment assessment, Context context, AsyncHttpResponseHandler responseHandler) {
     ResponseHandlerDecorator responseHandlerDecorator = new ResponseHandlerDecorator(responseHandler, assessment);
     try {
-      LogUtils.d(AssessmentService.class, "Syncing assessment for participant " + assessment.getParticipant().getUsername() + ", survey " + assessment.getSurveyName() + ", startDate " + assessment.getAssessmentStartDate());
+      LogUtils.d(AssessmentService.class, "Syncing assessment for participant " + assessment.getParticipant().getId() + ", survey " + assessment.getSurveyName() + ", startDate " + assessment.getAssessmentStartDate());
 
       AsyncHttpClient client = new AsyncHttpClient();
       String json = DomainSerializationService.toJson(assessment);

@@ -2,7 +2,6 @@ package com.example.jaf50.survey.domain;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -45,11 +44,11 @@ public class Assessment extends ParseObject {
     return getList("responses");
   }
 
-  public ParseUser getParticipant() {
-    return (ParseUser) get("participant");
+  public Participant getParticipant() {
+    return (Participant) get("participant");
   }
 
-  public void setParticipant(ParseUser participant) {
+  public void setParticipant(Participant participant) {
     put("participant", participant);
   }
 

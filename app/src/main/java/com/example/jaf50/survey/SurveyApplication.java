@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
+import com.example.jaf50.survey.domain.Participant;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -15,6 +16,7 @@ public class SurveyApplication extends Application {
   public static void registerParseClasses() {
     ParseObject.registerSubclass(Assessment.class);
     ParseObject.registerSubclass(AssessmentResponse.class);
+    ParseObject.registerSubclass(Participant.class);
   }
 
   @Override
