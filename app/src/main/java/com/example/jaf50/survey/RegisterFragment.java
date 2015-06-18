@@ -10,9 +10,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
+import com.example.jaf50.survey.service.RegistrationService;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -22,11 +24,13 @@ public class RegisterFragment extends Fragment {
   @InjectView(R.id.registerButton)
   BootstrapButton registerButton;
 
-  @InjectView(R.id.usernameTextBox)
-  EditText userNameEditText;
+  @InjectView(R.id.participantIdTextBox)
+  EditText participantIdTextBox;
 
   @InjectView(R.id.passwordTextBox)
-  EditText passwordNameEditText;
+  EditText passwordNameTextBox;
+
+  private RegistrationService registrationService = new RegistrationService();
 
   public static interface RegisterationCallback {
     void onRegisterSuccess();
@@ -54,32 +58,24 @@ public class RegisterFragment extends Fragment {
       public void onClick(View v) {
         registerButton.setEnabled(false);
 
-        String username = userNameEditText.getText().toString();
-        String password = passwordNameEditText.getText().toString();
-        register(username, password);
+        String participantId = participantIdTextBox.getText().toString();
+        String password = passwordNameTextBox.getText().toString();
+        registrationService.register(getActivity(), participantId, password, new JsonHttpResponseHandler() {
+          @Override
+          public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            registerationCallback.onRegisterSuccess();
+            registerButton.setEnabled(true);
+          }
+
+          @Override
+          public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+            Toast.makeText(getActivity(), "Error during registration: " + errorResponse, Toast.LENGTH_LONG).show();
+            registerButton.setEnabled(true);
+          }
+        });
       }
     });
 
     return view;
-  }
-
-  private void register(String username, String password) {
-    ParseUser user = new ParseUser();
-    user.setUsername(username);
-    user.setPassword(password);
-
-    user.signUpInBackground(new SignUpCallback() {
-      public void done(ParseException e) {
-        if (e == null) {
-          // Hooray! Let them use the app now.
-          registerationCallback.onRegisterSuccess();
-        } else {
-          // Sign up didn't succeed. Look at the ParseException to figure out what went wrong
-          Toast.makeText(getActivity(), "Error during registration: " + e, Toast.LENGTH_LONG).show();
-        }
-
-        registerButton.setEnabled(true);
-      }
-    });
   }
 }

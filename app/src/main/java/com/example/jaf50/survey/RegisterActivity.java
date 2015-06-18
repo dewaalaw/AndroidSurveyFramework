@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.example.jaf50.survey.alarm.SurveyAlarmScheduler;
+import com.example.jaf50.survey.domain.Participant;
 import com.example.jaf50.survey.util.LogUtils;
-import com.parse.ParseUser;
 
 public class RegisterActivity extends FragmentActivity implements RegisterFragment.RegisterationCallback {
 
@@ -15,8 +15,8 @@ public class RegisterActivity extends FragmentActivity implements RegisterFragme
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_register);
 
-    ParseUser currentUser = ParseUser.getCurrentUser();
-    if (currentUser != null) {
+    Participant participant = Participant.getCurrentParticipant(this);
+    if (participant != null) {
       new SurveyAlarmScheduler().scheduleAll(this, getResources().openRawResource(R.raw.coop_alarm_schedule));
       openSurveys();
     }
@@ -44,8 +44,8 @@ public class RegisterActivity extends FragmentActivity implements RegisterFragme
     super.onNewIntent(intent);
     LogUtils.d(getClass(), "In onNewIntent().");
     setIntent(intent);
-    ParseUser currentUser = ParseUser.getCurrentUser();
-    if (currentUser != null) {
+    Participant participant = Participant.getCurrentParticipant(this);
+    if (participant != null) {
       openSurveys();
     }
   }

@@ -21,7 +21,7 @@ import java.util.List;
 
 public class AssessmentService {
 
-  private static final String ASSESSMENT_SAVE_URL = "http://104.236.108.215:8080/api/assessments";
+  private static final String ASSESSMENT_SAVE_URL = ServiceConstants.API_BASE_URL + "/assessments";
 
   public void uploadUnsyncedAssessments(final Context context, final AsyncHttpResponseHandler responseHandler) {
     ParseQuery<Assessment> query = ParseQuery.getQuery("Assessment");
