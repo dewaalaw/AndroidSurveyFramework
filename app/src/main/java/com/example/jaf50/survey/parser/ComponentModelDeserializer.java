@@ -65,12 +65,12 @@ public class ComponentModelDeserializer implements JsonDeserializer<ComponentMod
     } else if ("radioGroup".equals(type)) {
       RadioGroupModel model = new RadioGroupModel();
       model.setResponseId(jsonObject.get("responseId").getAsString());
-      model.setInputs(getInputs(jsonObject.getAsJsonArray("inputs")));
+      model.setInputs(getRadioInputs(jsonObject.getAsJsonArray("inputs")));
       return model;
     } else if ("checkboxGroup".equals(type)) {
       CheckboxGroupModel model = new CheckboxGroupModel();
       model.setResponseId(jsonObject.get("responseId").getAsString());
-      model.setInputs(getInputs(jsonObject.getAsJsonArray("inputs")));
+      model.setInputs(getCheckboxInputs(jsonObject.getAsJsonArray("inputs")));
       return model;
     } else if ("spacer".equals(type)) {
       SpacerModel model = new SpacerModel();
@@ -85,13 +85,28 @@ public class ComponentModelDeserializer implements JsonDeserializer<ComponentMod
     return null;
   }
 
-  private List<InputModel> getInputs(JsonArray inputsArray) {
+  private List<InputModel> getRadioInputs(JsonArray inputsArray) {
     List<InputModel> inputs = new ArrayList<>();
     for (int i = 0; i < inputsArray.size(); i++) {
       JsonObject inputObject = inputsArray.get(i).getAsJsonObject();
       InputModel input = new InputModel();
       input.setLabel(inputObject.get("label").getAsString());
       input.setValue(inputObject.get("value").getAsString());
+      inputs.add(input);
+    }
+    return inputs;
+  }
+
+  private List<CheckboxInputModel> getCheckboxInputs(JsonArray inputsArray) {
+    List<CheckboxInputModel> inputs = new ArrayList<>();
+    for (int i = 0; i < inputsArray.size(); i++) {
+      JsonObject inputObject = inputsArray.get(i).getAsJsonObject();
+      CheckboxInputModel input = new CheckboxInputModel();
+      input.setLabel(inputObject.get("label").getAsString());
+      input.setValue(inputObject.get("value").getAsString());
+      if (inputObject.get("mutuallyExclusive") != null) {
+        input.setMutuallyExclusive(inputObject.get("mutuallyExclusive").getAsBoolean());
+      }
       inputs.add(input);
     }
     return inputs;

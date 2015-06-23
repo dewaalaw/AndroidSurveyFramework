@@ -3439,7 +3439,8 @@
                                 },
                                 {
                                     "label": "none",
-                                    "value": "13"
+                                    "value": "13",
+                                    "mutuallyExclusive": true
                                 }
                             ]
                         }

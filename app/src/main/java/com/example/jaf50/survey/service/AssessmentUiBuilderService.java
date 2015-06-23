@@ -13,6 +13,7 @@ import com.example.jaf50.survey.actions.EndAssessmentAction;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.parser.CheckboxGroupModel;
+import com.example.jaf50.survey.parser.CheckboxInputModel;
 import com.example.jaf50.survey.parser.ComponentModel;
 import com.example.jaf50.survey.parser.DatePickerModel;
 import com.example.jaf50.survey.parser.InputModel;
@@ -161,10 +162,11 @@ public class AssessmentUiBuilderService {
   private CheckboxGroupComponent buildCheckboxGroupComponent(CheckboxGroupModel model) {
     CheckboxGroupComponent checkboxGroupComponent = (CheckboxGroupComponent) layoutInflater.inflate(R.layout.checkbox_group, null);
     checkboxGroupComponent.setResponseId(model.getResponseId());
-    for (InputModel inputModel : model.getInputs()) {
+    for (CheckboxInputModel inputModel : model.getInputs()) {
       CheckboxComponent checkboxComponent = (CheckboxComponent) layoutInflater.inflate(R.layout.checkbox, null);
       checkboxComponent.setText(inputModel.getLabel());
       checkboxComponent.setValue(inputModel.getValue());
+      checkboxComponent.setMutuallyExclusive(inputModel.isMutuallyExclusive());
       checkboxGroupComponent.addComponent(checkboxComponent);
     }
     return checkboxGroupComponent;

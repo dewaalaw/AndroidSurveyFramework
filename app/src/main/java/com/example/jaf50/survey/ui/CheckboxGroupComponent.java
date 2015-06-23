@@ -2,6 +2,7 @@ package com.example.jaf50.survey.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -24,9 +25,24 @@ public class CheckboxGroupComponent extends LinearLayout implements ISurveyCompo
     return this;
   }
 
-  public void addComponent(CheckboxComponent checkboxComponent) {
+  public void addComponent(final CheckboxComponent checkboxComponent) {
     addView(checkboxComponent);
     checkboxComponents.add(checkboxComponent);
+
+    checkboxComponent.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        uncheckOpposingGroup(checkboxComponent);
+      }
+    });
+  }
+
+  private void uncheckOpposingGroup(CheckboxComponent checkboxComponent) {
+    for (CheckboxComponent component : checkboxComponents) {
+      if (component.isMutuallyExclusive() != checkboxComponent.isMutuallyExclusive()) {
+        component.setChecked(false);
+      }
+    }
   }
 
   @Override
