@@ -78,9 +78,9 @@ public class AssessmentService {
 
     @Override
     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-      parentHandler.onSuccess(statusCode, headers, responseBody);
       assessment.setSynced(true);
       assessment.pinInBackground();
+      parentHandler.onSuccess(statusCode, headers, responseBody);
     }
 
     @Override

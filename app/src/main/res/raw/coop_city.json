@@ -3070,7 +3070,11 @@
                 {
                     "id": "go_to_bed",
                     "components": [
-                        
+                        {
+                            "type": "timePicker",
+                            "responseId": "go_to_bed",
+                            "style": "chooser"
+                        }
                     ],
                     "mainText": "When did you go to bed last night (that is, get into bed with the intention of sleeping)?",
                     "previous": {
@@ -3086,7 +3090,11 @@
                 {
                     "id": "get_up_morning",
                     "components": [
-                        
+                        {
+                            "type": "timePicker",
+                            "responseId": "get_up_morning",
+                            "style": "chooser"
+                        }
                     ],
                     "mainText": "When did you get up this morning?",
                     "previous": {
