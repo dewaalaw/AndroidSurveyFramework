@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +15,7 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
+import com.example.jaf50.survey.alarm.WakeLocker;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentSaveOptions;
 import com.example.jaf50.survey.service.AssessmentService;
@@ -50,6 +52,7 @@ public class SurveyActivity extends FragmentActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
     setContentView(R.layout.activity_survey);
     ButterKnife.inject(this);
 
@@ -60,9 +63,7 @@ public class SurveyActivity extends FragmentActivity {
 
     surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.coop_city));
 
-    if (isAlarm) {
-      onAlarmForNewActivity(surveyName);
-    } else if (isTimeout) {
+    if (isTimeout) {
       finish();
     } else {
       startSurvey(surveyName);
@@ -299,11 +300,6 @@ public class SurveyActivity extends FragmentActivity {
     });
   }
 
-  private void onAlarmForNewActivity(String surveyName) {
-    startSurvey(surveyName);
-    playAlarmAudio();
-  }
-
   private void playAlarmAudio() {
     LogUtils.d(getClass(), "In playAlarmAudio(), surveyName = " + getIntent().getStringExtra("surveyName"));
     AudioPlayerService.getInstance().play(this, R.raw.laid_back_sunday);
@@ -323,11 +319,20 @@ public class SurveyActivity extends FragmentActivity {
   protected void onPause() {
     super.onPause();
     LogUtils.d(getClass(), "In onPause()");
+    WakeLocker.release();
   }
 
   @Override
   protected void onStop() {
     AudioPlayerService.getInstance().stop();
     super.onStop();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    if (getIntent().getBooleanExtra("isAlarm", false)) {
+      playAlarmAudio();
+    }
   }
 }

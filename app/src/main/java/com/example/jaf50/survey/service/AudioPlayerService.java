@@ -3,6 +3,8 @@ package com.example.jaf50.survey.service;
 import android.content.Context;
 import android.media.MediaPlayer;
 
+import com.example.jaf50.survey.util.LogUtils;
+
 public class AudioPlayerService {
 
   private static AudioPlayerService instance = null;
@@ -28,7 +30,7 @@ public class AudioPlayerService {
         mediaPlayer.start();
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      LogUtils.e(getClass(), "Error playing audio", e);
     }
   }
 
