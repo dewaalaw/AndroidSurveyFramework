@@ -74,6 +74,10 @@ public abstract class LaunchSurveyTask implements Task {
   public static class Task23 extends LaunchSurveyTask {}
   public static class Task24 extends LaunchSurveyTask {}
   public static class Task25 extends LaunchSurveyTask {}
+  public static class Task26 extends LaunchSurveyTask {}
+  public static class Task27 extends LaunchSurveyTask {}
+  public static class Task28 extends LaunchSurveyTask {}
+  public static class Task29 extends LaunchSurveyTask {}
 
   private static HashMap<Integer, Class<? extends LaunchSurveyTask>> taskMap = new HashMap<>();
 
@@ -103,6 +107,10 @@ public abstract class LaunchSurveyTask implements Task {
     taskMap.put(23, Task23.class);
     taskMap.put(24, Task24.class);
     taskMap.put(25, Task25.class);
+    taskMap.put(26, Task26.class);
+    taskMap.put(27, Task27.class);
+    taskMap.put(28, Task28.class);
+    taskMap.put(29, Task29.class);
   }
 
   public static Class<? extends LaunchSurveyTask> getTask(int taskNumber) {

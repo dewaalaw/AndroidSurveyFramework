@@ -36,7 +36,11 @@ public class AudioPlayerService {
 
   public void stop() {
     if (mediaPlayer != null) {
-      mediaPlayer.stop();
+      try {
+        mediaPlayer.stop();
+      } catch (Exception e) {
+        LogUtils.e(getClass(), "Error stopping the media player", e);
+      }
     }
   }
 }

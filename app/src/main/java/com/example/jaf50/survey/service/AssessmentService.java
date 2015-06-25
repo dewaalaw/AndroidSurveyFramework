@@ -23,7 +23,7 @@ public class AssessmentService {
 
   private static final String ASSESSMENT_SAVE_URL = ServiceConstants.API_BASE_URL + "/assessments";
 
-  public void uploadUnsyncedAssessments(final Context context, final AsyncHttpResponseHandler responseHandler) {
+  public synchronized void uploadUnsyncedAssessments(final Context context, final AsyncHttpResponseHandler responseHandler) {
     ParseQuery<Assessment> query = ParseQuery.getQuery("Assessment");
     query.fromLocalDatastore()
          .whereEqualTo("synced", false)
@@ -48,7 +48,7 @@ public class AssessmentService {
     postAssessment(assessment, context, responseHandler);
   }
 
-  private void postAssessment(Assessment assessment, Context context, AsyncHttpResponseHandler responseHandler) {
+  private synchronized void postAssessment(Assessment assessment, Context context, AsyncHttpResponseHandler responseHandler) {
     ResponseHandlerDecorator responseHandlerDecorator = new ResponseHandlerDecorator(responseHandler, assessment);
     try {
       LogUtils.d(AssessmentService.class, "Syncing assessment for participant " + assessment.getParticipant().getId() + ", survey " + assessment.getSurveyName() + ", startDate " + assessment.getAssessmentStartDate());

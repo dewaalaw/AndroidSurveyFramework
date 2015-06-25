@@ -6,8 +6,10 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,12 +17,14 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.actions.DirectContentTransition;
 import com.example.jaf50.survey.actions.EndAssessmentAction;
+import com.example.jaf50.survey.alarm.SurveyVibrator;
 import com.example.jaf50.survey.alarm.WakeLocker;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentSaveOptions;
 import com.example.jaf50.survey.service.AssessmentService;
 import com.example.jaf50.survey.service.AudioPlayerService;
 import com.example.jaf50.survey.util.LogUtils;
+import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawable;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -44,30 +48,93 @@ public class SurveyActivity extends FragmentActivity {
   @InjectView(R.id.previousButton)
   BootstrapButton previousButton;
 
-  private static final long timeoutMillis = 60000 * 5;
+  @InjectView(R.id.progressBar)
+  ProgressBar progressBar;
+
+  @InjectView(R.id.progressView)
+  View progressView;
+
+  @InjectView(R.id.surveyContentLayout)
+  ViewGroup surveyContentLayout;
 
   private SurveyActivityService surveyActivityService = new SurveyActivityService();
   private AssessmentService assessmentService = new AssessmentService();
 
+  private boolean onCreateCalled;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
     setContentView(R.layout.activity_survey);
     ButterKnife.inject(this);
+    progressBar.setIndeterminateDrawable(new ChromeFloatingCirclesDrawable.Builder(this).build());
+
+    surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.coop_city));
+    this.onCreateCalled = true;
+
+    if (getIntent().getBooleanExtra("isTimeout", false)) {
+      finish();
+    }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
 
     String surveyName = getIntent().getStringExtra("surveyName");
     boolean isAlarm = getIntent().getBooleanExtra("isAlarm", false);
     boolean isTimeout = getIntent().getBooleanExtra("isTimeout", false);
-    LogUtils.d(getClass(), "In onCreate(), surveyName = " + surveyName + ", isAlarm = " + isAlarm);
 
-    surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.coop_city));
+    Toast.makeText(this, "In SurveyActivity.onResume()", Toast.LENGTH_LONG).show();
+    LogUtils.d(getClass(), "In onResume(), surveyName = " + surveyName + ", isAlarm = " + isAlarm + ", isTimeout = " + isTimeout);
 
     if (isTimeout) {
-      finish();
-    } else {
+      Toast.makeText(this, "Timeout occurred!", Toast.LENGTH_LONG).show();
+      getIntent().putExtra("isTimeout", false);
+      onTimeout();
+    } else if (isAlarm) {
+      getIntent().putExtra("isAlarm", false);
+      getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+      if (surveyName != null) {
+        if (onCreateCalled) {
+          // No existing survey prior to this call.
+          startSurvey(surveyName);
+          soundAlarm();
+        } else {
+          onAlarmForExistingActivity(surveyName);
+        }
+      }
+    } else if (surveyName != null && !AssessmentHolder.getInstance().isAssessmentInProgress()) {
       startSurvey(surveyName);
     }
+
+    AssessmentHolder.getInstance().setAssessmentInProgress(true);
+  }
+
+  private void onAlarmForExistingActivity(final String surveyName) {
+    // This method was called in response to an alarm. Save the existing assessment's data and start the alarmed survey.
+    setAssessmentState(AssessmentState.Ending);
+
+    final Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions());
+    assessmentService.save(currentAssessment, this, new AsyncHttpResponseHandler() {
+      @Override
+      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        LogUtils.d(AssessmentService.class, "Saved assessment successfully: " + new String(responseBody));
+        Toast.makeText(SurveyActivity.this, "Data upload success!", Toast.LENGTH_LONG).show();
+        startSurvey(surveyName);
+        soundAlarm();
+      }
+
+      @Override
+      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+        LogUtils.e(AssessmentService.class, "Error posting assessment: " + new String(responseBody));
+        Toast.makeText(SurveyActivity.this, "Data upload failed when ending assessment for alarm: " + error, Toast.LENGTH_LONG).show();
+        startSurvey(surveyName);
+        soundAlarm();
+      }
+    });
   }
 
   private void startSurvey(String surveyName) {
@@ -76,6 +143,7 @@ public class SurveyActivity extends FragmentActivity {
       public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
         onAssessmentSaveSuccess(statusCode, headers, responseBody);
       }
+
       @Override
       public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
         onAssessmentSaveFailure(statusCode, headers, responseBody, error);
@@ -99,6 +167,8 @@ public class SurveyActivity extends FragmentActivity {
   public void onNext() {
     Action action = surveyActivityService.getCurrentScreenAction();
     if (action != null) {
+      stopAlarm();
+      getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
       if (action instanceof DirectContentTransition) {
         DirectContentTransition directContentTransition = (DirectContentTransition) action;
         if (directContentTransition.requiresResponse() && !surveyActivityService.getCurrentScreen().responsesEntered()) {
@@ -139,12 +209,12 @@ public class SurveyActivity extends FragmentActivity {
   public void setAssessmentState(final AssessmentState assessmentState) {
     switch (assessmentState) {
       case Starting:
-        previousButton.setEnabled(true);
-        nextButton.setEnabled(true);
+        surveyContentLayout.setVisibility(View.VISIBLE);
+        progressView.setVisibility(View.INVISIBLE);
         break;
       case Ending:
-        previousButton.setEnabled(false);
-        nextButton.setEnabled(false);
+        surveyContentLayout.setVisibility(View.INVISIBLE);
+        progressView.setVisibility(View.VISIBLE);
         break;
     }
   }
@@ -211,21 +281,6 @@ public class SurveyActivity extends FragmentActivity {
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
     setIntent(intent);
-    String surveyName = getIntent().getStringExtra("surveyName");
-    boolean isAlarm = getIntent().getBooleanExtra("isAlarm", false);
-    boolean isTimeout = getIntent().getBooleanExtra("isTimeout", false);
-
-    Toast.makeText(this, "In SurveyActivity.onNewIntent(), intent = " + intent, Toast.LENGTH_LONG).show();
-    LogUtils.d(getClass(), "In onNewIntent(), surveyName = " + surveyName + ", isAlarm = " + isAlarm + ", isTimeout = " + isTimeout);
-
-    if (isTimeout) {
-      Toast.makeText(this, "Timeout occurred!", Toast.LENGTH_LONG).show();
-      onTimeout();
-    } else if (surveyName != null && isAlarm) {
-      onAlarmForExistingActivity(surveyName);
-    } else {
-      LogUtils.d(getClass(), "In onNewIntent(), can't start the assessment because the surveyName is null.");
-    }
   }
 
   private void onTimeout() {
@@ -239,6 +294,7 @@ public class SurveyActivity extends FragmentActivity {
         onAssessmentSaveSuccess(statusCode, headers, responseBody);
         finish();
       }
+
       @Override
       public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
         onAssessmentSaveFailure(statusCode, headers, responseBody, error);
@@ -248,14 +304,14 @@ public class SurveyActivity extends FragmentActivity {
   }
 
   private void onAssessmentSaveSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-    LogUtils.d(AssessmentService.class, "Saved assessment successfully: " + new String(responseBody));
-    Toast.makeText(SurveyActivity.this, "Synced data successfully: " + new String(responseBody), Toast.LENGTH_LONG).show();
+    LogUtils.d(getClass(), "Saved assessment successfully: " + new String(responseBody));
+    Toast.makeText(this, "Synced data successfully: " + new String(responseBody), Toast.LENGTH_LONG).show();
     AssessmentHolder.getInstance().setAssessmentInProgress(false);
   }
 
   private void onAssessmentSaveFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
     String response = responseBody != null ? new String(responseBody) : "";
-    LogUtils.e(AssessmentService.class, "Error posting assessment: " + response, error);
+    LogUtils.e(getClass(), "Error posting assessment: " + response, error);
     Toast.makeText(SurveyActivity.this, "Data sync failed: " + error, Toast.LENGTH_LONG).show();
     AssessmentHolder.getInstance().setAssessmentInProgress(false);
   }
@@ -271,6 +327,7 @@ public class SurveyActivity extends FragmentActivity {
         onAssessmentSaveSuccess(statusCode, headers, responseBody);
         finish();
       }
+
       @Override
       public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
         onAssessmentSaveFailure(statusCode, headers, responseBody, error);
@@ -279,40 +336,17 @@ public class SurveyActivity extends FragmentActivity {
     });
   }
 
-  private void onAlarmForExistingActivity(final String surveyName) {
-    // This method was called in response to an alarm. Save the existing assessment's data and start the alarmed survey.
-    setAssessmentState(AssessmentState.Ending);
-
-    final Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions());
-    // TODO - don't wait for this assessment to save before moving on to the alarmed assessment.
-    assessmentService.save(currentAssessment, this, new AsyncHttpResponseHandler() {
+  private void soundAlarm() {
+    LogUtils.d(getClass(), "In soundAlarm(), surveyName = " + getIntent().getStringExtra("surveyName"));
+    // The audio/vibration are not guaranteed to playback unless the UI is fully visible, and posting a
+    // runnable seems to be a reliable way to ensure this.
+    surveyContentLayout.post(new Runnable() {
       @Override
-      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-        LogUtils.d(AssessmentService.class, "Saved assessment successfully: " + new String(responseBody));
-        startSurvey(surveyName);
-        playAlarmAudio();
-      }
-      @Override
-      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-        LogUtils.e(AssessmentService.class, "Error posting assessment: " + new String(responseBody));
-        Toast.makeText(SurveyActivity.this, "Data upload failed when ending assessment for alarm: " + error, Toast.LENGTH_LONG).show();
+      public void run() {
+        AudioPlayerService.getInstance().play(SurveyActivity.this, R.raw.laid_back_sunday);
+        SurveyVibrator.vibrate(SurveyActivity.this);
       }
     });
-  }
-
-  private void playAlarmAudio() {
-    LogUtils.d(getClass(), "In playAlarmAudio(), surveyName = " + getIntent().getStringExtra("surveyName"));
-    AudioPlayerService.getInstance().play(this, R.raw.laid_back_sunday);
-  }
-
-  @Override
-  protected void onStart() {
-    super.onStart();
-    AssessmentHolder.getInstance().setAssessmentInProgress(true);
-  }
-
-  @Override
-  public void onBackPressed() {
   }
 
   @Override
@@ -324,15 +358,20 @@ public class SurveyActivity extends FragmentActivity {
 
   @Override
   protected void onStop() {
-    AudioPlayerService.getInstance().stop();
+    stopAlarm();
+    this.onCreateCalled = false;
     super.onStop();
   }
 
+  private void stopAlarm() {
+    AudioPlayerService.getInstance().stop();
+    SurveyVibrator.cancelVibrate(this);
+  }
+
+  /**
+   * Prevent the user from "backing out" of the survey.
+   */
   @Override
-  protected void onResume() {
-    super.onResume();
-    if (getIntent().getBooleanExtra("isAlarm", false)) {
-      playAlarmAudio();
-    }
+  public void onBackPressed() {
   }
 }
