@@ -5,6 +5,7 @@ import android.app.Application;
 import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.domain.Participant;
+import com.example.jaf50.survey.util.LogUtils;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -22,8 +23,10 @@ public class SurveyApplication extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
+    LogUtils.d(getClass(), "In onCreate()");
     Parse.enableLocalDatastore(this);
     Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
     registerParseClasses();
+    LogUtils.d(getClass(), "In onCreate(), end...");
   }
 }

@@ -6,6 +6,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ParseClassName("Participant")
@@ -47,13 +48,17 @@ public class Participant extends ParseObject {
 
   public static Participant getActiveParticipant() {
     ParseQuery<Participant> query = ParseQuery.getQuery("Participant");
+    List<Participant> participants = new ArrayList<>();
     try {
-      List<Participant> participants = query.fromLocalDatastore()
-          .whereEqualTo("active", true)
-          .find();
+      participants = query.fromLocalDatastore()
+                          .whereEqualTo("active", true)
+                          .find();
       return !participants.isEmpty() ? participants.get(0) : null;
     } catch (ParseException e) {
       LogUtils.e(Participant.class, "Error retrieving active participant.", e);
+    } catch (ClassCastException e) {
+      LogUtils.e(Participant.class, "Tried converting object to Participant: " + participants.get(0), e);
+      throw e;
     }
     return null;
   }

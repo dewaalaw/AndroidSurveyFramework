@@ -74,7 +74,8 @@ public class SurveyActivity extends FragmentActivity {
     surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.coop_city));
     this.onCreateCalled = true;
 
-    if (getIntent().getBooleanExtra("isTimeout", false)) {
+    if (getIntent().getBooleanExtra("isTimeout", false) || getIntent().getStringExtra("surveyName") == null) {
+      LogUtils.d(getClass(), "In onCreate() about to finish early: isTimeout == " + getIntent().getBooleanExtra("isTimeout", false) + ", surveyName == " + getIntent().getStringExtra("surveyName"));
       finish();
     }
   }
