@@ -78,6 +78,22 @@ public abstract class LaunchSurveyTask implements Task {
   public static class Task27 extends LaunchSurveyTask {}
   public static class Task28 extends LaunchSurveyTask {}
   public static class Task29 extends LaunchSurveyTask {}
+  public static class Task30 extends LaunchSurveyTask {}
+  public static class Task31 extends LaunchSurveyTask {}
+  public static class Task32 extends LaunchSurveyTask {}
+  public static class Task33 extends LaunchSurveyTask {}
+  public static class Task34 extends LaunchSurveyTask {}
+  public static class Task35 extends LaunchSurveyTask {}
+  public static class Task36 extends LaunchSurveyTask {}
+  public static class Task37 extends LaunchSurveyTask {}
+  public static class Task38 extends LaunchSurveyTask {}
+  public static class Task39 extends LaunchSurveyTask {}
+  public static class Task40 extends LaunchSurveyTask {}
+  public static class Task41 extends LaunchSurveyTask {}
+  public static class Task42 extends LaunchSurveyTask {}
+  public static class Task43 extends LaunchSurveyTask {}
+  public static class Task44 extends LaunchSurveyTask {}
+  public static class Task45 extends LaunchSurveyTask {}
 
   private static HashMap<Integer, Class<? extends LaunchSurveyTask>> taskMap = new HashMap<>();
 
@@ -111,6 +127,22 @@ public abstract class LaunchSurveyTask implements Task {
     taskMap.put(27, Task27.class);
     taskMap.put(28, Task28.class);
     taskMap.put(29, Task29.class);
+    taskMap.put(30, Task30.class);
+    taskMap.put(31, Task31.class);
+    taskMap.put(32, Task32.class);
+    taskMap.put(33, Task33.class);
+    taskMap.put(34, Task34.class);
+    taskMap.put(35, Task35.class);
+    taskMap.put(36, Task36.class);
+    taskMap.put(37, Task37.class);
+    taskMap.put(38, Task38.class);
+    taskMap.put(39, Task39.class);
+    taskMap.put(40, Task40.class);
+    taskMap.put(41, Task41.class);
+    taskMap.put(42, Task42.class);
+    taskMap.put(43, Task43.class);
+    taskMap.put(44, Task44.class);
+    taskMap.put(45, Task45.class);
   }
 
   public static Class<? extends LaunchSurveyTask> getTask(int taskNumber) {

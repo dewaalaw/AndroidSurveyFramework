@@ -19,6 +19,9 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
+import java.util.concurrent.Callable;
+
+import bolts.Task;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -47,7 +50,13 @@ public class RegisterActivity extends FragmentActivity {
 
     Participant participant = Participant.getActiveParticipant();
     if (participant != null) {
-      new SurveyAlarmScheduler().scheduleAll(this, getResources().openRawResource(R.raw.coop_alarm_schedule));
+      Task.callInBackground(new Callable<Object>() {
+        @Override
+        public Object call() throws Exception {
+          new SurveyAlarmScheduler().scheduleAll(RegisterActivity.this, getResources().openRawResource(R.raw.coop_alarm_schedule));
+          return null;
+        }
+      });
       openSurveys();
     }
 

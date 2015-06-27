@@ -75,17 +75,26 @@
             "surveyName": "Beeped",
             "minuteRandomness": 2
         },
+        {
+            "scheduleExpression": "20 22 * * TUE",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
 
         {
             "scheduleExpression": "55 7 * * WED",
             "surveyName": "Beeped",
             "minuteRandomness": 2
         },
+
+
         {
-            "scheduleExpression": "25 10 * * WED",
+            "scheduleExpression": "3 16 * * WED",
             "surveyName": "Beeped",
-            "minuteRandomness": 2
+            "minuteRandomness": 0
         },
+
+
         {
             "scheduleExpression": "55 12 * * WED",
             "surveyName": "Beeped",
@@ -98,6 +107,80 @@
         },
         {
             "scheduleExpression": "10 18 * * WED",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+
+
+        {
+            "scheduleExpression": "57 13 * * THU",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+        {
+            "scheduleExpression": "0 16 * * THU",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+        {
+            "scheduleExpression": "0 17 * * THU",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+        {
+            "scheduleExpression": "0 18 * * THU",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+
+        {
+            "scheduleExpression": "40 8 * * FRI",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+        {
+            "scheduleExpression": "55 10 * * FRI",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+        {
+            "scheduleExpression": "10 13 * * FRI",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+        {
+            "scheduleExpression": "0 16 * * FRI",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+        {
+            "scheduleExpression": "35 18 * * FRI",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+
+        {
+            "scheduleExpression": "40 9 * * SAT",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+        {
+            "scheduleExpression": "10 12 * * SAT",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+        {
+            "scheduleExpression": "43 12 * * SAT",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+        {
+            "scheduleExpression": "20 17 * * SAT",
+            "surveyName": "Beeped",
+            "minuteRandomness": 2
+        },
+        {
+            "scheduleExpression": "55 19 * * SAT",
             "surveyName": "Beeped",
             "minuteRandomness": 2
         }
