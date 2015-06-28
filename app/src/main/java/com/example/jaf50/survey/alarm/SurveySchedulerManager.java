@@ -1,18 +1,17 @@
 package com.example.jaf50.survey.alarm;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.buzzbox.mob.android.scheduler.Logger;
 import com.buzzbox.mob.android.scheduler.ScheduledTask;
-import com.buzzbox.mob.android.scheduler.SchedulerManager;
 import com.buzzbox.mob.android.scheduler.SchedulerReceiver;
 import com.buzzbox.mob.android.scheduler.Task;
 import com.buzzbox.mob.android.scheduler.analytics.AnalyticsManager;
@@ -20,8 +19,8 @@ import com.buzzbox.mob.android.scheduler.cron.Predictor;
 import com.buzzbox.mob.android.scheduler.cron.SchedulingPattern;
 import com.buzzbox.mob.android.scheduler.db.MigrableSQLiteHelper;
 import com.buzzbox.mob.android.scheduler.ui.MetaDataUtils;
-import com.buzzbox.mob.android.scheduler.ui.SchedulerPreferenceActivity;
 import com.buzzbox.mob.android.scheduler.ui.StringUtils;
+import com.example.jaf50.survey.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,7 +50,7 @@ public class SurveySchedulerManager
     if (instance != null) {
       return instance;
     }
-    synchronized (SchedulerManager.class)
+    synchronized (SurveySchedulerManager.class)
     {
       if (instance == null) {
         instance = new SurveySchedulerManager();
@@ -68,25 +67,6 @@ public class SurveySchedulerManager
       }
     }
     return false;
-  }
-
-  public void startConfigurationActivity(Activity context, Class<? extends Task> taskClass)
-  {
-    ScheduledTask sTask = getInstance().loadTask(context, taskClass.getName());
-    Intent intent = new Intent(context, SchedulerPreferenceActivity.class);
-    try
-    {
-      Task instance = (Task)taskClass.newInstance();
-      intent.putExtra("task.name", instance.getTitle());
-    }
-    catch (Exception localException) {}
-    intent.putExtra("task.class", taskClass.getName());
-    if (sTask != null)
-    {
-      intent.putExtra("cron", sTask.cron);
-      intent.putExtra("cron.enabled", sTask.isEnabled());
-    }
-    context.startActivityForResult(intent, 919817235);
   }
 
   public static Map<String, Boolean> getNotificationTypeStatus(Context ctx)
@@ -106,77 +86,6 @@ public class SurveySchedulerManager
       }
     }
     return res;
-  }
-
-  public synchronized void handleConfigurationResult(Context context, Intent data)
-  {
-    if (data == null)
-    {
-      Log.e("buzzbox-scheduler", "nothing to save");
-      return;
-    }
-    try
-    {
-      SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-      SharedPreferences.Editor editPrefs = prefs.edit();
-
-      String[] notificationTypes = data.getStringArrayExtra("notificationTypes");
-      if ((notificationTypes != null) && (notificationTypes.length > 0))
-      {
-        for (int j = 0; j < notificationTypes.length; j++)
-        {
-          if (data.hasExtra("cron.led." + notificationTypes[j])) {
-            editPrefs.putBoolean("cron.led." + notificationTypes[j], data.getBooleanExtra("cron.led." + notificationTypes[j], true));
-          }
-          if (data.hasExtra("cron.sound." + notificationTypes[j])) {
-            editPrefs.putBoolean("cron.sound." + notificationTypes[j], data.getBooleanExtra("cron.sound." + notificationTypes[j], false));
-          }
-          if (data.hasExtra("cron.vibrate." + notificationTypes[j])) {
-            editPrefs.putBoolean("cron.vibrate." + notificationTypes[j], data.getBooleanExtra("cron.vibrate." + notificationTypes[j], false));
-          }
-          if (data.hasExtra("cron.statusBar." + notificationTypes[j])) {
-            editPrefs.putBoolean("cron.statusBar." + notificationTypes[j], data.getBooleanExtra("cron.statusBar." + notificationTypes[j], false));
-          }
-        }
-      }
-      else
-      {
-        if (data.hasExtra("cron.led")) {
-          editPrefs.putBoolean("cron.led", data.getBooleanExtra("cron.led", true));
-        }
-        if (data.hasExtra("cron.sound")) {
-          editPrefs.putBoolean("cron.sound", data.getBooleanExtra("cron.sound", false));
-        }
-        if (data.hasExtra("cron.vibrate")) {
-          editPrefs.putBoolean("cron.vibrate", data.getBooleanExtra("cron.vibrate", false));
-        }
-        if (data.hasExtra("cron.statusBar")) {
-          editPrefs.putBoolean("cron.statusBar", data.getBooleanExtra("cron.statusBar", false));
-        }
-      }
-      String cron = data.getStringExtra("cron");
-
-      Class<? extends Task> taskClass = (Class<? extends Task>) Class.forName(data.getStringExtra("task.class"));
-
-      ScheduledTask saved = loadTask(context, taskClass.getName());
-      if (saved == null) {
-        getInstance().saveTask(context, cron, taskClass);
-      } else {
-        getInstance().saveTask(context, cron, taskClass, saved.deliverAsapOnDelay, saved.getAutoPauseHours());
-      }
-      editPrefs.commit();
-
-      boolean enabled = data.getBooleanExtra("cron.enabled", true);
-      if (enabled) {
-        getInstance().restart(context, taskClass);
-      } else {
-        getInstance().stop(context, taskClass);
-      }
-    }
-    catch (Exception e)
-    {
-      Log.e("buzzbox-scheduler", "", e);
-    }
   }
 
   public void saveTask(Context context, String cron, Class<? extends Task> taskClass)
@@ -351,6 +260,14 @@ public class SurveySchedulerManager
     }
   }
 
+  private void scheduleAlarm(int type, long triggerAtMillis, PendingIntent pendingIntent, AlarmManager alarmManager) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      alarmManager.setExact(type, triggerAtMillis, pendingIntent);
+    } else {
+      alarmManager.set(type, triggerAtMillis, pendingIntent);
+    }
+  }
+
   protected void scheduleRetry(Context context, String className, String cron, long inMillisDelay, int retryCount)
   {
     AlarmManager mgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
@@ -362,9 +279,7 @@ public class SurveySchedulerManager
     i.putExtra("retryCount", retryCount);
     PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
-    mgr.set(2,
-        SystemClock.elapsedRealtime() + inMillisDelay,
-        pi);
+    scheduleAlarm(2, SystemClock.elapsedRealtime() + inMillisDelay, pi, mgr);
 
     long now = System.currentTimeMillis();
     try
@@ -476,11 +391,9 @@ public class SurveySchedulerManager
       Log.i(getClass().getName(), "Added randomness millis " + addingMillis + " to schedule " + task.cron);
     }
 
-    mgr.set(0,
-        matchingTime,
-        pi);
+    scheduleAlarm(0, matchingTime, pi, mgr);
 
-    Log.i(getClass().getName(),
+    LogUtils.d(getClass(),
         "Alarm Set for Task [" + task.taskClassName + "] with Schedule [" + task.cron + "] at date " + new Date(matchingTime));
   }
 

@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.example.jaf50.survey.alarm.SurveyAlarmScheduler;
 import com.example.jaf50.survey.domain.Participant;
 import com.example.jaf50.survey.service.LocalRegistrationService;
 import com.example.jaf50.survey.service.OnlineRegistrationService;
@@ -19,9 +17,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
-import java.util.concurrent.Callable;
-
-import bolts.Task;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -44,21 +39,8 @@ public class RegisterActivity extends FragmentActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
     setContentView(R.layout.activity_register);
     ButterKnife.inject(this);
-
-    Participant participant = Participant.getActiveParticipant();
-    if (participant != null) {
-      Task.callInBackground(new Callable<Object>() {
-        @Override
-        public Object call() throws Exception {
-          new SurveyAlarmScheduler().scheduleAll(RegisterActivity.this, getResources().openRawResource(R.raw.coop_alarm_schedule));
-          return null;
-        }
-      });
-      openSurveys();
-    }
 
     actionButton.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -80,7 +62,7 @@ public class RegisterActivity extends FragmentActivity {
     onlineRegistrationService.register(participantId, password, new JsonHttpResponseHandler() {
       @Override
       public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-        onRegisterSuccess();
+        openSurveys();
         actionButton.setEnabled(true);
       }
 
@@ -96,18 +78,13 @@ public class RegisterActivity extends FragmentActivity {
   private void registerLocally(String participantId, String password) {
     actionButton.setEnabled(false);
     if (localRegistrationService.register(participantId, password)) {
-      onRegisterSuccess();
+      openSurveys();
       actionButton.setEnabled(true);
     } else {
       passwordTextBox.setText("");
       Toast.makeText(RegisterActivity.this, getString(R.string.registration_error_invalid_password), Toast.LENGTH_LONG).show();
       actionButton.setEnabled(true);
     }
-  }
-
-  public void onRegisterSuccess() {
-    new SurveyAlarmScheduler().scheduleAll(this, getResources().openRawResource(R.raw.coop_alarm_schedule));
-    openSurveys();
   }
 
   private void openSurveys() {
@@ -126,6 +103,11 @@ public class RegisterActivity extends FragmentActivity {
     super.onNewIntent(intent);
     LogUtils.d(getClass(), "In onNewIntent().");
     setIntent(intent);
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
     Participant participant = Participant.getActiveParticipant();
     if (participant != null) {
       openSurveys();

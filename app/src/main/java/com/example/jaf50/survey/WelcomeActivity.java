@@ -8,16 +8,19 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.example.jaf50.survey.alarm.SurveyAlarmScheduler;
 import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.parser.WelcomeLinkModel;
 import com.example.jaf50.survey.parser.WelcomeModel;
 import com.example.jaf50.survey.service.AssessmentParserService;
 import com.example.jaf50.survey.util.LogUtils;
 
+import java.util.concurrent.Callable;
+
+import bolts.Task;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -32,7 +35,6 @@ public class WelcomeActivity extends FragmentActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
     if (AssessmentHolder.getInstance().isAssessmentInProgress() || getIntent().getStringExtra("surveyName") != null) {
       LogUtils.d(getClass(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName"));
@@ -40,7 +42,18 @@ public class WelcomeActivity extends FragmentActivity {
       finish();
     } else {
       initWelcomeScreen();
+      scheduleAlarms();
     }
+  }
+
+  private void scheduleAlarms() {
+    Task.callInBackground(new Callable<Void>() {
+      @Override
+      public Void call() throws Exception {
+        new SurveyAlarmScheduler().scheduleAll(WelcomeActivity.this, getResources().openRawResource(R.raw.coop_alarm_schedule));
+        return null;
+      }
+    });
   }
 
   private void startSurveyActivity(Intent surveyLaunchIntent) {
