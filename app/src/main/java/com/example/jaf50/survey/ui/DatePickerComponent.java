@@ -22,6 +22,7 @@ import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import lombok.Setter;
 
 public class DatePickerComponent extends LinearLayout implements ISurveyComponent {
 
@@ -35,7 +36,7 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
   BootstrapEditText yearEditText;
 
   private PickerStyle pickerStyle = PickerStyle.CHOOSER;
-  private String responseId;
+  @Setter private String responseId;
   private DatePickerDialog datePickerDialog;
   private Date selectedDate;
   private String label;
@@ -158,9 +159,5 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
   @Override
   public View getView() {
     return this;
-  }
-
-  public void setResponseId(String responseId) {
-    this.responseId = responseId;
   }
 }

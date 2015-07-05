@@ -3,6 +3,9 @@ package com.example.jaf50.survey.response;
 import com.example.jaf50.survey.domain.AssessmentResponse;
 import com.example.jaf50.survey.parser.ResponseConditionOperator;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class ResponseCondition {
 
   private ResponseConditionOperator responseConditionOperator;
@@ -30,13 +33,5 @@ public class ResponseCondition {
       return true;
     }
     return false;
-  }
-
-  @Override
-  public String toString() {
-    return "ResponseCondition{" +
-        "responseConditionOperator='" + responseConditionOperator + '\'' +
-        ", expectedResponse=" + expectedResponse +
-        '}';
   }
 }

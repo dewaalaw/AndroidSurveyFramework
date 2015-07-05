@@ -24,6 +24,8 @@ import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import lombok.Getter;
+import lombok.Setter;
 
 public class TimePickerComponent extends LinearLayout implements ISurveyComponent {
 
@@ -38,7 +40,7 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
 
   private PickerStyle pickerStyle;
   private Date selectedTime;
-  private String responseId;
+  @Getter @Setter private String responseId;
   private TimePickerDialog timePickerDialog;
   private boolean isViewAttachedToWindow = false;
   private String label;
@@ -165,13 +167,5 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
   @Override
   public View getView() {
     return this;
-  }
-
-  public void setResponseId(String responseId) {
-    this.responseId = responseId;
-  }
-
-  public String getResponseId() {
-    return responseId;
   }
 }

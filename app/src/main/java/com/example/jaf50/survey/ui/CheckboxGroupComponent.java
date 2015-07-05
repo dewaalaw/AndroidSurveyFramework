@@ -11,9 +11,11 @@ import com.example.jaf50.survey.response.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Setter;
+
 public class CheckboxGroupComponent extends LinearLayout implements ISurveyComponent {
 
-  private String responseId;
+  @Setter private String responseId;
 
   private List<CheckboxComponent> checkboxComponents = new ArrayList<CheckboxComponent>();
 
@@ -58,9 +60,5 @@ public class CheckboxGroupComponent extends LinearLayout implements ISurveyCompo
       }
     }
     return response;
-  }
-
-  public void setResponseId(String responseId) {
-    this.responseId = responseId;
   }
 }

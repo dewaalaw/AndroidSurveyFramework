@@ -4,28 +4,16 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.CheckBox;
 
+import lombok.Getter;
+import lombok.Setter;
+
+
 public class CheckboxComponent extends CheckBox {
 
-  private String value;
-  private boolean mutuallyExclusive;
+  @Getter @Setter private String value;
+  @Getter @Setter private boolean mutuallyExclusive;
 
   public CheckboxComponent(Context context, AttributeSet attrs) {
     super(context, attrs);
-  }
-
-  public String getValue() {
-    return value;
-  }
-
-  public void setValue(String value) {
-    this.value = value;
-  }
-
-  public void setMutuallyExclusive(boolean mutuallyExclusive) {
-    this.mutuallyExclusive = mutuallyExclusive;
-  }
-
-  public boolean isMutuallyExclusive() {
-    return mutuallyExclusive;
   }
 }

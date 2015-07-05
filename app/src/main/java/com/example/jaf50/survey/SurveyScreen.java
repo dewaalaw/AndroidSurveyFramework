@@ -17,6 +17,8 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import lombok.Getter;
+import lombok.Setter;
 
 public class SurveyScreen extends LinearLayout {
 
@@ -26,10 +28,10 @@ public class SurveyScreen extends LinearLayout {
   private List<ISurveyComponent> surveyComponents = new ArrayList<>();
   private LinkedHashMap<ResponseCriteria, Action> actionMap = new LinkedHashMap<>();
 
-  private String screenId;
-  private String mainText;
-  private NavigationButtonModel previousButtonModel;
-  private NavigationButtonModel nextButtonModel;
+  @Getter @Setter private String screenId;
+  @Getter @Setter private String mainText;
+  @Getter @Setter private NavigationButtonModel previousButtonModel;
+  @Getter @Setter private NavigationButtonModel nextButtonModel;
   private ResponseCollectorService responseCollectorService = new ResponseCollectorService();
 
   public SurveyScreen(Context context, AttributeSet attrs) {
@@ -40,22 +42,6 @@ public class SurveyScreen extends LinearLayout {
   public void addSurveyComponent(ISurveyComponent surveyComponent) {
     contentLayout.addView(surveyComponent.getView());
     surveyComponents.add(surveyComponent);
-  }
-
-  public void setScreenId(String screenId) {
-    this.screenId = screenId;
-  }
-
-  public String getScreenId() {
-    return screenId;
-  }
-
-  public void setMainText(String mainText) {
-    this.mainText = mainText;
-  }
-
-  public String getMainText() {
-    return mainText;
   }
 
   public List<AssessmentResponse> collectResponses() {
@@ -96,21 +82,5 @@ public class SurveyScreen extends LinearLayout {
 
   public void addResponseCriteria(ResponseCriteria responseCriteria, Action correspondingAction) {
     actionMap.put(responseCriteria, correspondingAction);
-  }
-
-  public NavigationButtonModel getPreviousButtonModel() {
-    return previousButtonModel;
-  }
-
-  public void setPreviousButtonModel(NavigationButtonModel previousButtonModel) {
-    this.previousButtonModel = previousButtonModel;
-  }
-
-  public NavigationButtonModel getNextButtonModel() {
-    return nextButtonModel;
-  }
-
-  public void setNextButtonModel(NavigationButtonModel nextButtonModel) {
-    this.nextButtonModel = nextButtonModel;
   }
 }

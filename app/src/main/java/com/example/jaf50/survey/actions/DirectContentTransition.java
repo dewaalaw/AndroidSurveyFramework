@@ -1,39 +1,18 @@
 package com.example.jaf50.survey.actions;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class DirectContentTransition implements Action {
 
-  private String fromId;
-  private String toId;
-  private boolean requiresResponse;
+  @Getter @Setter private String fromId;
+  @Getter @Setter private String toId;
+  @Getter @Setter private boolean responseRequired;
 
-  public DirectContentTransition(String fromId, String toId, boolean requiresResponse) {
+  public DirectContentTransition(String fromId, String toId, boolean responseRequired) {
     setFromId(fromId);
     setToId(toId);
-    setRequiresResponse(requiresResponse);
-  }
-
-  public void setFromId(String fromId) {
-    this.fromId = fromId;
-  }
-
-  public void setToId(String toId) {
-    this.toId = toId;
-  }
-
-  public String getFromId() {
-    return fromId;
-  }
-
-  public String getToId() {
-    return toId;
-  }
-
-  public boolean requiresResponse() {
-    return requiresResponse;
-  }
-
-  public void setRequiresResponse(boolean requiresResponse) {
-    this.requiresResponse = requiresResponse;
+    setResponseRequired(responseRequired);
   }
 
   @Override

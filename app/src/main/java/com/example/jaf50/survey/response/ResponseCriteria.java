@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class ResponseCriteria {
 
-  private boolean isDefault = false;
+  @Getter @Setter private boolean isDefault = false;
 
   private HashMap<String, List<ResponseCondition>> variableToResponseConditions = new HashMap<>();
 
@@ -46,13 +49,5 @@ public class ResponseCriteria {
       conditions.add(responseCondition);
       variableToResponseConditions.put(expectedResponse.getResponseId(), conditions);
     }
-  }
-
-  public void setDefault(boolean isDefault) {
-    this.isDefault = isDefault;
-  }
-
-  public boolean isDefault() {
-    return isDefault;
   }
 }

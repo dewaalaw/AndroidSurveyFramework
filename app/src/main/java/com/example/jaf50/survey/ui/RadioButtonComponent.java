@@ -4,19 +4,14 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RadioButton;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class RadioButtonComponent extends RadioButton {
 
-  private String value;
+  @Getter @Setter private String value;
 
   public RadioButtonComponent(Context context, AttributeSet attrs) {
     super(context, attrs);
-  }
-
-  public String getValue() {
-    return value;
-  }
-
-  public void setValue(String value) {
-    this.value = value;
   }
 }

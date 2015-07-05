@@ -14,6 +14,8 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import lombok.Getter;
+import lombok.Setter;
 
 public class SliderComponent extends LinearLayout implements ISurveyComponent {
 
@@ -28,7 +30,7 @@ public class SliderComponent extends LinearLayout implements ISurveyComponent {
   @InjectView(R.id.rightLabelTextView)
   TextView rightLabelTextView;
 
-  private String responseId;
+  @Getter @Setter private String responseId;
 
   public SliderComponent(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -76,13 +78,5 @@ public class SliderComponent extends LinearLayout implements ISurveyComponent {
   @Override
   public View getView() {
     return this;
-  }
-
-  public void setResponseId(String responseId) {
-    this.responseId = responseId;
-  }
-
-  public String getResponseId() {
-    return responseId;
   }
 }

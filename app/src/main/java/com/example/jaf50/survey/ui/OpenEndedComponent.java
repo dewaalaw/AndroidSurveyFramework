@@ -10,9 +10,12 @@ import android.view.inputmethod.InputConnection;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
 import com.example.jaf50.survey.response.Response;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class OpenEndedComponent extends BootstrapEditText implements ISurveyComponent {
 
-  private String responseId;
+  @Getter @Setter private String responseId;
 
   public OpenEndedComponent(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -60,13 +63,5 @@ public class OpenEndedComponent extends BootstrapEditText implements ISurveyComp
   @Override
   public View getView() {
     return this;
-  }
-
-  public String getResponseId() {
-    return responseId;
-  }
-
-  public void setResponseId(String responseId) {
-    this.responseId = responseId;
   }
 }

@@ -7,22 +7,17 @@ import android.view.MotionEvent;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class SurveySeekBar extends DiscreteSeekBar {
 
   public static final int DEFAULT_VALUE = -1;
-  private int selectedValue = DEFAULT_VALUE;
+  @Getter @Setter private int selectedValue = DEFAULT_VALUE;
 
   public SurveySeekBar(Context context, AttributeSet attrs) {
     super(context, attrs);
     setShouldDisplayValueIndicator(false);
-  }
-
-  public void setSelectedValue(int hiddenValue) {
-    this.selectedValue = hiddenValue;
-  }
-
-  public int getSelectedValue() {
-    return selectedValue;
   }
 
   @Override

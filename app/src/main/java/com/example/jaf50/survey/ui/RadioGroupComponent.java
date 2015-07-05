@@ -3,14 +3,16 @@ package com.example.jaf50.survey.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.example.jaf50.survey.response.Response;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class RadioGroupComponent extends RadioGroup implements ISurveyComponent {
 
-  private String responseId;
+  @Getter @Setter private String responseId;
 
   public RadioGroupComponent(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -37,13 +39,5 @@ public class RadioGroupComponent extends RadioGroup implements ISurveyComponent 
       response.addValue(radioButtonComponent.getValue());
     }
     return response;
-  }
-
-  public void setResponseId(String responseId) {
-    this.responseId = responseId;
-  }
-
-  public String getResponseId() {
-    return responseId;
   }
 }

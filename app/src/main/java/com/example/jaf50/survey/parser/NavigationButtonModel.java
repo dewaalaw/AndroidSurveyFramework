@@ -1,23 +1,12 @@
 package com.example.jaf50.survey.parser;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class NavigationButtonModel {
 
   private Boolean allowed;
   private String label;
-
-  public Boolean isAllowed() {
-    return allowed;
-  }
-
-  public String getLabel() {
-    return label;
-  }
-
-  public void setAllowed(Boolean allowed) {
-    this.allowed = allowed;
-  }
-
-  public void setLabel(String label) {
-    this.label = label;
-  }
 }

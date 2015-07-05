@@ -172,7 +172,7 @@ public class SurveyActivity extends FragmentActivity {
       getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
       if (action instanceof DirectContentTransition) {
         DirectContentTransition directContentTransition = (DirectContentTransition) action;
-        if (directContentTransition.requiresResponse() && !surveyActivityService.getCurrentScreen().responsesEntered()) {
+        if (directContentTransition.isResponseRequired() && !surveyActivityService.getCurrentScreen().responsesEntered()) {
           showSkipDialog(directContentTransition);
         } else {
           surveyActivityService.transitionToScreen(directContentTransition.getToId());
@@ -240,13 +240,13 @@ public class SurveyActivity extends FragmentActivity {
       setNextButtonLabel(currentScreen.getNextButtonModel().getLabel());
     }
 
-    if (currentScreen.getPreviousButtonModel().isAllowed()) {
+    if (currentScreen.getPreviousButtonModel().getAllowed()) {
       showPreviousButton();
     } else {
       hidePreviousButton();
     }
 
-    if (currentScreen.getNextButtonModel().isAllowed()) {
+    if (currentScreen.getNextButtonModel().getAllowed()) {
       showNextButton();
     } else {
       hideNextButton();
