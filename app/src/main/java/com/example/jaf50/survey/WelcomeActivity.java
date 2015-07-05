@@ -107,6 +107,9 @@ public class WelcomeActivity extends FragmentActivity {
     mainTextView.setText(welcomeLinkModel.getTransitionText());
 
     BootstrapButton previousButton = ButterKnife.findById(this, R.id.previousButton);
+    if (welcomeLinkModel.getPreviousLabel() != null) {
+      previousButton.setText(welcomeLinkModel.getPreviousLabel());
+    }
     previousButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -115,6 +118,9 @@ public class WelcomeActivity extends FragmentActivity {
     });
 
     BootstrapButton nextButton = ButterKnife.findById(this, R.id.nextButton);
+    if (welcomeLinkModel.getNextLabel() != null) {
+      nextButton.setText(welcomeLinkModel.getNextLabel());
+    }
     nextButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

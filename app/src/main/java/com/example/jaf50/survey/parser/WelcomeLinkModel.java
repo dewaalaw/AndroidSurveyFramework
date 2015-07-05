@@ -12,4 +12,6 @@ public class WelcomeLinkModel {
   private String transitionText;
   private String icon;
   private String buttonType;
+  private String previousLabel;
+  private String nextLabel;
 }

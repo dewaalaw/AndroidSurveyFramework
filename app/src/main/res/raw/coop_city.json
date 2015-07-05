@@ -7,21 +7,24 @@
                 "label": "Waking",
                 "transitionText": "If you would like to take the waking survey, please tap the next button.  If not, please tap the go back button.",
                 "icon": "fa-sun-o",
-                "buttonType": "primary"
+                "buttonType": "primary",
+                "previousLabel": "Go Back"
             },
             {
                 "surveyName": "Bedtime",
                 "label": "Bedtime",
                 "transitionText": "If you would like to take the bedtime survey, please tap the next button.  If not, please tap the go back button.",
                 "icon": "fa-moon-o",
-                "buttonType": "info"
+                "buttonType": "info",
+                "previousLabel": "Go Back"
             },
             {
                 "surveyName": "Beeped",
                 "label": "Beeped",
                 "transitionText": "If you would like to take the beeped survey, please tap the next button.  If not, please tap the go back button.",
                 "icon": "fa-bell",
-                "buttonType": "success"
+                "buttonType": "success",
+                "previousLabel": "Go Back"
             }
         ]
     },
@@ -29,7 +32,7 @@
         {
             "description": "",
             "name": "Beeped",
-            "timeoutMinutes": 10,
+            "timeoutMinutes": 2,
             "screens": [
                 {
                     "id": "feel_rt_now_intro",
@@ -880,6 +883,9 @@
                     "mainText": "<b>Now get ready to play a few brain games!</b>",
                     "previous": {
                         "allowed": true
+                    },
+                    "next": {
+                        "label": "Done"
                     },
                     "responseCriteria": [
                         {
@@ -3279,6 +3285,9 @@
                     "previous": {
                         "allowed": true
                     },
+                    "next": {
+                        "label": "Done"
+                    },
                     "responseCriteria": [
                         {
                             "condition": "complete"
@@ -3715,6 +3724,9 @@
                     "mainText": "<b>You have completed the bedtime survey!  Please make sure to connect your smartphone to an outlet so it will be fully charged for tomorrow.  Thank you and good night!</b>",
                     "previous": {
                         "allowed": true
+                    },
+                    "next": {
+                        "label": "Done"
                     },
                     "responseCriteria": [
                         {
