@@ -66,6 +66,8 @@ public class SurveyActivity extends FragmentActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    LogUtils.d(getClass(), "In onCreate()");
+
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
     setContentView(R.layout.activity_survey);
     ButterKnife.inject(this);
@@ -83,10 +85,12 @@ public class SurveyActivity extends FragmentActivity {
   @Override
   protected void onResume() {
     super.onResume();
-
     String surveyName = getIntent().getStringExtra("surveyName");
     boolean isAlarm = getIntent().getBooleanExtra("isAlarm", false);
     boolean isTimeout = getIntent().getBooleanExtra("isTimeout", false);
+
+    if (isAlarm) { WakeLocker.acquireFull(this); }
+    if (isTimeout) { WakeLocker.acquirePartial(this); }
 
     Toast.makeText(this, "In SurveyActivity.onResume()", Toast.LENGTH_LONG).show();
     LogUtils.d(getClass(), "In onResume(), surveyName = " + surveyName + ", isAlarm = " + isAlarm + ", isTimeout = " + isTimeout);
@@ -253,34 +257,18 @@ public class SurveyActivity extends FragmentActivity {
     }
   }
 
-  public void showPreviousButton() {
-    previousButton.setVisibility(View.VISIBLE);
-  }
-
-  public void showNextButton() {
-    nextButton.setVisibility(View.VISIBLE);
-  }
-
-  public void hidePreviousButton() {
-    previousButton.setVisibility(View.INVISIBLE);
-  }
-
-  public void hideNextButton() {
-    nextButton.setVisibility(View.INVISIBLE);
-  }
-
-  public void setPreviousButtonLabel(String label) {
-    previousButton.setText(label);
-  }
-
-  public void setNextButtonLabel(String label) {
-    nextButton.setText(label);
-  }
+  public void showPreviousButton() { previousButton.setVisibility(View.VISIBLE); }
+  public void showNextButton() { nextButton.setVisibility(View.VISIBLE); }
+  public void hidePreviousButton() { previousButton.setVisibility(View.INVISIBLE); }
+  public void hideNextButton() { nextButton.setVisibility(View.INVISIBLE); }
+  public void setPreviousButtonLabel(String label) { previousButton.setText(label); }
+  public void setNextButtonLabel(String label) { nextButton.setText(label); }
 
   // NOTE: this will also be called if the user taps HOME and then taps the application icon again.
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
+    LogUtils.d(getClass(), "In onNewIntent()");
     setIntent(intent);
   }
 

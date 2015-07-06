@@ -15,10 +15,8 @@ public class AssessmentTimeoutTask implements Task {
   public TaskResult doWork(ContextWrapper contextWrapper) {
     try {
       LogUtils.d(getClass(), "In doWork()...");
-
-      WakeLocker.acquirePartial(contextWrapper);
-
       if (AssessmentHolder.getInstance().isAssessmentInProgress()) {
+        LogUtils.d(getClass(), "In doWork(), assessmentInProgress block.");
         Intent intent = new Intent(contextWrapper, SurveyActivity.class)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK)
             .putExtra("isTimeout", true);

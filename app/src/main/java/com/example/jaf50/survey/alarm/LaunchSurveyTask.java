@@ -18,8 +18,6 @@ public abstract class LaunchSurveyTask implements Task {
     try {
       LogUtils.d(getClass(), "In doWork(), surveyName to launch = " + getSurveyName(contextWrapper));
 
-      WakeLocker.acquireFull(contextWrapper);
-
       Intent surveyIntent = new Intent(contextWrapper, RegisterActivity.class)
           .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK)
           .putExtra("surveyName", getSurveyName(contextWrapper))
