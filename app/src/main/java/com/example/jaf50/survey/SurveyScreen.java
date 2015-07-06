@@ -15,15 +15,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import lombok.Getter;
 import lombok.Setter;
 
 public class SurveyScreen extends LinearLayout {
 
-  @InjectView(R.id.content)
-  LinearLayout contentLayout;
+  @Bind(R.id.content) LinearLayout contentLayout;
 
   private List<ISurveyComponent> surveyComponents = new ArrayList<>();
   private LinkedHashMap<ResponseCriteria, Action> actionMap = new LinkedHashMap<>();
@@ -36,7 +35,7 @@ public class SurveyScreen extends LinearLayout {
 
   public SurveyScreen(Context context, AttributeSet attrs) {
     super(context, attrs);
-    ButterKnife.inject(this);
+    ButterKnife.bind(this);
   }
 
   public void addSurveyComponent(ISurveyComponent surveyComponent) {

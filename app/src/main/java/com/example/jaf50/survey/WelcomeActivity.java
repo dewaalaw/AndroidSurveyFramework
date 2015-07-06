@@ -21,16 +21,13 @@ import com.example.jaf50.survey.util.LogUtils;
 import java.util.concurrent.Callable;
 
 import bolts.Task;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class WelcomeActivity extends FragmentActivity {
 
-  @InjectView(R.id.welcomeTextView)
-  TextView welcomeTextView;
-
-  @InjectView(R.id.contentPanel)
-  ViewGroup contentPanel;
+  @Bind(R.id.welcomeTextView) TextView welcomeTextView;
+  @Bind(R.id.contentPanel) ViewGroup contentPanel;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +65,7 @@ public class WelcomeActivity extends FragmentActivity {
 
   private void initWelcomeScreen() {
     setContentView(R.layout.survey_selection_screen);
-    ButterKnife.inject(this);
+    ButterKnife.bind(this);
 
     LayoutInflater inflater = LayoutInflater.from(this);
     final Typeface typeface = Typeface.createFromAsset(getAssets(), "OpenSans-Bold.ttf");

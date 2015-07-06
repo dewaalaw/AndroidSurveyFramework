@@ -20,20 +20,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import lombok.Setter;
 
 public class DatePickerComponent extends LinearLayout implements ISurveyComponent {
 
-  @InjectView(R.id.selectButton)
-  BootstrapButton selectButton;
-  @InjectView(R.id.dayEditText)
-  BootstrapEditText dayEditText;
-  @InjectView(R.id.monthEditText)
-  BootstrapEditText monthEditText;
-  @InjectView(R.id.yearEditText)
-  BootstrapEditText yearEditText;
+  @Bind(R.id.selectButton) BootstrapButton selectButton;
+  @Bind(R.id.dayEditText) BootstrapEditText dayEditText;
+  @Bind(R.id.monthEditText) BootstrapEditText monthEditText;
+  @Bind(R.id.yearEditText) BootstrapEditText yearEditText;
 
   private PickerStyle pickerStyle = PickerStyle.CHOOSER;
   @Setter private String responseId;
@@ -105,7 +101,7 @@ public class DatePickerComponent extends LinearLayout implements ISurveyComponen
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     this.isViewAttachedToWindow = true;
-    ButterKnife.inject(this);
+    ButterKnife.bind(this);
 
     if (this.label != null) {
       setLabel(this.label);

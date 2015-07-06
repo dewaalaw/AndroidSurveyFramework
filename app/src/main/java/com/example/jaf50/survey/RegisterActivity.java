@@ -17,19 +17,14 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class RegisterActivity extends FragmentActivity {
 
-  @InjectView(R.id.actionButton)
-  BootstrapButton actionButton;
-
-  @InjectView(R.id.participantIdTextBox)
-  EditText participantIdTextBox;
-
-  @InjectView(R.id.passwordTextBox)
-  EditText passwordTextBox;
+  @Bind(R.id.actionButton) BootstrapButton actionButton;
+  @Bind(R.id.participantIdTextBox) EditText participantIdTextBox;
+  @Bind(R.id.passwordTextBox) EditText passwordTextBox;
 
   private OnlineRegistrationService onlineRegistrationService = new OnlineRegistrationService();
   private LocalRegistrationService localRegistrationService = new LocalRegistrationService();
@@ -40,7 +35,7 @@ public class RegisterActivity extends FragmentActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_register);
-    ButterKnife.inject(this);
+    ButterKnife.bind(this);
 
     actionButton.setOnClickListener(new View.OnClickListener() {
       @Override

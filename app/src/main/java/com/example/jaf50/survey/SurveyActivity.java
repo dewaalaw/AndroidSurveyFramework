@@ -29,33 +29,20 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class SurveyActivity extends FragmentActivity {
 
-  @InjectView(R.id.contentPanel)
-  LinearLayout contentPanel;
-
-  @InjectView(R.id.mainTextView)
-  TextView mainTextView;
-
-  @InjectView(R.id.nextButton)
-  BootstrapButton nextButton;
-
-  @InjectView(R.id.previousButton)
-  BootstrapButton previousButton;
-
-  @InjectView(R.id.progressBar)
-  ProgressBar progressBar;
-
-  @InjectView(R.id.progressView)
-  View progressView;
-
-  @InjectView(R.id.surveyContentLayout)
-  ViewGroup surveyContentLayout;
+  @Bind(R.id.contentPanel) LinearLayout contentPanel;
+  @Bind(R.id.mainTextView) TextView mainTextView;
+  @Bind(R.id.nextButton) BootstrapButton nextButton;
+  @Bind(R.id.previousButton) BootstrapButton previousButton;
+  @Bind(R.id.progressBar) ProgressBar progressBar;
+  @Bind(R.id.progressView) View progressView;
+  @Bind(R.id.surveyContentLayout) ViewGroup surveyContentLayout;
 
   private SurveyActivityService surveyActivityService = new SurveyActivityService();
   private AssessmentService assessmentService = new AssessmentService();
@@ -70,7 +57,8 @@ public class SurveyActivity extends FragmentActivity {
 
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
     setContentView(R.layout.activity_survey);
-    ButterKnife.inject(this);
+    ButterKnife.bind(this);
+
     progressBar.setIndeterminateDrawable(new ChromeFloatingCirclesDrawable.Builder(this).build());
 
     surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.coop_city));

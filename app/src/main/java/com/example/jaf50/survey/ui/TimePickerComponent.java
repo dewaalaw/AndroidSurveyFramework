@@ -22,21 +22,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import lombok.Getter;
 import lombok.Setter;
 
 public class TimePickerComponent extends LinearLayout implements ISurveyComponent {
 
-  @InjectView(R.id.selectButton)
-  BootstrapButton selectButton;
-  @InjectView(R.id.hourEditText)
-  BootstrapEditText hourEditText;
-  @InjectView(R.id.minuteEditText)
-  BootstrapEditText minuteEditText;
-  @InjectView(R.id.amPmSpinner)
-  Spinner amPmSpinner;
+  @Bind(R.id.selectButton) BootstrapButton selectButton;
+  @Bind(R.id.hourEditText) BootstrapEditText hourEditText;
+  @Bind(R.id.minuteEditText) BootstrapEditText minuteEditText;
+  @Bind(R.id.amPmSpinner) Spinner amPmSpinner;
 
   private PickerStyle pickerStyle;
   private Date selectedTime;
@@ -110,7 +106,7 @@ public class TimePickerComponent extends LinearLayout implements ISurveyComponen
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     this.isViewAttachedToWindow = true;
-    ButterKnife.inject(this);
+    ButterKnife.bind(this);
 
     if (this.label != null) {
       setLabel(this.label);

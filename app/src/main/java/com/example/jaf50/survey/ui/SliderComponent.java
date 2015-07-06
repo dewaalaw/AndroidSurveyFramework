@@ -12,8 +12,8 @@ import com.example.jaf50.survey.response.Response;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,14 +21,9 @@ public class SliderComponent extends LinearLayout implements ISurveyComponent {
 
   private static final int DEFAULT_PROGRESS = 50;
 
-  @InjectView(R.id.seekBar)
-  SurveySeekBar seekBar;
-
-  @InjectView(R.id.leftLabelTextView)
-  TextView leftLabelTextView;
-
-  @InjectView(R.id.rightLabelTextView)
-  TextView rightLabelTextView;
+  @Bind(R.id.seekBar) SurveySeekBar seekBar;
+  @Bind(R.id.leftLabelTextView) TextView leftLabelTextView;
+  @Bind(R.id.rightLabelTextView) TextView rightLabelTextView;
 
   @Getter @Setter private String responseId;
 
@@ -39,7 +34,7 @@ public class SliderComponent extends LinearLayout implements ISurveyComponent {
   @Override
   protected void onFinishInflate() {
     super.onFinishInflate();
-    ButterKnife.inject(this, this);
+    ButterKnife.bind(this, this);
     seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
       @Override
       public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
