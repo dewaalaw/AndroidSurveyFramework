@@ -9,10 +9,14 @@ import com.example.jaf50.survey.util.LogUtils;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
+import dagger.ObjectGraph;
+
 public class SurveyApplication extends Application {
 
   private static final String APPLICATION_ID = "M8rcJZvA3poUvvJofyS4t5K0vtpHVLg3biM1NgVK";
   private static final String CLIENT_KEY = "JPImlAeJvXtmuaTH1mmzcqe87zuOtXaUvgJTzERX";
+
+  private ObjectGraph objectGraph;
 
   public static void registerParseClasses() {
     ParseObject.registerSubclass(Assessment.class);
@@ -28,5 +32,11 @@ public class SurveyApplication extends Application {
     Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
     registerParseClasses();
     LogUtils.d(getClass(), "In onCreate(), end...");
+
+    objectGraph = ObjectGraph.create(new SurveyModule());
+  }
+
+  public ObjectGraph getObjectGraph() {
+    return objectGraph;
   }
 }

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
@@ -31,10 +33,11 @@ public class SurveyScreen extends LinearLayout {
   @Getter @Setter private String mainText;
   @Getter @Setter private NavigationButtonModel previousButtonModel;
   @Getter @Setter private NavigationButtonModel nextButtonModel;
-  private ResponseCollectorService responseCollectorService = new ResponseCollectorService();
+  @Inject ResponseCollectorService responseCollectorService;
 
   public SurveyScreen(Context context, AttributeSet attrs) {
     super(context, attrs);
+    ((SurveyApplication) context.getApplicationContext()).getObjectGraph().inject(this);
     ButterKnife.bind(this);
   }
 

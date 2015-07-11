@@ -1,7 +1,9 @@
-package com.example.jaf50.survey;
+package com.example.jaf50.survey.service;
 
 import android.content.Context;
 
+import com.example.jaf50.survey.AssessmentHolder;
+import com.example.jaf50.survey.SurveyScreen;
 import com.example.jaf50.survey.actions.Action;
 import com.example.jaf50.survey.alarm.AssessmentTimeoutTask;
 import com.example.jaf50.survey.alarm.SurveySchedulerManager;
@@ -11,8 +13,6 @@ import com.example.jaf50.survey.domain.AssessmentSaveOptions;
 import com.example.jaf50.survey.domain.Participant;
 import com.example.jaf50.survey.parser.StudyModel;
 import com.example.jaf50.survey.parser.SurveyModel;
-import com.example.jaf50.survey.service.AssessmentParserService;
-import com.example.jaf50.survey.service.AssessmentUiBuilderService;
 
 import java.io.InputStream;
 import java.util.ArrayList;

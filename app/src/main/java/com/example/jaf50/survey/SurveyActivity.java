@@ -23,11 +23,14 @@ import com.example.jaf50.survey.domain.Assessment;
 import com.example.jaf50.survey.domain.AssessmentSaveOptions;
 import com.example.jaf50.survey.service.AssessmentService;
 import com.example.jaf50.survey.service.AudioPlayerService;
+import com.example.jaf50.survey.service.SurveyActivityService;
 import com.example.jaf50.survey.util.LogUtils;
 import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawable;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,14 +47,16 @@ public class SurveyActivity extends FragmentActivity {
   @Bind(R.id.progressView) View progressView;
   @Bind(R.id.surveyContentLayout) ViewGroup surveyContentLayout;
 
-  private SurveyActivityService surveyActivityService = new SurveyActivityService();
-  private AssessmentService assessmentService = new AssessmentService();
+  @Inject
+  SurveyActivityService surveyActivityService;
+  @Inject AssessmentService assessmentService;
 
   private boolean onCreateCalled;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    ((SurveyApplication) getApplication()).getObjectGraph().inject(this);
 
     LogUtils.d(getClass(), "In onCreate()");
 
