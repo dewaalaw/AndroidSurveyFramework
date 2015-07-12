@@ -6,12 +6,12 @@
             "minuteRandomness": 2
         },
         {
-            "scheduleExpression": "5 11 * * SUN",
+            "scheduleExpression": "49 10 * * SUN",
             "surveyName": "Beeped",
             "minuteRandomness": 2
         },
         {
-            "scheduleExpression": "30 13 * * SUN",
+            "scheduleExpression": "54 12 * * SUN",
             "surveyName": "Beeped",
             "minuteRandomness": 2
         },
@@ -175,14 +175,14 @@
             "minuteRandomness": 2
         },
         {
-            "scheduleExpression": "20 17 * * SAT",
+            "scheduleExpression": "20 14 * * SAT",
             "surveyName": "Beeped",
             "minuteRandomness": 2
         },
         {
-            "scheduleExpression": "55 19 * * SAT",
+            "scheduleExpression": "14 23 * * SAT",
             "surveyName": "Beeped",
-            "minuteRandomness": 2
+            "minuteRandomness": 0
         }
     ]
 }

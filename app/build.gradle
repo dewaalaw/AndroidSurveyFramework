@@ -1,11 +1,26 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.example.jaf50.survey"
+        applicationId "com.askonthego"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
@@ -43,4 +58,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/buzzboxSDK-0.6.5.jar')
     provided 'pl.mg6.hrisey:hrisey:0.3.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
+        transitive = true;
+    }
 }

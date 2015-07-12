@@ -2,7 +2,8 @@ package com.example.jaf50.survey;
 
 import android.test.AndroidTestCase;
 
-import com.example.jaf50.survey.domain.AssessmentResponse;
+import com.askonthego.SurveyApplication;
+import com.askonthego.domain.AssessmentResponse;
 
 public class TestAssessmentResponse extends AndroidTestCase {
 

@@ -2,10 +2,11 @@ package com.example.jaf50.survey;
 
 import android.test.AndroidTestCase;
 
-import com.example.jaf50.survey.domain.AssessmentResponse;
-import com.example.jaf50.survey.parser.ResponseConditionOperator;
-import com.example.jaf50.survey.response.ResponseCondition;
-import com.example.jaf50.survey.response.ResponseCriteria;
+import com.askonthego.SurveyApplication;
+import com.askonthego.domain.AssessmentResponse;
+import com.askonthego.parser.ResponseConditionOperator;
+import com.askonthego.response.ResponseCondition;
+import com.askonthego.response.ResponseCriteria;
 
 import java.util.Arrays;
 

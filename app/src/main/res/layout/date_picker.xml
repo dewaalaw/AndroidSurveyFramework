@@ -1,4 +1,4 @@
-<com.example.jaf50.survey.ui.DatePickerComponent xmlns:android="http://schemas.android.com/apk/res/android"
+<com.askonthego.ui.DatePickerComponent xmlns:android="http://schemas.android.com/apk/res/android"
                                                  xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
                                                  android:orientation="vertical"
                                                  android:layout_width="wrap_content"
@@ -80,4 +80,4 @@
         </LinearLayout>
     </LinearLayout>
 
-</com.example.jaf50.survey.ui.DatePickerComponent>
+</com.askonthego.ui.DatePickerComponent>
