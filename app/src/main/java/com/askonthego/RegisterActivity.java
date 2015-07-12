@@ -7,12 +7,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.example.jaf50.survey.R;
 import com.askonthego.domain.Participant;
 import com.askonthego.service.LocalRegistrationService;
 import com.askonthego.service.OnlineRegistrationService;
 import com.askonthego.util.LogUtils;
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.crashlytics.android.Crashlytics;
+import com.example.jaf50.survey.R;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -22,6 +23,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 import io.pristine.sheath.Sheath;
 
 public class RegisterActivity extends FragmentActivity {
@@ -38,6 +40,7 @@ public class RegisterActivity extends FragmentActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Fabric.with(this, new Crashlytics());
     Sheath.inject(this);
     setContentView(R.layout.activity_register);
     ButterKnife.bind(this);
