@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DomainSerializationService {
 
-  public static String toJson(Assessment assessment) throws JSONException {
+  public String toJson(Assessment assessment) throws JSONException {
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("surveyName", assessment.getSurveyName());
     jsonObject.put("startDate", assessment.getAssessmentStartDate());

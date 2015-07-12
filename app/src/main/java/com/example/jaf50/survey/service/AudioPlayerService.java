@@ -7,17 +7,7 @@ import com.example.jaf50.survey.util.LogUtils;
 
 public class AudioPlayerService {
 
-  private static AudioPlayerService instance = null;
   private MediaPlayer mediaPlayer;
-
-  private AudioPlayerService() {}
-
-  public static AudioPlayerService getInstance() {
-    if (instance == null) {
-      instance = new AudioPlayerService();
-    }
-    return instance;
-  }
 
   public void play(Context context, int audioResourceId) {
     if (mediaPlayer != null) {

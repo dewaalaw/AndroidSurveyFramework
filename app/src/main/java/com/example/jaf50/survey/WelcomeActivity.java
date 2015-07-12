@@ -20,18 +20,25 @@ import com.example.jaf50.survey.util.LogUtils;
 
 import java.util.concurrent.Callable;
 
+import javax.inject.Inject;
+
 import bolts.Task;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.pristine.sheath.Sheath;
 
 public class WelcomeActivity extends FragmentActivity {
 
   @Bind(R.id.welcomeTextView) TextView welcomeTextView;
   @Bind(R.id.contentPanel) ViewGroup contentPanel;
 
+  @Inject SurveyAlarmScheduler surveyAlarmScheduler;
+  @Inject AssessmentParserService assessmentParserService;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Sheath.inject(this);
 
     if (AssessmentHolder.getInstance().isAssessmentInProgress() || getIntent().getStringExtra("surveyName") != null) {
       LogUtils.d(getClass(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName"));
@@ -47,7 +54,7 @@ public class WelcomeActivity extends FragmentActivity {
     Task.callInBackground(new Callable<Void>() {
       @Override
       public Void call() throws Exception {
-        new SurveyAlarmScheduler().scheduleAll(WelcomeActivity.this, getResources().openRawResource(R.raw.coop_alarm_schedule));
+        surveyAlarmScheduler.scheduleAll(WelcomeActivity.this, getResources().openRawResource(R.raw.coop_alarm_schedule));
         return null;
       }
     });
@@ -93,7 +100,6 @@ public class WelcomeActivity extends FragmentActivity {
   }
 
   private void initStudyModel() {
-    AssessmentParserService assessmentParserService = new AssessmentParserService();
     StudyModel studyModel = assessmentParserService.parseStudy(getResources().openRawResource(R.raw.coop_city));
     AssessmentHolder.getInstance().setStudyModel(studyModel);
   }

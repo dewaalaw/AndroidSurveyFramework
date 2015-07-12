@@ -9,34 +9,28 @@ import com.example.jaf50.survey.util.LogUtils;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
-import dagger.ObjectGraph;
+import io.pristine.sheath.Sheath;
 
 public class SurveyApplication extends Application {
 
   private static final String APPLICATION_ID = "M8rcJZvA3poUvvJofyS4t5K0vtpHVLg3biM1NgVK";
   private static final String CLIENT_KEY = "JPImlAeJvXtmuaTH1mmzcqe87zuOtXaUvgJTzERX";
 
-  private ObjectGraph objectGraph;
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    Sheath.holster(new SurveyModule());
+
+    LogUtils.d(getClass(), "In onCreate()");
+
+    Parse.enableLocalDatastore(this);
+    registerParseClasses();
+    Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
+  }
 
   public static void registerParseClasses() {
     ParseObject.registerSubclass(Assessment.class);
     ParseObject.registerSubclass(AssessmentResponse.class);
     ParseObject.registerSubclass(Participant.class);
-  }
-
-  @Override
-  public void onCreate() {
-    super.onCreate();
-    LogUtils.d(getClass(), "In onCreate()");
-    Parse.enableLocalDatastore(this);
-    Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
-    registerParseClasses();
-    LogUtils.d(getClass(), "In onCreate(), end...");
-
-    objectGraph = ObjectGraph.create(new SurveyModule());
-  }
-
-  public ObjectGraph getObjectGraph() {
-    return objectGraph;
   }
 }

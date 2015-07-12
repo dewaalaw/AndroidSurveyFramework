@@ -14,7 +14,11 @@ import java.io.InputStreamReader;
 
 public class SurveyAlarmScheduler {
 
-  private static Gson gson = new Gson();
+  private Gson gson;
+
+  public SurveyAlarmScheduler(Gson gson) {
+    this.gson = gson;
+  }
 
   public void scheduleAll(Context context, InputStream alarmInputStream) {
     ScheduleModel scheduleModel = gson.fromJson(new InputStreamReader(alarmInputStream), ScheduleModel.class);

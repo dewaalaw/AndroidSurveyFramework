@@ -22,6 +22,11 @@ import java.util.List;
 public class AssessmentService {
 
   private static final String ASSESSMENT_SAVE_URL = ServiceConstants.API_BASE_URL + "/assessments";
+  private DomainSerializationService domainSerializationService;
+
+  public AssessmentService(DomainSerializationService domainSerializationService) {
+    this.domainSerializationService = domainSerializationService;
+  }
 
   public synchronized void uploadUnsyncedAssessments(final Context context, final AsyncHttpResponseHandler responseHandler) {
     ParseQuery<Assessment> query = ParseQuery.getQuery("Assessment");
@@ -54,7 +59,7 @@ public class AssessmentService {
       LogUtils.d(AssessmentService.class, "Syncing assessment for participant " + assessment.getParticipant().getId() + ", survey " + assessment.getSurveyName() + ", startDate " + assessment.getAssessmentStartDate());
 
       AsyncHttpClient client = new AsyncHttpClient();
-      String json = DomainSerializationService.toJson(assessment);
+      String json = domainSerializationService.toJson(assessment);
       StringEntity entity = new StringEntity(json);
       entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
       client.post(context, ASSESSMENT_SAVE_URL, entity, "application/json", responseHandlerDecorator);

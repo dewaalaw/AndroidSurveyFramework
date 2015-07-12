@@ -36,6 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.pristine.sheath.Sheath;
 
 public class SurveyActivity extends FragmentActivity {
 
@@ -47,16 +48,18 @@ public class SurveyActivity extends FragmentActivity {
   @Bind(R.id.progressView) View progressView;
   @Bind(R.id.surveyContentLayout) ViewGroup surveyContentLayout;
 
-  @Inject
-  SurveyActivityService surveyActivityService;
+  @Inject SurveyActivityService surveyActivityService;
   @Inject AssessmentService assessmentService;
+  @Inject SurveyVibrator surveyVibrator;
+  @Inject WakeLocker wakeLocker;
+  @Inject AudioPlayerService audioPlayerService;
 
   private boolean onCreateCalled;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ((SurveyApplication) getApplication()).getObjectGraph().inject(this);
+    Sheath.inject(this);
 
     LogUtils.d(getClass(), "In onCreate()");
 
@@ -82,8 +85,8 @@ public class SurveyActivity extends FragmentActivity {
     boolean isAlarm = getIntent().getBooleanExtra("isAlarm", false);
     boolean isTimeout = getIntent().getBooleanExtra("isTimeout", false);
 
-    if (isAlarm) { WakeLocker.acquireFull(this); }
-    if (isTimeout) { WakeLocker.acquirePartial(this); }
+    if (isAlarm) { wakeLocker.acquireFull(this); }
+    if (isTimeout) { wakeLocker.acquirePartial(this); }
 
     Toast.makeText(this, "In SurveyActivity.onResume()", Toast.LENGTH_LONG).show();
     LogUtils.d(getClass(), "In onResume(), surveyName = " + surveyName + ", isAlarm = " + isAlarm + ", isTimeout = " + isTimeout);
@@ -325,8 +328,8 @@ public class SurveyActivity extends FragmentActivity {
     surveyContentLayout.post(new Runnable() {
       @Override
       public void run() {
-        AudioPlayerService.getInstance().play(SurveyActivity.this, R.raw.laid_back_sunday);
-        SurveyVibrator.vibrate(SurveyActivity.this);
+        audioPlayerService.play(SurveyActivity.this, R.raw.laid_back_sunday);
+        surveyVibrator.vibrate(SurveyActivity.this);
       }
     });
   }
@@ -335,7 +338,7 @@ public class SurveyActivity extends FragmentActivity {
   protected void onPause() {
     super.onPause();
     LogUtils.d(getClass(), "In onPause()");
-    WakeLocker.release();
+    wakeLocker.release();
   }
 
   @Override
@@ -346,8 +349,8 @@ public class SurveyActivity extends FragmentActivity {
   }
 
   private void stopAlarm() {
-    AudioPlayerService.getInstance().stop();
-    SurveyVibrator.cancelVibrate(this);
+    audioPlayerService.stop();
+    surveyVibrator.cancelVibrate(this);
   }
 
   /**

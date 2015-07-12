@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.pristine.sheath.Sheath;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,7 +38,7 @@ public class SurveyScreen extends LinearLayout {
 
   public SurveyScreen(Context context, AttributeSet attrs) {
     super(context, attrs);
-    ((SurveyApplication) context.getApplicationContext()).getObjectGraph().inject(this);
+    Sheath.inject(this);
     ButterKnife.bind(this);
   }
 

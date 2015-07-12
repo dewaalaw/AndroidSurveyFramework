@@ -17,8 +17,11 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.pristine.sheath.Sheath;
 
 public class RegisterActivity extends FragmentActivity {
 
@@ -26,14 +29,15 @@ public class RegisterActivity extends FragmentActivity {
   @Bind(R.id.participantIdTextBox) EditText participantIdTextBox;
   @Bind(R.id.passwordTextBox) EditText passwordTextBox;
 
-  private OnlineRegistrationService onlineRegistrationService = new OnlineRegistrationService();
-  private LocalRegistrationService localRegistrationService = new LocalRegistrationService();
+  @Inject OnlineRegistrationService onlineRegistrationService;
+  @Inject LocalRegistrationService localRegistrationService;
 
   private static final boolean requiresOnlineRegistration = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Sheath.inject(this);
     setContentView(R.layout.activity_register);
     ButterKnife.bind(this);
 

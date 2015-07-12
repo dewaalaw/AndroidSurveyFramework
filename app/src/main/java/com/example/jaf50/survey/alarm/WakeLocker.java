@@ -3,22 +3,23 @@ package com.example.jaf50.survey.alarm;
 import android.content.Context;
 import android.os.PowerManager;
 
-public abstract class WakeLocker {
-  private static PowerManager.WakeLock wakeLock;
+public class WakeLocker {
 
-  public static void acquireFull(Context context) {
+  private PowerManager.WakeLock wakeLock;
+
+  public void acquireFull(Context context) {
     acquire(context, PowerManager.FULL_WAKE_LOCK |
                      PowerManager.ACQUIRE_CAUSES_WAKEUP |
                      PowerManager.ON_AFTER_RELEASE);
   }
 
-  public static void acquirePartial(Context context) {
+  public void acquirePartial(Context context) {
     acquire(context, PowerManager.PARTIAL_WAKE_LOCK |
                      PowerManager.ACQUIRE_CAUSES_WAKEUP |
                      PowerManager.ON_AFTER_RELEASE);
   }
 
-  private static void acquire(Context context, int levelAndFlags) {
+  private void acquire(Context context, int levelAndFlags) {
     if (wakeLock != null) {
       wakeLock.release();
     }
@@ -28,7 +29,7 @@ public abstract class WakeLocker {
     wakeLock.acquire();
   }
 
-  public static void release() {
+  public void release() {
     if (wakeLock != null) {
       wakeLock.release();
     }
