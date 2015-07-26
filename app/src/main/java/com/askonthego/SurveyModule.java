@@ -6,7 +6,6 @@ import com.askonthego.alarm.SurveyAlarmScheduler;
 import com.askonthego.alarm.SurveyVibrator;
 import com.askonthego.alarm.WakeLocker;
 import com.askonthego.service.AssessmentConverter;
-import com.askonthego.service.AssessmentParserService;
 import com.askonthego.service.AssessmentService;
 import com.askonthego.service.AudioPlayerService;
 import com.askonthego.service.DomainSerializationService;
@@ -17,7 +16,7 @@ import com.askonthego.service.ResponseCollectorService;
 import com.askonthego.service.RestAssessmentService;
 import com.askonthego.service.RestUserService;
 import com.askonthego.service.ServiceConstants;
-import com.askonthego.service.SurveyActivityService;
+import com.askonthego.service.StudyParser;
 import com.google.gson.Gson;
 
 import javax.inject.Singleton;
@@ -41,11 +40,6 @@ class SurveyModule {
   }
 
   @Provides
-  public SurveyActivityService getSurveyActivityService() {
-    return new SurveyActivityService();
-  }
-
-  @Provides
   public AssessmentService getAssessmentService(Preferences preferences, RestAssessmentService restAssessmentService) {
     return new AssessmentService(preferences, restAssessmentService);
   }
@@ -59,11 +53,6 @@ class SurveyModule {
   @Provides
   public SurveyAlarmScheduler getSurveyAlarmScheduler(Gson gson) {
     return new SurveyAlarmScheduler(gson);
-  }
-
-  @Provides
-  public AssessmentParserService getAssessmentParserService() {
-    return new AssessmentParserService();
   }
 
   @Singleton
@@ -128,5 +117,16 @@ class SurveyModule {
   public RestUserService getUserService() {
     RestAdapter restAdapter = getBaseRestAdapterBuilder().build();
     return restAdapter.create(RestUserService.class);
+  }
+
+  @Provides
+  @Singleton
+  public AssessmentHolder getAssessmentHolder() {
+    return new AssessmentHolder();
+  }
+
+  @Provides
+  public StudyParser getStudyParser() {
+    return new StudyParser();
   }
 }

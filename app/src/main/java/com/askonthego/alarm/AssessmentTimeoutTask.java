@@ -9,13 +9,21 @@ import com.askonthego.AssessmentHolder;
 import com.askonthego.SurveyActivity;
 import com.askonthego.util.LogUtils;
 
+import javax.inject.Inject;
+
+import io.pristine.sheath.Sheath;
+
 public class AssessmentTimeoutTask implements Task {
+
+  @Inject AssessmentHolder assessmentHolder;
 
   @Override
   public TaskResult doWork(ContextWrapper contextWrapper) {
     try {
+      Sheath.inject(this);
+
       LogUtils.d(getClass(), "In doWork()...");
-      if (AssessmentHolder.getInstance().isAssessmentInProgress()) {
+      if (assessmentHolder.isAssessmentInProgress()) {
         LogUtils.d(getClass(), "In doWork(), assessmentInProgress block.");
         Intent intent = new Intent(contextWrapper, SurveyActivity.class)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK)

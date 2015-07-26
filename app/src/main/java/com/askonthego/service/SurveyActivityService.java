@@ -29,11 +29,20 @@ public class SurveyActivityService {
   private Stack<List<AssessmentResponse>> responseStack = new Stack<>();
   private Assessment currentAssessment;
 
+  private AssessmentParser assessmentParser;
+  private StudyParser studyParser;
+  private AssessmentHolder assessmentHolder;
+
+  public SurveyActivityService(AssessmentParser assessmentParser, StudyParser studyParser, AssessmentHolder assessmentHolder) {
+    this.assessmentParser = assessmentParser;
+    this.studyParser = studyParser;
+    this.assessmentHolder = assessmentHolder;
+  }
+
   public void initStudyModel(InputStream surveyInputStream) {
-    if (AssessmentHolder.getInstance().getStudyModel() == null) {
-      AssessmentParserService assessmentParserService = new AssessmentParserService();
-      StudyModel studyModel = assessmentParserService.parseStudy(surveyInputStream);
-      AssessmentHolder.getInstance().setStudyModel(studyModel);
+    if (assessmentHolder.getStudyModel() == null) {
+      StudyModel studyModel = studyParser.getStudy(surveyInputStream);
+      assessmentHolder.setStudyModel(studyModel);
     }
   }
 
@@ -101,7 +110,7 @@ public class SurveyActivityService {
     this.currentAssessment = assessment;
 
     SurveyModel surveyModel = getSurveyModel(surveyName, studyModel);
-    List<SurveyScreen> surveyScreensList = buildSurveyScreens(surveyModel, context, assessment);
+    List<SurveyScreen> surveyScreensList = assessmentParser.getScreens(surveyModel);
     this.surveyScreens.clear();
     for (SurveyScreen surveyScreen : surveyScreensList) {
       this.surveyScreens.put(surveyScreen.getScreenId(), surveyScreen);
@@ -118,11 +127,6 @@ public class SurveyActivityService {
     if (surveyModel.getTimeoutMinutes() > 0) {
       scheduleAssessmentTimeout(context, surveyModel.getTimeoutMinutes());
     }
-  }
-
-  private List<SurveyScreen> buildSurveyScreens(SurveyModel surveyModel, Context context, Assessment assessment) {
-    AssessmentUiBuilderService assessmentUiBuilderService = new AssessmentUiBuilderService(context, assessment);
-    return assessmentUiBuilderService.build(surveyModel);
   }
 
   public String getStartScreenId() {

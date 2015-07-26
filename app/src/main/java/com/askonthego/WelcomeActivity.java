@@ -10,14 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.example.jaf50.survey.R;
 import com.askonthego.alarm.SurveyAlarmScheduler;
 import com.askonthego.parser.StudyModel;
 import com.askonthego.parser.WelcomeLinkModel;
 import com.askonthego.parser.WelcomeModel;
-import com.askonthego.service.AssessmentParserService;
+import com.askonthego.service.StudyParser;
 import com.askonthego.util.LogUtils;
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.example.jaf50.survey.R;
 
 import java.util.concurrent.Callable;
 
@@ -34,14 +34,15 @@ public class WelcomeActivity extends FragmentActivity {
   @Bind(R.id.contentPanel) ViewGroup contentPanel;
 
   @Inject SurveyAlarmScheduler surveyAlarmScheduler;
-  @Inject AssessmentParserService assessmentParserService;
+  @Inject AssessmentHolder assessmentHolder;
+  @Inject StudyParser studyParser;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Sheath.inject(this);
 
-    if (AssessmentHolder.getInstance().isAssessmentInProgress() || getIntent().getStringExtra("surveyName") != null) {
+    if (assessmentHolder.isAssessmentInProgress() || getIntent().getStringExtra("surveyName") != null) {
       LogUtils.d(getClass(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName"));
       startSurveyActivity(getIntent());
       finish();
@@ -79,9 +80,11 @@ public class WelcomeActivity extends FragmentActivity {
     final Typeface typeface = Typeface.createFromAsset(getAssets(), "OpenSans-Bold.ttf");
     welcomeTextView.setTypeface(typeface);
 
-    initStudyModel();
+    // Initialize the StudyModel.
+    StudyModel studyModel = studyParser.getStudy(getResources().openRawResource(R.raw.coop_city));
+    assessmentHolder.setStudyModel(studyModel);
 
-    WelcomeModel welcomeModel = AssessmentHolder.getInstance().getStudyModel().getWelcomeScreen();
+    WelcomeModel welcomeModel = assessmentHolder.getStudyModel().getWelcomeScreen();
     welcomeTextView.setText(Html.fromHtml(welcomeModel.getText()));
 
     for (final WelcomeLinkModel welcomeLinkModel : welcomeModel.getLinks()) {
@@ -98,11 +101,6 @@ public class WelcomeActivity extends FragmentActivity {
       });
       contentPanel.addView(button);
     }
-  }
-
-  private void initStudyModel() {
-    StudyModel studyModel = assessmentParserService.parseStudy(getResources().openRawResource(R.raw.coop_city));
-    AssessmentHolder.getInstance().setStudyModel(studyModel);
   }
 
   private void showAssessmentWelcomeScreen(final WelcomeLinkModel welcomeLinkModel) {

@@ -20,8 +20,10 @@ import com.askonthego.alarm.SurveyVibrator;
 import com.askonthego.alarm.WakeLocker;
 import com.askonthego.domain.Assessment;
 import com.askonthego.domain.AssessmentSaveOptions;
+import com.askonthego.service.AssessmentParser;
 import com.askonthego.service.AssessmentService;
 import com.askonthego.service.AudioPlayerService;
+import com.askonthego.service.StudyParser;
 import com.askonthego.service.SurveyActivityService;
 import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -49,18 +51,21 @@ public class SurveyActivity extends FragmentActivity {
   @Bind(R.id.progressView) View progressView;
   @Bind(R.id.surveyContentLayout) ViewGroup surveyContentLayout;
 
-  @Inject SurveyActivityService surveyActivityService;
   @Inject AssessmentService assessmentService;
   @Inject SurveyVibrator surveyVibrator;
   @Inject WakeLocker wakeLocker;
   @Inject AudioPlayerService audioPlayerService;
+  @Inject AssessmentHolder assessmentHolder;
+  @Inject StudyParser studyParser;
 
   private boolean onCreateCalled;
+  private SurveyActivityService surveyActivityService;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Sheath.inject(this);
+    this.surveyActivityService = new SurveyActivityService(new AssessmentParser(this), studyParser, assessmentHolder);
 
     LogUtils.d(getClass(), "In onCreate()");
 
@@ -70,7 +75,7 @@ public class SurveyActivity extends FragmentActivity {
 
     progressBar.setIndeterminateDrawable(new ChromeFloatingCirclesDrawable.Builder(this).build());
 
-    surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.coop_city));
+    this.surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.coop_city));
     this.onCreateCalled = true;
 
     if (getIntent().getBooleanExtra("isTimeout", false) || getIntent().getStringExtra("surveyName") == null) {
@@ -108,11 +113,19 @@ public class SurveyActivity extends FragmentActivity {
           onAlarmForExistingActivity(surveyName);
         }
       }
-    } else if (surveyName != null && !AssessmentHolder.getInstance().isAssessmentInProgress()) {
+    } else if (surveyName != null && !assessmentHolder.isAssessmentInProgress()) {
       startSurvey(surveyName);
     }
 
-    AssessmentHolder.getInstance().setAssessmentInProgress(true);
+    assessmentHolder.setAssessmentInProgress(true);
+  }
+
+  // NOTE: this will also be called if the user taps HOME and then taps the application icon again.
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    LogUtils.d(getClass(), "In onNewIntent()");
+    setIntent(intent);
   }
 
   private void onAlarmForExistingActivity(final String surveyName) {
@@ -152,7 +165,7 @@ public class SurveyActivity extends FragmentActivity {
       }
     });
 
-    surveyActivityService.startSurvey(surveyName, AssessmentHolder.getInstance().getStudyModel(), this);
+    surveyActivityService.startSurvey(surveyName, assessmentHolder.getStudyModel(), this);
     setCurrentScreen(surveyActivityService.getStartScreenId());
     setAssessmentState(AssessmentState.Starting);
   }
@@ -180,6 +193,8 @@ public class SurveyActivity extends FragmentActivity {
           setCurrentScreen(directContentTransition.getToId());
         }
       } else if (action instanceof EndAssessmentAction) {
+        // TODO - EndAssessmentAction is currently only used as a tagging interface to indicate that a survey
+        // should be completed. There has to be a better way to do this.
         endAssessment();
       }
     }
@@ -261,14 +276,6 @@ public class SurveyActivity extends FragmentActivity {
   public void setPreviousButtonLabel(String label) { previousButton.setText(label); }
   public void setNextButtonLabel(String label) { nextButton.setText(label); }
 
-  // NOTE: this will also be called if the user taps HOME and then taps the application icon again.
-  @Override
-  protected void onNewIntent(Intent intent) {
-    super.onNewIntent(intent);
-    LogUtils.d(getClass(), "In onNewIntent()");
-    setIntent(intent);
-  }
-
   private void onTimeout() {
     LogUtils.d(getClass(), "In onTimeout()");
 
@@ -292,13 +299,13 @@ public class SurveyActivity extends FragmentActivity {
   private void onAssessmentSaveSuccess(Response response) {
     LogUtils.d(getClass(), "Saved assessment successfully: " + response.getBody());
     Toast.makeText(this, "Synced data successfully: " + response.getBody(), Toast.LENGTH_LONG).show();
-    AssessmentHolder.getInstance().setAssessmentInProgress(false);
+    assessmentHolder.setAssessmentInProgress(false);
   }
 
   private void onAssessmentSaveFailure(RetrofitError error) {
     LogUtils.e(getClass(), "Error posting assessment: ", error);
     Toast.makeText(SurveyActivity.this, "Data sync failed: " + error, Toast.LENGTH_LONG).show();
-    AssessmentHolder.getInstance().setAssessmentInProgress(false);
+    assessmentHolder.setAssessmentInProgress(false);
   }
 
   private void endAssessment() {

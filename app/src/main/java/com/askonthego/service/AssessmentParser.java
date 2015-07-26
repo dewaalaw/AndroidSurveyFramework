@@ -1,16 +1,14 @@
 package com.askonthego.service;
 
-import android.content.Context;
+import android.app.Activity;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
-import com.example.jaf50.survey.R;
 import com.askonthego.SurveyScreen;
 import com.askonthego.actions.DirectContentTransition;
 import com.askonthego.actions.EndAssessmentAction;
-import com.askonthego.domain.Assessment;
 import com.askonthego.domain.AssessmentResponse;
 import com.askonthego.parser.CheckboxGroupModel;
 import com.askonthego.parser.CheckboxInputModel;
@@ -41,23 +39,22 @@ import com.askonthego.ui.SliderComponent;
 import com.askonthego.ui.SpacerComponent;
 import com.askonthego.ui.TextComponent;
 import com.askonthego.ui.TimePickerComponent;
+import com.example.jaf50.survey.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AssessmentUiBuilderService {
+public class AssessmentParser {
 
-  private Context context;
+  private Activity activity;
   private LayoutInflater layoutInflater;
-  private Assessment assessment;
 
-  public AssessmentUiBuilderService(Context context, Assessment assessment) {
-    this.context = context;
-    this.layoutInflater = LayoutInflater.from(context);
-    this.assessment = assessment;
+  public AssessmentParser(Activity activity) {
+    this.activity = activity;
+    this.layoutInflater = LayoutInflater.from(activity);
   }
 
-  public List<SurveyScreen> build(SurveyModel surveyModel) {
+  public List<SurveyScreen> getScreens(SurveyModel surveyModel) {
     List<SurveyScreen> surveyScreens = new ArrayList<>();
     for (SurveyScreenModel surveyScreenModel : surveyModel.getScreens()) {
       SurveyScreen surveyScreen = (SurveyScreen) layoutInflater.inflate(R.layout.survey_content, null);
@@ -120,7 +117,7 @@ public class AssessmentUiBuilderService {
     ResponseCriteria surveyCompleteResponseCriteria = new ResponseCriteria();
     surveyCompleteResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.COMPLETE, new AssessmentResponse()));
 
-    surveyScreen.addResponseCriteria(surveyCompleteResponseCriteria, new EndAssessmentAction(assessment));
+    surveyScreen.addResponseCriteria(surveyCompleteResponseCriteria, new EndAssessmentAction());
   }
 
   private NavigationButtonModel getButtonModel(NavigationButtonModel parsedModel, boolean defaultAllowed, String defaultLabel) {
@@ -217,7 +214,7 @@ public class AssessmentUiBuilderService {
 
   private ISurveyComponent buildSpacerComponent(SpacerModel model) {
     SpacerComponent spacerComponent = (SpacerComponent) layoutInflater.inflate(R.layout.spacer, null);
-    int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, model.getHeight(), this.context.getResources().getDisplayMetrics());
+    int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, model.getHeight(), this.activity.getResources().getDisplayMetrics());
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
     spacerComponent.setLayoutParams(params);
     return spacerComponent;
