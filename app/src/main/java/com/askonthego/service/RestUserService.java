@@ -4,7 +4,7 @@ import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
-public interface UserService {
+public interface RestUserService {
 
   @POST("/users")
   void createUser(@Body Credentials credentials, Callback<Void> cb);

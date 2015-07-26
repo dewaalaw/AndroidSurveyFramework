@@ -55,7 +55,6 @@ dependencies {
     compile project(':DiscreteSeekBar')
     compile project(':ambience')
     compile 'com.parse.bolts:bolts-android:1.+'
-    compile 'de.greenrobot:eventbus:2.4.0'
     compile 'io.pristine.sheath:sheath:1.0.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])

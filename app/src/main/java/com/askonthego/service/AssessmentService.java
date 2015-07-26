@@ -9,18 +9,17 @@ import com.parse.ParseQuery;
 import java.util.List;
 
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class AssessmentService {
 
-  private RestAdapter restAdapter;
+  private RestAssessmentService restAssessmentService;
   private Preferences preferences;
 
-  public AssessmentService(Preferences preferences, RestAdapter restAdapter) {
+  public AssessmentService(Preferences preferences, RestAssessmentService restAssessmentService) {
     this.preferences = preferences;
-    this.restAdapter = restAdapter;
+    this.restAssessmentService = restAssessmentService;
   }
 
   public synchronized void uploadUnsyncedAssessments(final Callback<Void> responseHandler) {
@@ -50,9 +49,7 @@ public class AssessmentService {
 
   private synchronized void postAssessment(final Assessment assessment, final Callback<Void> callback) {
     LogUtils.d(AssessmentService.class, "Syncing assessment for participant " + assessment.getParticipant().getId() + ", survey " + assessment.getSurveyName() + ", startDate " + assessment.getAssessmentStartDate());
-
-    final RetrofitAssessmentService assessmentService = restAdapter.create(RetrofitAssessmentService.class);
-    assessmentService.postAssessment(preferences.getApiToken(), assessment, new Callback<Void>() {
+    restAssessmentService.postAssessment(preferences.getApiToken(), assessment, new Callback<Void>() {
       @Override
       public void success(Void aVoid, Response response) {
         assessment.setSynced(true);

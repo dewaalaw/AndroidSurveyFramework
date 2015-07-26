@@ -14,11 +14,12 @@ import com.askonthego.service.LocalRegistrationService;
 import com.askonthego.service.OnlineRegistrationService;
 import com.askonthego.service.Preferences;
 import com.askonthego.service.ResponseCollectorService;
+import com.askonthego.service.RestAssessmentService;
+import com.askonthego.service.RestUserService;
 import com.askonthego.service.ServiceConstants;
 import com.askonthego.service.SurveyActivityService;
 import com.google.gson.Gson;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -44,15 +45,9 @@ class SurveyModule {
     return new SurveyActivityService();
   }
 
-  @Singleton
   @Provides
-  public DomainSerializationService getDomainSerializationService() {
-    return new DomainSerializationService();
-  }
-
-  @Provides
-  public AssessmentService getAssessmentService(Preferences preferences, @Named("AssessmentServiceRestAdapter") RestAdapter restAdapter) {
-    return new AssessmentService(preferences, restAdapter);
+  public AssessmentService getAssessmentService(Preferences preferences, RestAssessmentService restAssessmentService) {
+    return new AssessmentService(preferences, restAssessmentService);
   }
 
   @Singleton
@@ -100,8 +95,8 @@ class SurveyModule {
   }
 
   @Provides
-  public OnlineRegistrationService getOnlineRegistrationService(@Named("GenericRestAdapter") RestAdapter restAdapter) {
-    return new OnlineRegistrationService(restAdapter);
+  public OnlineRegistrationService getOnlineRegistrationService(RestUserService restUserService) {
+    return new OnlineRegistrationService(restUserService);
   }
 
   @Provides
@@ -110,26 +105,28 @@ class SurveyModule {
   }
 
   @Provides
-  public AssessmentConverter getAssessmentConverter(DomainSerializationService domainSerializationService) {
-    return new AssessmentConverter(domainSerializationService);
+  public RestAssessmentService getRetrofitAssessmentService() {
+    RestAdapter restAdapter = getAssessmentServiceRestAdapter();
+    return restAdapter.create(RestAssessmentService.class);
   }
 
-  @Provides
-  @Named("AssessmentServiceRestAdapter")
-  public RestAdapter getAssessmentServiceRestAdapter(AssessmentConverter assessmentConverter) {
-    return new RestAdapter.Builder()
+  private RestAdapter getAssessmentServiceRestAdapter() {
+    DomainSerializationService domainSerializationService = new DomainSerializationService();
+    AssessmentConverter assessmentConverter = new AssessmentConverter(domainSerializationService);
+    return getBaseRestAdapterBuilder()
         .setConverter(assessmentConverter)
-        .setLogLevel(RestAdapter.LogLevel.FULL)
-        .setEndpoint(ServiceConstants.API_BASE_URL)
         .build();
   }
 
-  @Provides
-  @Named("GenericRestAdapter")
-  public RestAdapter getGenericRestAdapter() {
+  private RestAdapter.Builder getBaseRestAdapterBuilder() {
     return new RestAdapter.Builder()
         .setLogLevel(RestAdapter.LogLevel.FULL)
-        .setEndpoint(ServiceConstants.API_BASE_URL)
-        .build();
+        .setEndpoint(ServiceConstants.API_BASE_URL);
+  }
+
+  @Provides
+  public RestUserService getUserService() {
+    RestAdapter restAdapter = getBaseRestAdapterBuilder().build();
+    return restAdapter.create(RestUserService.class);
   }
 }
