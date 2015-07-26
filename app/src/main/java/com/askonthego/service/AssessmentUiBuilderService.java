@@ -71,41 +71,56 @@ public class AssessmentUiBuilderService {
       }
 
       for (ResponseCriteriaModel responseCriteriaModel : surveyScreenModel.getResponseCriteria()) {
-        if (responseCriteriaModel.getCondition() == ResponseConditionOperator.EQUALS ||
-            responseCriteriaModel.getCondition() == ResponseConditionOperator.CONTAINS_ALL ||
-            responseCriteriaModel.getCondition() == ResponseConditionOperator.CONTAINS_ANY) {
-          AssessmentResponse assessmentResponse = new AssessmentResponse();
-          assessmentResponse.setResponseId(responseCriteriaModel.getResponse().getId());
-          assessmentResponse.setValues(responseCriteriaModel.getResponse().getValues());
-
-          ResponseCondition responseCondition = new ResponseCondition(responseCriteriaModel.getCondition(), assessmentResponse);
-          DirectContentTransition transition = new DirectContentTransition(responseCriteriaModel.getResponse().getId(),
-              responseCriteriaModel.getTransition(),
-              responseCriteriaModel.isResponseRequired());
-
-          ResponseCriteria responseCriteria = new ResponseCriteria();
-          responseCriteria.addCondition(responseCondition);
-
-          surveyScreen.addResponseCriteria(responseCriteria, transition);
+        if (responseCriteriaModel.getCondition().isComparisonOperator()) {
+          addValueComparisonResponseCriteria(surveyScreen, responseCriteriaModel);
         } else if (responseCriteriaModel.getCondition() == ResponseConditionOperator.DEFAULT) {
-          ResponseCriteria defaultResponseCriteria = new ResponseCriteria();
-          defaultResponseCriteria.setDefault(true);
-          defaultResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.DEFAULT, new AssessmentResponse()));
-
-          surveyScreen.addResponseCriteria(defaultResponseCriteria, new DirectContentTransition(null,
-              responseCriteriaModel.getTransition(),
-              responseCriteriaModel.isResponseRequired()));
+          addDefaultResponseCriteria(surveyScreen, responseCriteriaModel);
         } else if (responseCriteriaModel.getCondition() == ResponseConditionOperator.COMPLETE) {
-          ResponseCriteria surveyCompleteResponseCriteria = new ResponseCriteria();
-          surveyCompleteResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.COMPLETE, new AssessmentResponse()));
-
-          surveyScreen.addResponseCriteria(surveyCompleteResponseCriteria, new EndAssessmentAction(assessment));
+          addCompletionResponseCriteria(surveyScreen);
         }
       }
 
       surveyScreens.add(surveyScreen);
     }
     return surveyScreens;
+  }
+
+  private void addValueComparisonResponseCriteria(SurveyScreen surveyScreen, ResponseCriteriaModel responseCriteriaModel) {
+    AssessmentResponse assessmentResponse = new AssessmentResponse();
+    assessmentResponse.setResponseId(responseCriteriaModel.getResponse().getId());
+    assessmentResponse.setValues(responseCriteriaModel.getResponse().getValues());
+
+    ResponseCondition responseCondition = new ResponseCondition(responseCriteriaModel.getCondition(), assessmentResponse);
+
+    // Navigate to the "transition" id if the response comparison evaluates to true.
+    DirectContentTransition transition = new DirectContentTransition(responseCriteriaModel.getResponse().getId(),
+        responseCriteriaModel.getTransition(),
+        responseCriteriaModel.isResponseRequired());
+
+    ResponseCriteria responseCriteria = new ResponseCriteria();
+    responseCriteria.addCondition(responseCondition);
+
+    surveyScreen.addResponseCriteria(responseCriteria, transition);
+  }
+
+  private void addDefaultResponseCriteria(SurveyScreen surveyScreen, ResponseCriteriaModel responseCriteriaModel) {
+    ResponseCriteria defaultResponseCriteria = new ResponseCriteria();
+    defaultResponseCriteria.setDefault(true);
+    defaultResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.DEFAULT, new AssessmentResponse()));
+
+    // Navigate to the "transition" id regardless of the response value.
+    DirectContentTransition transition = new DirectContentTransition(null,
+        responseCriteriaModel.getTransition(),
+        responseCriteriaModel.isResponseRequired());
+
+    surveyScreen.addResponseCriteria(defaultResponseCriteria, transition);
+  }
+
+  private void addCompletionResponseCriteria(SurveyScreen surveyScreen) {
+    ResponseCriteria surveyCompleteResponseCriteria = new ResponseCriteria();
+    surveyCompleteResponseCriteria.addCondition(new ResponseCondition(ResponseConditionOperator.COMPLETE, new AssessmentResponse()));
+
+    surveyScreen.addResponseCriteria(surveyCompleteResponseCriteria, new EndAssessmentAction(assessment));
   }
 
   private NavigationButtonModel getButtonModel(NavigationButtonModel parsedModel, boolean defaultAllowed, String defaultLabel) {
