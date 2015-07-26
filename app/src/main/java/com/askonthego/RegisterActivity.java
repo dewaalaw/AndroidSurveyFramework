@@ -10,14 +10,12 @@ import android.widget.Toast;
 import com.askonthego.domain.Participant;
 import com.askonthego.service.LocalRegistrationService;
 import com.askonthego.service.OnlineRegistrationService;
+import com.askonthego.service.Preferences;
+import com.askonthego.service.Token;
 import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.crashlytics.android.Crashlytics;
 import com.example.jaf50.survey.R;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.apache.http.Header;
-import org.json.JSONObject;
 
 import javax.inject.Inject;
 
@@ -25,6 +23,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 import io.pristine.sheath.Sheath;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class RegisterActivity extends FragmentActivity {
 
@@ -34,8 +35,9 @@ public class RegisterActivity extends FragmentActivity {
 
   @Inject OnlineRegistrationService onlineRegistrationService;
   @Inject LocalRegistrationService localRegistrationService;
+  @Inject Preferences preferences;
 
-  private static final boolean requiresOnlineRegistration = false;
+  private static final boolean requiresOnlineRegistration = true;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +64,18 @@ public class RegisterActivity extends FragmentActivity {
 
   private void registerOnline(String participantId, String password) {
     actionButton.setEnabled(false);
-    onlineRegistrationService.register(participantId, password, new JsonHttpResponseHandler() {
+    onlineRegistrationService.register(participantId, password, new Callback<Token>() {
       @Override
-      public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+      public void success(Token token, Response response) {
+        preferences.saveApiToken(token.getToken());
         openSurveys();
         actionButton.setEnabled(true);
       }
 
       @Override
-      public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-        Toast.makeText(RegisterActivity.this, "Error during registration: " + errorResponse, Toast.LENGTH_LONG).show();
+      public void failure(RetrofitError error) {
+        Toast.makeText(RegisterActivity.this, getString(R.string.registration_error), Toast.LENGTH_LONG).show();
+        LogUtils.e(getClass(), "Registration error", error);
         passwordTextBox.setText("");
         actionButton.setEnabled(true);
       }

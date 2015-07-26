@@ -13,8 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.example.jaf50.survey.R;
 import com.askonthego.actions.Action;
 import com.askonthego.actions.DirectContentTransition;
 import com.askonthego.actions.EndAssessmentAction;
@@ -26,10 +24,9 @@ import com.askonthego.service.AssessmentService;
 import com.askonthego.service.AudioPlayerService;
 import com.askonthego.service.SurveyActivityService;
 import com.askonthego.util.LogUtils;
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.example.jaf50.survey.R;
 import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawable;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
-import org.apache.http.Header;
 
 import javax.inject.Inject;
 
@@ -38,6 +35,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.pristine.sheath.Sheath;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class SurveyActivity extends FragmentActivity {
 
@@ -120,18 +120,18 @@ public class SurveyActivity extends FragmentActivity {
     setAssessmentState(AssessmentState.Ending);
 
     final Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions());
-    assessmentService.save(currentAssessment, this, new AsyncHttpResponseHandler() {
+    assessmentService.save(currentAssessment, new Callback<Void>() {
       @Override
-      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-        LogUtils.d(AssessmentService.class, "Saved assessment successfully: " + new String(responseBody));
+      public void success(Void aVoid, Response response) {
+        LogUtils.d(AssessmentService.class, "Saved assessment successfully: " + response.getBody());
         Toast.makeText(SurveyActivity.this, "Data upload success!", Toast.LENGTH_LONG).show();
         startSurvey(surveyName);
         soundAlarm();
       }
 
       @Override
-      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-        LogUtils.e(AssessmentService.class, "Error posting assessment: " + new String(responseBody));
+      public void failure(RetrofitError error) {
+        LogUtils.e(AssessmentService.class, "Error posting assessment", error);
         Toast.makeText(SurveyActivity.this, "Data upload failed when ending assessment for alarm: " + error, Toast.LENGTH_LONG).show();
         startSurvey(surveyName);
         soundAlarm();
@@ -140,15 +140,15 @@ public class SurveyActivity extends FragmentActivity {
   }
 
   private void startSurvey(String surveyName) {
-    assessmentService.uploadUnsyncedAssessments(this, new AsyncHttpResponseHandler() {
+    assessmentService.uploadUnsyncedAssessments(new Callback<Void>() {
       @Override
-      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-        onAssessmentSaveSuccess(statusCode, headers, responseBody);
+      public void success(Void aVoid, Response response) {
+        onAssessmentSaveSuccess(response);
       }
 
       @Override
-      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-        onAssessmentSaveFailure(statusCode, headers, responseBody, error);
+      public void failure(RetrofitError error) {
+        onAssessmentSaveFailure(error);
       }
     });
 
@@ -274,30 +274,29 @@ public class SurveyActivity extends FragmentActivity {
 
     setAssessmentState(AssessmentState.Ending);
     Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions().setTimeout(true));
-    assessmentService.save(currentAssessment, this, new AsyncHttpResponseHandler() {
+    assessmentService.save(currentAssessment, new Callback<Void>() {
       @Override
-      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-        onAssessmentSaveSuccess(statusCode, headers, responseBody);
+      public void success(Void aVoid, Response response) {
+        onAssessmentSaveSuccess(response);
         finish();
       }
 
       @Override
-      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-        onAssessmentSaveFailure(statusCode, headers, responseBody, error);
+      public void failure(RetrofitError error) {
+        onAssessmentSaveFailure(error);
         finish();
       }
     });
   }
 
-  private void onAssessmentSaveSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-    LogUtils.d(getClass(), "Saved assessment successfully: " + new String(responseBody));
-    Toast.makeText(this, "Synced data successfully: " + new String(responseBody), Toast.LENGTH_LONG).show();
+  private void onAssessmentSaveSuccess(Response response) {
+    LogUtils.d(getClass(), "Saved assessment successfully: " + response.getBody());
+    Toast.makeText(this, "Synced data successfully: " + response.getBody(), Toast.LENGTH_LONG).show();
     AssessmentHolder.getInstance().setAssessmentInProgress(false);
   }
 
-  private void onAssessmentSaveFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-    String response = responseBody != null ? new String(responseBody) : "";
-    LogUtils.e(getClass(), "Error posting assessment: " + response, error);
+  private void onAssessmentSaveFailure(RetrofitError error) {
+    LogUtils.e(getClass(), "Error posting assessment: ", error);
     Toast.makeText(SurveyActivity.this, "Data sync failed: " + error, Toast.LENGTH_LONG).show();
     AssessmentHolder.getInstance().setAssessmentInProgress(false);
   }
@@ -307,16 +306,16 @@ public class SurveyActivity extends FragmentActivity {
 
     setAssessmentState(AssessmentState.Ending);
     Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions());
-    assessmentService.save(currentAssessment, this, new AsyncHttpResponseHandler() {
+    assessmentService.save(currentAssessment, new Callback<Void>() {
       @Override
-      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-        onAssessmentSaveSuccess(statusCode, headers, responseBody);
+      public void success(Void aVoid, Response response) {
+        onAssessmentSaveSuccess(response);
         finish();
       }
 
       @Override
-      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-        onAssessmentSaveFailure(statusCode, headers, responseBody, error);
+      public void failure(RetrofitError error) {
+        onAssessmentSaveFailure(error);
         finish();
       }
     });

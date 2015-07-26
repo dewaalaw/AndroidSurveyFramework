@@ -1,22 +1,29 @@
 package com.askonthego;
 
+import android.content.Context;
+
 import com.askonthego.alarm.SurveyAlarmScheduler;
 import com.askonthego.alarm.SurveyVibrator;
 import com.askonthego.alarm.WakeLocker;
+import com.askonthego.service.AssessmentConverter;
 import com.askonthego.service.AssessmentParserService;
 import com.askonthego.service.AssessmentService;
 import com.askonthego.service.AudioPlayerService;
 import com.askonthego.service.DomainSerializationService;
 import com.askonthego.service.LocalRegistrationService;
 import com.askonthego.service.OnlineRegistrationService;
+import com.askonthego.service.Preferences;
 import com.askonthego.service.ResponseCollectorService;
+import com.askonthego.service.ServiceConstants;
 import com.askonthego.service.SurveyActivityService;
 import com.google.gson.Gson;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit.RestAdapter;
 
 @Module(injects = {
     SurveyActivity.class,
@@ -25,6 +32,12 @@ import dagger.Provides;
     WelcomeActivity.class
 })
 class SurveyModule {
+
+  private Context context;
+
+  public SurveyModule(Context context) {
+    this.context = context;
+  }
 
   @Provides
   public SurveyActivityService getSurveyActivityService() {
@@ -38,8 +51,8 @@ class SurveyModule {
   }
 
   @Provides
-  public AssessmentService getAssessmentService(DomainSerializationService domainSerializationService) {
-    return new AssessmentService(domainSerializationService);
+  public AssessmentService getAssessmentService(Preferences preferences, @Named("AssessmentServiceRestAdapter") RestAdapter restAdapter) {
+    return new AssessmentService(preferences, restAdapter);
   }
 
   @Singleton
@@ -87,7 +100,36 @@ class SurveyModule {
   }
 
   @Provides
-  public OnlineRegistrationService getOnlineRegistrationService() {
-    return new OnlineRegistrationService();
+  public OnlineRegistrationService getOnlineRegistrationService(@Named("GenericRestAdapter") RestAdapter restAdapter) {
+    return new OnlineRegistrationService(restAdapter);
+  }
+
+  @Provides
+  public Preferences getPreferences() {
+    return new Preferences(context);
+  }
+
+  @Provides
+  public AssessmentConverter getAssessmentConverter(DomainSerializationService domainSerializationService) {
+    return new AssessmentConverter(domainSerializationService);
+  }
+
+  @Provides
+  @Named("AssessmentServiceRestAdapter")
+  public RestAdapter getAssessmentServiceRestAdapter(AssessmentConverter assessmentConverter) {
+    return new RestAdapter.Builder()
+        .setConverter(assessmentConverter)
+        .setLogLevel(RestAdapter.LogLevel.FULL)
+        .setEndpoint(ServiceConstants.API_BASE_URL)
+        .build();
+  }
+
+  @Provides
+  @Named("GenericRestAdapter")
+  public RestAdapter getGenericRestAdapter() {
+    return new RestAdapter.Builder()
+        .setLogLevel(RestAdapter.LogLevel.FULL)
+        .setEndpoint(ServiceConstants.API_BASE_URL)
+        .build();
   }
 }

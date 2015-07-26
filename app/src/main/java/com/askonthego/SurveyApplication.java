@@ -22,7 +22,7 @@ public class SurveyApplication extends Application {
   public void onCreate() {
     super.onCreate();
     Fabric.with(this, new Crashlytics());
-    Sheath.holster(new SurveyModule());
+    Sheath.holster(new SurveyModule(this));
 
     LogUtils.d(getClass(), "In onCreate()");
 

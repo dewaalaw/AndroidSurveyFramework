@@ -1,34 +1,29 @@
 package com.askonthego.service;
 
-import android.content.Context;
-
 import com.askonthego.domain.Assessment;
 import com.askonthego.sdk.BetterFindCallback;
 import com.askonthego.util.LogUtils;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
-import org.apache.http.Header;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HTTP;
-import org.json.JSONException;
-
-import java.io.UnsupportedEncodingException;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class AssessmentService {
 
-  private static final String ASSESSMENT_SAVE_URL = ServiceConstants.API_BASE_URL + "/assessments";
-  private DomainSerializationService domainSerializationService;
+  private RestAdapter restAdapter;
+  private Preferences preferences;
 
-  public AssessmentService(DomainSerializationService domainSerializationService) {
-    this.domainSerializationService = domainSerializationService;
+  public AssessmentService(Preferences preferences, RestAdapter restAdapter) {
+    this.preferences = preferences;
+    this.restAdapter = restAdapter;
   }
 
-  public synchronized void uploadUnsyncedAssessments(final Context context, final AsyncHttpResponseHandler responseHandler) {
+  public synchronized void uploadUnsyncedAssessments(final Callback<Void> responseHandler) {
     ParseQuery<Assessment> query = ParseQuery.getQuery("Assessment");
     query.fromLocalDatastore()
          .whereEqualTo("synced", false)
@@ -37,7 +32,7 @@ public class AssessmentService {
            @Override
            public void onSuccess(List<Assessment> assessments) {
              for (Assessment assessment : assessments) {
-               postAssessment(assessment, context, responseHandler);
+               postAssessment(assessment, responseHandler);
              }
            }
 
@@ -48,49 +43,27 @@ public class AssessmentService {
          });
   }
 
-  public void save(final Assessment assessment, final Context context, final AsyncHttpResponseHandler responseHandler) {
+  public void save(Assessment assessment, Callback<Void> callback) {
     assessment.pinInBackground();
-    postAssessment(assessment, context, responseHandler);
+    postAssessment(assessment, callback);
   }
 
-  private synchronized void postAssessment(Assessment assessment, Context context, AsyncHttpResponseHandler responseHandler) {
-    ResponseHandlerDecorator responseHandlerDecorator = new ResponseHandlerDecorator(responseHandler, assessment);
-    try {
-      LogUtils.d(AssessmentService.class, "Syncing assessment for participant " + assessment.getParticipant().getId() + ", survey " + assessment.getSurveyName() + ", startDate " + assessment.getAssessmentStartDate());
+  private synchronized void postAssessment(final Assessment assessment, final Callback<Void> callback) {
+    LogUtils.d(AssessmentService.class, "Syncing assessment for participant " + assessment.getParticipant().getId() + ", survey " + assessment.getSurveyName() + ", startDate " + assessment.getAssessmentStartDate());
 
-      AsyncHttpClient client = new AsyncHttpClient();
-      String json = domainSerializationService.toJson(assessment);
-      StringEntity entity = new StringEntity(json);
-      entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-      client.post(context, ASSESSMENT_SAVE_URL, entity, "application/json", responseHandlerDecorator);
-    } catch (JSONException e) {
-      LogUtils.e(AssessmentService.class, "Error posting assessment: ", e);
-      responseHandlerDecorator.onFailure(500, null, "Error syncing assessment".getBytes(), e);
-    } catch (UnsupportedEncodingException e) {
-      LogUtils.e(AssessmentService.class, "Error posting assessment: ", e);
-      responseHandlerDecorator.onFailure(500, null, "Error syncing assessment".getBytes(), e);
-    }
-  }
+    final RetrofitAssessmentService assessmentService = restAdapter.create(RetrofitAssessmentService.class);
+    assessmentService.postAssessment(preferences.getApiToken(), assessment, new Callback<Void>() {
+      @Override
+      public void success(Void aVoid, Response response) {
+        assessment.setSynced(true);
+        assessment.pinInBackground();
+        callback.success(aVoid, response);
+      }
 
-  private class ResponseHandlerDecorator extends AsyncHttpResponseHandler {
-    private AsyncHttpResponseHandler parentHandler;
-    private Assessment assessment;
-
-    ResponseHandlerDecorator(AsyncHttpResponseHandler parentHandler, Assessment assessment) {
-      this.parentHandler = parentHandler;
-      this.assessment = assessment;
-    }
-
-    @Override
-    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-      assessment.setSynced(true);
-      assessment.pinInBackground();
-      parentHandler.onSuccess(statusCode, headers, responseBody);
-    }
-
-    @Override
-    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-      parentHandler.onFailure(statusCode, headers, responseBody, error);
-    }
+      @Override
+      public void failure(RetrofitError error) {
+        callback.failure(error);
+      }
+    });
   }
 }
