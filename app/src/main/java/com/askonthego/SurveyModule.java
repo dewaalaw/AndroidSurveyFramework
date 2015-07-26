@@ -2,6 +2,7 @@ package com.askonthego;
 
 import android.content.Context;
 
+import com.askonthego.alarm.AssessmentTimeoutTask;
 import com.askonthego.alarm.SurveyAlarmScheduler;
 import com.askonthego.alarm.SurveyVibrator;
 import com.askonthego.alarm.WakeLocker;
@@ -26,6 +27,7 @@ import dagger.Provides;
 import retrofit.RestAdapter;
 
 @Module(injects = {
+    AssessmentTimeoutTask.class,
     SurveyActivity.class,
     SurveyScreen.class,
     RegisterActivity.class,
