@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.askonthego.alarm.SurveyAlarmScheduler;
+import com.askonthego.alarm.TimeoutEvent;
 import com.askonthego.parser.StudyModel;
 import com.askonthego.parser.WelcomeLinkModel;
 import com.askonthego.parser.WelcomeModel;
@@ -26,6 +27,7 @@ import javax.inject.Inject;
 import bolts.Task;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import io.pristine.sheath.Sheath;
 
 public class WelcomeActivity extends FragmentActivity {
@@ -42,8 +44,9 @@ public class WelcomeActivity extends FragmentActivity {
     super.onCreate(savedInstanceState);
     Sheath.inject(this);
 
-    if (assessmentHolder.isAssessmentInProgress() || getIntent().getStringExtra("surveyName") != null) {
-      LogUtils.d(getClass(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName"));
+    TimeoutEvent timeoutEvent = EventBus.getDefault().getStickyEvent(TimeoutEvent.class);
+    if (assessmentHolder.isAssessmentInProgress() || getIntent().getStringExtra("surveyName") != null || timeoutEvent != null) {
+      LogUtils.d(getClass(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName") + ", timeoutEvent = " + timeoutEvent);
       startSurveyActivity(getIntent());
       finish();
     } else {
