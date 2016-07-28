@@ -37,7 +37,7 @@ public class RegisterActivity extends FragmentActivity {
   @Inject LocalRegistrationService localRegistrationService;
   @Inject Preferences preferences;
 
-  private static final boolean requiresOnlineRegistration = true;
+  private static final boolean requiresOnlineRegistration = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
