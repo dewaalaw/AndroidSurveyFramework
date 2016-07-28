@@ -14,14 +14,13 @@ import com.askonthego.service.Preferences;
 import com.askonthego.service.Token;
 import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.crashlytics.android.Crashlytics;
 import com.example.jaf50.survey.R;
+import com.example.jaf50.survey.R2;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 import io.pristine.sheath.Sheath;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -29,9 +28,9 @@ import retrofit.client.Response;
 
 public class RegisterActivity extends FragmentActivity {
 
-  @Bind(R.id.actionButton) BootstrapButton actionButton;
-  @Bind(R.id.participantIdTextBox) EditText participantIdTextBox;
-  @Bind(R.id.passwordTextBox) EditText passwordTextBox;
+  @BindView(R2.id.actionButton) BootstrapButton actionButton;
+  @BindView(R2.id.participantIdTextBox) EditText participantIdTextBox;
+  @BindView(R2.id.passwordTextBox) EditText passwordTextBox;
 
   @Inject OnlineRegistrationService onlineRegistrationService;
   @Inject LocalRegistrationService localRegistrationService;
@@ -42,7 +41,6 @@ public class RegisterActivity extends FragmentActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Fabric.with(this, new Crashlytics());
     Sheath.inject(this);
     setContentView(R.layout.activity_register);
     ButterKnife.bind(this);

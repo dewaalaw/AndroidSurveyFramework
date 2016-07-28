@@ -8,10 +8,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.askonthego.response.Response;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
-import com.example.jaf50.survey.R;
-import com.askonthego.response.Response;
+import com.example.jaf50.survey.R2;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.lang.reflect.Field;
@@ -20,16 +20,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.Setter;
 
 public class DatePickerComponent extends LinearLayout implements ISurveyComponent {
 
-  @Bind(R.id.selectButton) BootstrapButton selectButton;
-  @Bind(R.id.dayEditText) BootstrapEditText dayEditText;
-  @Bind(R.id.monthEditText) BootstrapEditText monthEditText;
-  @Bind(R.id.yearEditText) BootstrapEditText yearEditText;
+  @BindView(R2.id.selectButton) BootstrapButton selectButton;
+  @BindView(R2.id.dayEditText) BootstrapEditText dayEditText;
+  @BindView(R2.id.monthEditText) BootstrapEditText monthEditText;
+  @BindView(R2.id.yearEditText) BootstrapEditText yearEditText;
 
   private PickerStyle pickerStyle = PickerStyle.CHOOSER;
   @Setter private String responseId;

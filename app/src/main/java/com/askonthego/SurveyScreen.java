@@ -4,13 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-import com.example.jaf50.survey.R;
 import com.askonthego.actions.Action;
 import com.askonthego.domain.AssessmentResponse;
 import com.askonthego.parser.NavigationButtonModel;
 import com.askonthego.response.ResponseCriteria;
 import com.askonthego.service.ResponseCollectorService;
 import com.askonthego.ui.ISurveyComponent;
+import com.example.jaf50.survey.R2;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.pristine.sheath.Sheath;
 import lombok.Getter;
@@ -26,7 +26,7 @@ import lombok.Setter;
 
 public class SurveyScreen extends LinearLayout {
 
-  @Bind(R.id.content) LinearLayout contentLayout;
+  @BindView(R2.id.content) LinearLayout contentLayout;
 
   private List<ISurveyComponent> surveyComponents = new ArrayList<>();
   private LinkedHashMap<ResponseCriteria, Action> actionMap = new LinkedHashMap<>();

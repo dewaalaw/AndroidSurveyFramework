@@ -10,10 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.askonthego.response.Response;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
 import com.example.jaf50.survey.R;
-import com.askonthego.response.Response;
+import com.example.jaf50.survey.R2;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -22,17 +23,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.Getter;
 import lombok.Setter;
 
 public class TimePickerComponent extends LinearLayout implements ISurveyComponent {
 
-  @Bind(R.id.selectButton) BootstrapButton selectButton;
-  @Bind(R.id.hourEditText) BootstrapEditText hourEditText;
-  @Bind(R.id.minuteEditText) BootstrapEditText minuteEditText;
-  @Bind(R.id.amPmSpinner) Spinner amPmSpinner;
+  @BindView(R2.id.selectButton) BootstrapButton selectButton;
+  @BindView(R2.id.hourEditText) BootstrapEditText hourEditText;
+  @BindView(R2.id.minuteEditText) BootstrapEditText minuteEditText;
+  @BindView(R2.id.amPmSpinner) Spinner amPmSpinner;
 
   private PickerStyle pickerStyle;
   private Date selectedTime;

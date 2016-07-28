@@ -29,11 +29,12 @@ import com.askonthego.service.SurveyActivityService;
 import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.example.jaf50.survey.R;
+import com.example.jaf50.survey.R2;
 import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawable;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -45,13 +46,13 @@ import retrofit.client.Response;
 
 public class SurveyActivity extends FragmentActivity {
 
-  @Bind(R.id.contentPanel) LinearLayout contentPanel;
-  @Bind(R.id.mainTextView) TextView mainTextView;
-  @Bind(R.id.nextButton) BootstrapButton nextButton;
-  @Bind(R.id.previousButton) BootstrapButton previousButton;
-  @Bind(R.id.progressBar) ProgressBar progressBar;
-  @Bind(R.id.progressView) View progressView;
-  @Bind(R.id.surveyContentLayout) ViewGroup surveyContentLayout;
+  @BindView(R2.id.contentPanel) LinearLayout contentPanel;
+  @BindView(R2.id.mainTextView) TextView mainTextView;
+  @BindView(R2.id.nextButton) BootstrapButton nextButton;
+  @BindView(R2.id.previousButton) BootstrapButton previousButton;
+  @BindView(R2.id.progressBar) ProgressBar progressBar;
+  @BindView(R2.id.progressView) View progressView;
+  @BindView(R2.id.surveyContentLayout) ViewGroup surveyContentLayout;
 
   @Inject AssessmentService assessmentService;
   @Inject SurveyVibrator surveyVibrator;
@@ -175,7 +176,7 @@ public class SurveyActivity extends FragmentActivity {
     setAssessmentState(AssessmentState.Starting);
   }
 
-  @OnClick(R.id.previousButton)
+  @OnClick(R2.id.previousButton)
   public void onPrevious() {
     if (surveyActivityService.hasPrevious()) {
       SurveyScreen previousSurveyScreen = surveyActivityService.previous();
@@ -183,7 +184,7 @@ public class SurveyActivity extends FragmentActivity {
     }
   }
 
-  @OnClick(R.id.nextButton)
+  @OnClick(R2.id.nextButton)
   public void onNext() {
     Action action = surveyActivityService.getCurrentScreenAction();
     if (action != null) {
