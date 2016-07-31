@@ -17,7 +17,7 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.pristine.sheath.Sheath;
 import retrofit.Callback;
@@ -26,9 +26,9 @@ import retrofit.client.Response;
 
 public class RegisterActivity extends FragmentActivity {
 
-  @Bind(R.id.actionButton) BootstrapButton actionButton;
-  @Bind(R.id.participantIdTextBox) EditText participantIdTextBox;
-  @Bind(R.id.passwordTextBox) EditText passwordTextBox;
+  @BindView(R.id.actionButton) BootstrapButton actionButton;
+  @BindView(R.id.participantIdTextBox) EditText participantIdTextBox;
+  @BindView(R.id.passwordTextBox) EditText passwordTextBox;
 
   @Inject OnlineRegistrationService onlineRegistrationService;
   @Inject LocalRegistrationService localRegistrationService;

@@ -32,7 +32,7 @@ import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawa
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -44,13 +44,13 @@ import retrofit.client.Response;
 
 public class SurveyActivity extends FragmentActivity {
 
-  @Bind(R.id.contentPanel) LinearLayout contentPanel;
-  @Bind(R.id.mainTextView) TextView mainTextView;
-  @Bind(R.id.nextButton) BootstrapButton nextButton;
-  @Bind(R.id.previousButton) BootstrapButton previousButton;
-  @Bind(R.id.progressBar) ProgressBar progressBar;
-  @Bind(R.id.progressView) View progressView;
-  @Bind(R.id.surveyContentLayout) ViewGroup surveyContentLayout;
+  @BindView(R.id.contentPanel) LinearLayout contentPanel;
+  @BindView(R.id.mainTextView) TextView mainTextView;
+  @BindView(R.id.nextButton) BootstrapButton nextButton;
+  @BindView(R.id.previousButton) BootstrapButton previousButton;
+  @BindView(R.id.progressBar) ProgressBar progressBar;
+  @BindView(R.id.progressView) View progressView;
+  @BindView(R.id.surveyContentLayout) ViewGroup surveyContentLayout;
 
   @Inject AssessmentService assessmentService;
   @Inject SurveyVibrator surveyVibrator;

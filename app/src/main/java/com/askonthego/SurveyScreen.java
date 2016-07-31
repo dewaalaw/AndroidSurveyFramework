@@ -17,7 +17,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.pristine.sheath.Sheath;
 import lombok.Getter;
@@ -25,7 +25,7 @@ import lombok.Setter;
 
 public class SurveyScreen extends LinearLayout {
 
-  @Bind(R.id.content) LinearLayout contentLayout;
+  @BindView(R.id.content) LinearLayout contentLayout;
 
   private List<ISurveyComponent> surveyComponents = new ArrayList<>();
   private LinkedHashMap<ResponseCriteria, Action> actionMap = new LinkedHashMap<>();

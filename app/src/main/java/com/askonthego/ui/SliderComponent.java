@@ -12,7 +12,7 @@ import com.askonthego.response.Response;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,9 +21,9 @@ public class SliderComponent extends LinearLayout implements ISurveyComponent {
 
   private static final int DEFAULT_PROGRESS = 50;
 
-  @Bind(R.id.seekBar) SurveySeekBar seekBar;
-  @Bind(R.id.leftLabelTextView) TextView leftLabelTextView;
-  @Bind(R.id.rightLabelTextView) TextView rightLabelTextView;
+  @BindView(R.id.seekBar) SurveySeekBar seekBar;
+  @BindView(R.id.leftLabelTextView) TextView leftLabelTextView;
+  @BindView(R.id.rightLabelTextView) TextView rightLabelTextView;
 
   @Getter @Setter private String responseId;
 
