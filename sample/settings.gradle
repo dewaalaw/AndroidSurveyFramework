@@ -1,0 +1,7 @@
+include ':app'
+include ':askonthego'
+project(':askonthego').projectDir=new File(rootProject.projectDir, '../askonthego/surveyLib')
+include ':DiscreteSeekBar'
+project(':DiscreteSeekBar').projectDir=new File(rootProject.projectDir, '../askonthego/DiscreteSeekBar')
+include ':ambience'
+project(':ambience').projectDir=new File(rootProject.projectDir, '../askonthego/ambience')
