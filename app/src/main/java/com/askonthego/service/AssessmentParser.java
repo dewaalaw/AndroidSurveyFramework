@@ -6,6 +6,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
+import com.askonthego.R;
 import com.askonthego.SurveyScreen;
 import com.askonthego.actions.DirectContentTransition;
 import com.askonthego.actions.EndAssessmentAction;
@@ -39,7 +40,6 @@ import com.askonthego.ui.SliderComponent;
 import com.askonthego.ui.SpacerComponent;
 import com.askonthego.ui.TextComponent;
 import com.askonthego.ui.TimePickerComponent;
-import com.example.jaf50.survey.R;
 
 import java.util.ArrayList;
 import java.util.List;

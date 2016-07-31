@@ -14,14 +14,11 @@ import com.askonthego.service.Preferences;
 import com.askonthego.service.Token;
 import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.crashlytics.android.Crashlytics;
-import com.example.jaf50.survey.R;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 import io.pristine.sheath.Sheath;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -42,7 +39,6 @@ public class RegisterActivity extends FragmentActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Fabric.with(this, new Crashlytics());
     Sheath.inject(this);
     setContentView(R.layout.activity_register);
     ButterKnife.bind(this);

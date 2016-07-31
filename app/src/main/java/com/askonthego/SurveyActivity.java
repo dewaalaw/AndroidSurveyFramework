@@ -28,7 +28,6 @@ import com.askonthego.service.StudyParser;
 import com.askonthego.service.SurveyActivityService;
 import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.example.jaf50.survey.R;
 import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawable;
 
 import javax.inject.Inject;
