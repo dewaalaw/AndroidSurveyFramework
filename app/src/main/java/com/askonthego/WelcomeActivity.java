@@ -18,7 +18,6 @@ import com.askonthego.parser.WelcomeModel;
 import com.askonthego.service.StudyParser;
 import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.example.jaf50.survey.R;
 
 import java.util.concurrent.Callable;
 

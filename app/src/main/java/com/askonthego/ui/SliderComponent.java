@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.jaf50.survey.R;
+import com.askonthego.R;
 import com.askonthego.response.Response;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-import com.example.jaf50.survey.R;
 import com.askonthego.actions.Action;
 import com.askonthego.domain.AssessmentResponse;
 import com.askonthego.parser.NavigationButtonModel;
