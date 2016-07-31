@@ -20,16 +20,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.Setter;
 
 public class DatePickerComponent extends LinearLayout implements ISurveyComponent {
 
-  @Bind(R.id.selectButton) BootstrapButton selectButton;
-  @Bind(R.id.dayEditText) BootstrapEditText dayEditText;
-  @Bind(R.id.monthEditText) BootstrapEditText monthEditText;
-  @Bind(R.id.yearEditText) BootstrapEditText yearEditText;
+  @BindView(R.id.selectButton) BootstrapButton selectButton;
+  @BindView(R.id.dayEditText) BootstrapEditText dayEditText;
+  @BindView(R.id.monthEditText) BootstrapEditText monthEditText;
+  @BindView(R.id.yearEditText) BootstrapEditText yearEditText;
 
   private PickerStyle pickerStyle = PickerStyle.CHOOSER;
   @Setter private String responseId;

@@ -24,15 +24,15 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 
 import bolts.Task;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import io.pristine.sheath.Sheath;
 
 public class WelcomeActivity extends FragmentActivity {
 
-  @Bind(R.id.welcomeTextView) TextView welcomeTextView;
-  @Bind(R.id.contentPanel) ViewGroup contentPanel;
+  @BindView(R.id.welcomeTextView) TextView welcomeTextView;
+  @BindView(R.id.contentPanel) ViewGroup contentPanel;
 
   @Inject SurveyAlarmScheduler surveyAlarmScheduler;
   @Inject AssessmentHolder assessmentHolder;

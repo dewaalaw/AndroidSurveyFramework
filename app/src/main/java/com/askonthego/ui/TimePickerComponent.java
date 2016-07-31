@@ -22,17 +22,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.Getter;
 import lombok.Setter;
 
 public class TimePickerComponent extends LinearLayout implements ISurveyComponent {
 
-  @Bind(R.id.selectButton) BootstrapButton selectButton;
-  @Bind(R.id.hourEditText) BootstrapEditText hourEditText;
-  @Bind(R.id.minuteEditText) BootstrapEditText minuteEditText;
-  @Bind(R.id.amPmSpinner) Spinner amPmSpinner;
+  @BindView(R.id.selectButton) BootstrapButton selectButton;
+  @BindView(R.id.hourEditText) BootstrapEditText hourEditText;
+  @BindView(R.id.minuteEditText) BootstrapEditText minuteEditText;
+  @BindView(R.id.amPmSpinner) Spinner amPmSpinner;
 
   private PickerStyle pickerStyle;
   private Date selectedTime;
