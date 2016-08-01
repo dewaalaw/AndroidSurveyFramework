@@ -7,6 +7,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class InputModel {
 
-  private String label;
-  private String value;
+    private String label;
+    private String value;
 }

@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class SliderModel extends ComponentModel {
 
-  private String responseId;
-  private String leftLabel;
-  private String rightLabel;
+    private String responseId;
+    private String leftLabel;
+    private String rightLabel;
 }

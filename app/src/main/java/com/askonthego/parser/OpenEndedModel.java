@@ -7,5 +7,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class OpenEndedModel extends ComponentModel {
 
-  private String responseId;
+    private String responseId;
 }

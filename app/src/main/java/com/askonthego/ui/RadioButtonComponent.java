@@ -9,9 +9,9 @@ import lombok.Setter;
 
 public class RadioButtonComponent extends RadioButton {
 
-  @Getter @Setter private String value;
+    @Getter @Setter private String value;
 
-  public RadioButtonComponent(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
+    public RadioButtonComponent(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 }

@@ -7,30 +7,30 @@ import com.askonthego.util.LogUtils;
 
 public class AudioPlayerService {
 
-  private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
 
-  public void play(Context context, int audioResourceId) {
-    if (mediaPlayer != null) {
-      mediaPlayer.stop();
-      mediaPlayer.release();
+    public void play(Context context, int audioResourceId) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+        }
+        try {
+            mediaPlayer = MediaPlayer.create(context, audioResourceId);
+            if (mediaPlayer != null) {
+                mediaPlayer.start();
+            }
+        } catch (Exception e) {
+            LogUtils.e(getClass(), "Error playing audio", e);
+        }
     }
-    try {
-      mediaPlayer = MediaPlayer.create(context, audioResourceId);
-      if (mediaPlayer != null) {
-        mediaPlayer.start();
-      }
-    } catch (Exception e) {
-      LogUtils.e(getClass(), "Error playing audio", e);
-    }
-  }
 
-  public void stop() {
-    if (mediaPlayer != null) {
-      try {
-        mediaPlayer.stop();
-      } catch (Exception e) {
-        LogUtils.e(getClass(), "Error stopping the media player", e);
-      }
+    public void stop() {
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.stop();
+            } catch (Exception e) {
+                LogUtils.e(getClass(), "Error stopping the media player", e);
+            }
+        }
     }
-  }
 }

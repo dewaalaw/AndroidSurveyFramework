@@ -11,11 +11,11 @@ import java.io.InputStreamReader;
 
 public class StudyParser {
 
-  public StudyModel getStudy(InputStream inputStream) {
-    GsonBuilder gsonBuilder = new GsonBuilder();
-    gsonBuilder.registerTypeAdapter(ComponentModel.class, new ComponentModelDeserializer());
-    Gson gson = gsonBuilder.create();
+    public StudyModel getStudy(InputStream inputStream) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(ComponentModel.class, new ComponentModelDeserializer());
+        Gson gson = gsonBuilder.create();
 
-    return gson.fromJson(new InputStreamReader(inputStream), StudyModel.class);
-  }
+        return gson.fromJson(new InputStreamReader(inputStream), StudyModel.class);
+    }
 }

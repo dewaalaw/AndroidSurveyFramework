@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class TimePickerModel extends ComponentModel {
 
-  private String responseId;
-  private PickerStyle pickerStyle = PickerStyle.CHOOSER;
-  private String label;
+    private String responseId;
+    private PickerStyle pickerStyle = PickerStyle.CHOOSER;
+    private String label;
 }

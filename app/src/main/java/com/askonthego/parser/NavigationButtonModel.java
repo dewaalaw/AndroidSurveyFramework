@@ -7,6 +7,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class NavigationButtonModel {
 
-  private Boolean allowed;
-  private String label;
+    private Boolean allowed;
+    private String label;
 }

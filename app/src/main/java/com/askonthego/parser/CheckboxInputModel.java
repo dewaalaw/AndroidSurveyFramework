@@ -7,5 +7,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class CheckboxInputModel extends InputModel {
 
-  private boolean mutuallyExclusive;
+    private boolean mutuallyExclusive;
 }

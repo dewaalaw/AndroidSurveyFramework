@@ -7,8 +7,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ResponseCriteriaModel extends ComponentModel {
 
-  private ResponseConditionOperator condition;
-  private ResponseModel response;
-  private String transition;
-  private boolean responseRequired = true;
+    private ResponseConditionOperator condition;
+    private ResponseModel response;
+    private String transition;
+    private boolean responseRequired = true;
 }

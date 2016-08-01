@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ResponseModel {
 
-  private String id;
-  private List<Object> values;
+    private String id;
+    private List<Object> values;
 }

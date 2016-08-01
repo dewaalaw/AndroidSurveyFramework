@@ -7,6 +7,6 @@ import lombok.Setter;
 
 public class AssessmentHolder {
 
-  @Getter @Setter private StudyModel studyModel;
-  @Getter @Setter private boolean assessmentInProgress;
+    @Getter @Setter private StudyModel studyModel;
+    @Getter @Setter private boolean assessmentInProgress;
 }

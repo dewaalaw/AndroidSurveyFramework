@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class WelcomeModel {
 
-  private String text;
-  private List<WelcomeLinkModel> links;
+    private String text;
+    private List<WelcomeLinkModel> links;
 }

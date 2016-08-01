@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class SurveyModel {
 
-  private String description;
-  private String name;
-  private int timeoutMinutes;
-  private List<SurveyScreenModel> screens;
+    private String description;
+    private String name;
+    private int timeoutMinutes;
+    private List<SurveyScreenModel> screens;
 }
