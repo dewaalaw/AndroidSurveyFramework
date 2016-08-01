@@ -10,10 +10,10 @@ import lombok.Setter;
 
 public class CheckboxComponent extends CheckBox {
 
-  @Getter @Setter private String value;
-  @Getter @Setter private boolean mutuallyExclusive;
+    @Getter @Setter private String value;
+    @Getter @Setter private boolean mutuallyExclusive;
 
-  public CheckboxComponent(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
+    public CheckboxComponent(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 }

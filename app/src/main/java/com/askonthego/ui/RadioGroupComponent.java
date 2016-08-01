@@ -12,32 +12,32 @@ import lombok.Setter;
 
 public class RadioGroupComponent extends RadioGroup implements ISurveyComponent {
 
-  @Getter @Setter private String responseId;
+    @Getter @Setter private String responseId;
 
-  public RadioGroupComponent(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
-
-  public ViewGroup getView() {
-    return this;
-  }
-
-  public void addComponent(RadioButtonComponent radioButtonComponent) {
-    addView(radioButtonComponent);
-  }
-
-  @Override
-  public boolean acceptsResponse() {
-    return true;
-  }
-
-  public Response getResponse() {
-    Response response = new Response(responseId);
-    int checkedId = getCheckedRadioButtonId();
-    if (checkedId != -1) {
-      RadioButtonComponent radioButtonComponent = (RadioButtonComponent) findViewById(checkedId);
-      response.addValue(radioButtonComponent.getValue());
+    public RadioGroupComponent(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
-    return response;
-  }
+
+    public ViewGroup getView() {
+        return this;
+    }
+
+    public void addComponent(RadioButtonComponent radioButtonComponent) {
+        addView(radioButtonComponent);
+    }
+
+    @Override
+    public boolean acceptsResponse() {
+        return true;
+    }
+
+    public Response getResponse() {
+        Response response = new Response(responseId);
+        int checkedId = getCheckedRadioButtonId();
+        if (checkedId != -1) {
+            RadioButtonComponent radioButtonComponent = (RadioButtonComponent) findViewById(checkedId);
+            response.addValue(radioButtonComponent.getValue());
+        }
+        return response;
+    }
 }

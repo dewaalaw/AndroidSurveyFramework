@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class RadioGroupModel extends ComponentModel {
 
-  private String responseId;
-  private List<InputModel> inputs;
+    private String responseId;
+    private List<InputModel> inputs;
 }

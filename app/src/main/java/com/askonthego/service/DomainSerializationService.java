@@ -11,36 +11,36 @@ import java.util.List;
 
 public class DomainSerializationService {
 
-  public String toJson(Assessment assessment) throws JSONException {
-    JSONObject jsonObject = new JSONObject();
-    jsonObject.put("surveyName", assessment.getSurveyName());
-    jsonObject.put("startDate", assessment.getAssessmentStartDate());
-    jsonObject.put("endDate", assessment.getAssessmentEndDate());
-    jsonObject.put("timeoutDate", assessment.getAssessmentTimeoutDate());
+    public String toJson(Assessment assessment) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("surveyName", assessment.getSurveyName());
+        jsonObject.put("startDate", assessment.getAssessmentStartDate());
+        jsonObject.put("endDate", assessment.getAssessmentEndDate());
+        jsonObject.put("timeoutDate", assessment.getAssessmentTimeoutDate());
 
-    if (assessment.getParticipant() != null) {
-      jsonObject.put("participantId", assessment.getParticipant().getId());
-    }
-
-    JSONArray responses = new JSONArray();
-    for(AssessmentResponse response : assessment.getResponses()) {
-      JSONObject responseObject = new JSONObject();
-      responseObject.put("responseId", response.getResponseId());
-      responseObject.put("responseDate", response.getResponseDate());
-
-      JSONArray values = new JSONArray();
-      List<Object> rawValues = response.getValues();
-      if (rawValues != null) {
-        for (Object value : rawValues) {
-          values.put(value);
+        if (assessment.getParticipant() != null) {
+            jsonObject.put("participantId", assessment.getParticipant().getId());
         }
-      }
-      responseObject.put("values", values);
 
-      responses.put(responseObject);
+        JSONArray responses = new JSONArray();
+        for (AssessmentResponse response : assessment.getResponses()) {
+            JSONObject responseObject = new JSONObject();
+            responseObject.put("responseId", response.getResponseId());
+            responseObject.put("responseDate", response.getResponseDate());
+
+            JSONArray values = new JSONArray();
+            List<Object> rawValues = response.getValues();
+            if (rawValues != null) {
+                for (Object value : rawValues) {
+                    values.put(value);
+                }
+            }
+            responseObject.put("values", values);
+
+            responses.put(responseObject);
+        }
+        jsonObject.put("responses", responses);
+
+        return jsonObject.toString();
     }
-    jsonObject.put("responses", responses);
-
-    return jsonObject.toString();
-  }
 }

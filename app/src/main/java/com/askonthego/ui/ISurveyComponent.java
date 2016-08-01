@@ -6,9 +6,9 @@ import com.askonthego.response.Response;
 
 public interface ISurveyComponent {
 
-  boolean acceptsResponse();
+    boolean acceptsResponse();
 
-  Response getResponse();
+    Response getResponse();
 
-  View getView();
+    View getView();
 }

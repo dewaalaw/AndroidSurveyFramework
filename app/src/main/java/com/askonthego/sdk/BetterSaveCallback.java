@@ -5,16 +5,16 @@ import com.parse.SaveCallback;
 
 public abstract class BetterSaveCallback implements SaveCallback {
 
-  @Override
-  public void done(ParseException e) {
-    if (e != null) {
-      onFailure(e);
-    } else {
-      onSuccess();
+    @Override
+    public void done(ParseException e) {
+        if (e != null) {
+            onFailure(e);
+        } else {
+            onSuccess();
+        }
     }
-  }
 
-  protected abstract void onFailure(ParseException e);
+    protected abstract void onFailure(ParseException e);
 
-  protected abstract void onSuccess();
+    protected abstract void onSuccess();
 }

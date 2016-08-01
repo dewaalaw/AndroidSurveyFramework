@@ -4,13 +4,13 @@ import java.util.List;
 
 public class ScheduleModel {
 
-  private List<AlarmModel> alarms;
+    private List<AlarmModel> alarms;
 
-  public List<AlarmModel> getAlarms() {
-    return alarms;
-  }
+    public List<AlarmModel> getAlarms() {
+        return alarms;
+    }
 
-  public void setAlarms(List<AlarmModel> alarms) {
-    this.alarms = alarms;
-  }
+    public void setAlarms(List<AlarmModel> alarms) {
+        this.alarms = alarms;
+    }
 }

@@ -15,50 +15,50 @@ import lombok.Setter;
 
 public class CheckboxGroupComponent extends LinearLayout implements ISurveyComponent {
 
-  @Setter private String responseId;
+    @Setter private String responseId;
 
-  private List<CheckboxComponent> checkboxComponents = new ArrayList<CheckboxComponent>();
+    private List<CheckboxComponent> checkboxComponents = new ArrayList<CheckboxComponent>();
 
-  public CheckboxGroupComponent(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
-
-  public ViewGroup getView() {
-    return this;
-  }
-
-  public void addComponent(final CheckboxComponent checkboxComponent) {
-    addView(checkboxComponent);
-    checkboxComponents.add(checkboxComponent);
-
-    checkboxComponent.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        uncheckOpposingGroup(checkboxComponent);
-      }
-    });
-  }
-
-  private void uncheckOpposingGroup(CheckboxComponent checkboxComponent) {
-    for (CheckboxComponent component : checkboxComponents) {
-      if (component.isMutuallyExclusive() != checkboxComponent.isMutuallyExclusive()) {
-        component.setChecked(false);
-      }
+    public CheckboxGroupComponent(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
-  }
 
-  @Override
-  public boolean acceptsResponse() {
-    return true;
-  }
-
-  public Response getResponse() {
-    Response response = new Response(responseId);
-    for (CheckboxComponent checkboxComponent : checkboxComponents) {
-      if (checkboxComponent.isChecked()) {
-        response.addValue(checkboxComponent.getValue());
-      }
+    public ViewGroup getView() {
+        return this;
     }
-    return response;
-  }
+
+    public void addComponent(final CheckboxComponent checkboxComponent) {
+        addView(checkboxComponent);
+        checkboxComponents.add(checkboxComponent);
+
+        checkboxComponent.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uncheckOpposingGroup(checkboxComponent);
+            }
+        });
+    }
+
+    private void uncheckOpposingGroup(CheckboxComponent checkboxComponent) {
+        for (CheckboxComponent component : checkboxComponents) {
+            if (component.isMutuallyExclusive() != checkboxComponent.isMutuallyExclusive()) {
+                component.setChecked(false);
+            }
+        }
+    }
+
+    @Override
+    public boolean acceptsResponse() {
+        return true;
+    }
+
+    public Response getResponse() {
+        Response response = new Response(responseId);
+        for (CheckboxComponent checkboxComponent : checkboxComponents) {
+            if (checkboxComponent.isChecked()) {
+                response.addValue(checkboxComponent.getValue());
+            }
+        }
+        return response;
+    }
 }

@@ -7,16 +7,16 @@ import java.util.List;
 
 public abstract class BetterFindCallback<T extends com.parse.ParseObject> implements FindCallback<T> {
 
-  @Override
-  public void done(List<T> results, ParseException e) {
-    if (e != null) {
-      onFailure(e);
-    } else {
-      onSuccess(results);
+    @Override
+    public void done(List<T> results, ParseException e) {
+        if (e != null) {
+            onFailure(e);
+        } else {
+            onSuccess(results);
+        }
     }
-  }
 
-  public abstract void onSuccess(List<T> results);
+    public abstract void onSuccess(List<T> results);
 
-  protected abstract void onFailure(ParseException e);
+    protected abstract void onFailure(ParseException e);
 }

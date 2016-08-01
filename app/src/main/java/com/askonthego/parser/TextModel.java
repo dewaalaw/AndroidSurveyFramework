@@ -7,5 +7,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class TextModel extends ComponentModel {
 
-  private String label;
+    private String label;
 }

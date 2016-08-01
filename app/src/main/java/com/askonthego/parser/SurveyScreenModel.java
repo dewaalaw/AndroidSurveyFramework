@@ -10,10 +10,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class SurveyScreenModel {
 
-  private String id;
-  private String mainText;
-  private NavigationButtonModel previous;
-  private NavigationButtonModel next;
-  private List<ComponentModel> components;
-  private List<ResponseCriteriaModel> responseCriteria = new ArrayList<>();
+    private String id;
+    private String mainText;
+    private NavigationButtonModel previous;
+    private NavigationButtonModel next;
+    private List<ComponentModel> components;
+    private List<ResponseCriteriaModel> responseCriteria = new ArrayList<>();
 }

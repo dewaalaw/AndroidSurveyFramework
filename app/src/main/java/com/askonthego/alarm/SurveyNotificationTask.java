@@ -2,31 +2,31 @@ package com.askonthego.alarm;
 
 import android.content.ContextWrapper;
 
+import com.askonthego.RegisterActivity;
 import com.buzzbox.mob.android.scheduler.NotificationMessage;
 import com.buzzbox.mob.android.scheduler.Task;
 import com.buzzbox.mob.android.scheduler.TaskResult;
-import com.askonthego.RegisterActivity;
 
 public class SurveyNotificationTask implements Task {
 
-  @Override
-  public TaskResult doWork(ContextWrapper contextWrapper) {
-    TaskResult result = new TaskResult();
-    NotificationMessage message = new NotificationMessage(
-        "Complete a Survey", "Please complete a survey")
-        .setNotificationClickIntentClass(RegisterActivity.class);
-    result.addMessage(message);
+    @Override
+    public TaskResult doWork(ContextWrapper contextWrapper) {
+        TaskResult result = new TaskResult();
+        NotificationMessage message = new NotificationMessage(
+            "Complete a Survey", "Please complete a survey")
+            .setNotificationClickIntentClass(RegisterActivity.class);
+        result.addMessage(message);
 
-    return result;
-  }
+        return result;
+    }
 
-  @Override
-  public String getTitle() {
-    return "Beep!";
-  }
+    @Override
+    public String getTitle() {
+        return "Beep!";
+    }
 
-  @Override
-  public String getId() {
-    return "Beep";
-  }
+    @Override
+    public String getId() {
+        return "Beep";
+    }
 }

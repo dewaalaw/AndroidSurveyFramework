@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class CheckboxGroupModel extends ComponentModel {
 
-  private String responseId;
-  private List<CheckboxInputModel> inputs;
+    private String responseId;
+    private List<CheckboxInputModel> inputs;
 }

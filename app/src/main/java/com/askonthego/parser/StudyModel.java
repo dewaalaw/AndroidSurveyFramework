@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class StudyModel {
 
-  private WelcomeModel welcomeScreen;
-  private List<SurveyModel> surveys;
+    private WelcomeModel welcomeScreen;
+    private List<SurveyModel> surveys;
 }

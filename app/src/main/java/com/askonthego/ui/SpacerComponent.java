@@ -9,22 +9,22 @@ import com.askonthego.response.Response;
 
 public class SpacerComponent extends LinearLayout implements ISurveyComponent {
 
-  public SpacerComponent(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
+    public SpacerComponent(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-  @Override
-  public boolean acceptsResponse() {
-    return false;
-  }
+    @Override
+    public boolean acceptsResponse() {
+        return false;
+    }
 
-  @Override
-  public Response getResponse() {
-    return new Response();
-  }
+    @Override
+    public Response getResponse() {
+        return new Response();
+    }
 
-  @Override
-  public View getView() {
-    return this;
-  }
+    @Override
+    public View getView() {
+        return this;
+    }
 }

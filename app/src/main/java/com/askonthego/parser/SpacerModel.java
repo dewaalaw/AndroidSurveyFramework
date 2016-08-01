@@ -7,5 +7,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class SpacerModel extends ComponentModel {
 
-  private int height;
+    private int height;
 }
