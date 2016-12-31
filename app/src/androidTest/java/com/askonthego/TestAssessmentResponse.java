@@ -9,7 +9,7 @@ public class TestAssessmentResponse extends AndroidTestCase {
 
   @Override
   protected void setUp() throws Exception {
-    SurveyApplication.registerParseClasses();
+    //SurveyApplication.registerParseClasses();
   }
 
   public void test() {

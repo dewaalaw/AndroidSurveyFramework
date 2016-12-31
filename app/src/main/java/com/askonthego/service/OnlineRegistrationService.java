@@ -9,17 +9,18 @@ import retrofit.client.Response;
 public class OnlineRegistrationService {
 
     private RestUserService restUserService;
+    private ParticipantService participantService;
 
-    public OnlineRegistrationService(RestUserService restUserService) {
+    public OnlineRegistrationService(RestUserService restUserService, ParticipantService participantService) {
         this.restUserService = restUserService;
+        this.participantService = participantService;
     }
 
-    public void register(final String participantId, final String password, final Callback<Token> callback) {
-        final Credentials credentials = new Credentials(participantId, password);
+    public void register(final Credentials credentials, final Callback<Token> callback) {
         restUserService.createUser(credentials, new Callback<Void>() {
             @Override
             public void success(Void ignore, Response response) {
-                authenticate(restUserService, credentials, participantId, callback);
+                authenticate(credentials, callback);
             }
 
             @Override
@@ -29,13 +30,13 @@ public class OnlineRegistrationService {
         });
     }
 
-    private void authenticate(RestUserService restUserService, Credentials credentials, final String participantId, final Callback<Token> callback) {
+    private void authenticate(final Credentials credentials, final Callback<Token> callback) {
         restUserService.authenticate(credentials, new Callback<Token>() {
             @Override
             public void success(Token token, Response response) {
                 Participant participant = new Participant();
-                participant.setId(participantId);
-                Participant.setActiveParticipant(participant);
+                participant.setId(credentials.getUsername());
+                participantService.setActiveParticipant(participant);
                 callback.success(token, response);
             }
 

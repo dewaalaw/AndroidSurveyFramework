@@ -14,9 +14,9 @@ public class DomainSerializationService {
     public String toJson(Assessment assessment) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("surveyName", assessment.getSurveyName());
-        jsonObject.put("startDate", assessment.getAssessmentStartDate());
-        jsonObject.put("endDate", assessment.getAssessmentEndDate());
-        jsonObject.put("timeoutDate", assessment.getAssessmentTimeoutDate());
+        jsonObject.put("startDate", assessment.getStartDate());
+        jsonObject.put("endDate", assessment.getEndDate());
+        jsonObject.put("timeoutDate", assessment.getTimeoutDate());
 
         if (assessment.getParticipant() != null) {
             jsonObject.put("participantId", assessment.getParticipant().getId());

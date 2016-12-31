@@ -1,78 +1,82 @@
 package com.askonthego.domain;
 
-import com.parse.ParseClassName;
-import com.parse.ParseObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@ParseClassName("Assessment")
-public class Assessment extends ParseObject {
+public class Assessment {
 
-    private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
+    private transient String documentId;
+    private transient boolean synced;
+    
+    private String surveyName;
+    private List<AssessmentResponse> responses = new ArrayList<>();
+    private Participant participant;
+    private Date startDate;
+    private Date endDate;
+    private Date timeoutDate;
 
-    public Assessment() {
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 
-    public boolean isSynced() {
-        return getBoolean("synced");
+    public String getDocumentId() {
+        return documentId;
     }
 
     public void setSynced(boolean synced) {
-        put("synced", synced);
+        this.synced = synced;
     }
 
-    public String getSurveyName() {
-        return getString("surveyName");
+    public boolean isSynced() {
+        return synced;
     }
 
     public void setSurveyName(String surveyName) {
-        put("surveyName", surveyName);
+        this.surveyName = surveyName;
     }
 
-    public void setResponses(AssessmentResponse... responses) {
-        setResponses(Arrays.asList(responses));
+    public String getSurveyName() {
+        return surveyName;
     }
 
     public void setResponses(List<AssessmentResponse> responses) {
-        addAll("responses", responses);
+        this.responses = responses;
     }
 
     public List<AssessmentResponse> getResponses() {
-        return getList("responses");
-    }
-
-    public Participant getParticipant() {
-        return (Participant) get("participant");
+        return responses;
     }
 
     public void setParticipant(Participant participant) {
-        put("participant", participant);
+        this.participant = participant;
     }
 
-    public void setAssessmentStartDate(Date date) {
-        put("assessmentStartDate", dateFormatter.format(date));
+    public Participant getParticipant() {
+        return participant;
     }
 
-    public String getAssessmentStartDate() {
-        return getString("assessmentStartDate");
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public void setAssessmentEndDate(Date date) {
-        put("assessmentEndDate", dateFormatter.format(date));
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public String getAssessmentEndDate() {
-        return getString("assessmentEndDate");
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
-    public void setAssessmentTimeoutDate(Date date) {
-        put("assessmentTimeoutDate", dateFormatter.format(date));
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public String getAssessmentTimeoutDate() {
-        return getString("assessmentTimeoutDate");
+    public void setTimeoutDate(Date timeoutDate) {
+        this.timeoutDate = timeoutDate;
+    }
+
+    public Date getTimeoutDate() {
+        return timeoutDate;
     }
 }

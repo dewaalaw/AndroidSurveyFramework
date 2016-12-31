@@ -8,8 +8,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.askonthego.domain.Participant;
+import com.askonthego.service.Credentials;
 import com.askonthego.service.LocalRegistrationService;
 import com.askonthego.service.OnlineRegistrationService;
+import com.askonthego.service.ParticipantService;
 import com.askonthego.service.Preferences;
 import com.askonthego.service.Token;
 import com.askonthego.util.LogUtils;
@@ -32,9 +34,10 @@ public class RegisterActivity extends FragmentActivity {
 
     @Inject OnlineRegistrationService onlineRegistrationService;
     @Inject LocalRegistrationService localRegistrationService;
+    @Inject ParticipantService participantService;
     @Inject Preferences preferences;
 
-    private static final boolean requiresOnlineRegistration = false;
+    private static final boolean requiresOnlineRegistration = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,7 @@ public class RegisterActivity extends FragmentActivity {
 
     private void registerOnline(String participantId, String password) {
         actionButton.setEnabled(false);
-        onlineRegistrationService.register(participantId, password, new Callback<Token>() {
+        onlineRegistrationService.register(new Credentials(participantId, password), new Callback<Token>() {
             @Override
             public void success(Token token, Response response) {
                 preferences.saveApiToken(token.getToken());
@@ -111,7 +114,7 @@ public class RegisterActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Participant participant = Participant.getActiveParticipant();
+        Participant participant = participantService.getActiveParticipant();
         if (participant != null) {
             openSurveys();
         }
