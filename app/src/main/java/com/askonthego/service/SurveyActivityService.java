@@ -10,7 +10,6 @@ import com.askonthego.alarm.SurveySchedulerManager;
 import com.askonthego.domain.Assessment;
 import com.askonthego.domain.AssessmentResponse;
 import com.askonthego.domain.AssessmentSaveOptions;
-import com.askonthego.domain.Participant;
 import com.askonthego.parser.StudyModel;
 import com.askonthego.parser.SurveyModel;
 
@@ -33,10 +32,13 @@ public class SurveyActivityService {
     private StudyParser studyParser;
     private AssessmentHolder assessmentHolder;
 
-    public SurveyActivityService(AssessmentParser assessmentParser, StudyParser studyParser, AssessmentHolder assessmentHolder) {
+    private ParticipantService participantService;
+
+    public SurveyActivityService(AssessmentParser assessmentParser, StudyParser studyParser, AssessmentHolder assessmentHolder, ParticipantService participantService) {
         this.assessmentParser = assessmentParser;
         this.studyParser = studyParser;
         this.assessmentHolder = assessmentHolder;
+        this.participantService = participantService;
     }
 
     public void initStudyModel(InputStream surveyInputStream) {
@@ -76,9 +78,9 @@ public class SurveyActivityService {
     public Assessment collectAssessment(AssessmentSaveOptions assessmentSaveOptions) {
         currentAssessment.setResponses(collectResponses());
         Date date = new Date();
-        currentAssessment.setAssessmentEndDate(date);
+        currentAssessment.setEndDate(date);
         if (assessmentSaveOptions.isTimeout()) {
-            currentAssessment.setAssessmentTimeoutDate(date);
+            currentAssessment.setTimeoutDate(date);
         }
         return currentAssessment;
     }
@@ -106,7 +108,7 @@ public class SurveyActivityService {
         Assessment assessment = new Assessment();
         assessment.setSynced(false);
         assessment.setSurveyName(surveyName);
-        assessment.setParticipant(Participant.getActiveParticipant());
+        assessment.setParticipant(participantService.getActiveParticipant());
         this.currentAssessment = assessment;
 
         SurveyModel surveyModel = getSurveyModel(surveyName, studyModel);
@@ -122,7 +124,7 @@ public class SurveyActivityService {
         setCurrentScreen(startScreenId);
         screenStack.push(this.surveyScreens.get(startScreenId));
 
-        currentAssessment.setAssessmentStartDate(new Date());
+        currentAssessment.setStartDate(new Date());
 
         if (surveyModel.getTimeoutMinutes() > 0) {
             scheduleAssessmentTimeout(context, surveyModel.getTimeoutMinutes());

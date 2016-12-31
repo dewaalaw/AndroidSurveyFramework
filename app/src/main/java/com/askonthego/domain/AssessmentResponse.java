@@ -1,53 +1,44 @@
 package com.askonthego.domain;
 
-import com.parse.ParseClassName;
-import com.parse.ParseObject;
-
-import org.json.JSONObject;
-
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-@ParseClassName("AssessmentResponse")
-public class AssessmentResponse extends ParseObject {
+public class AssessmentResponse {
+
+    private String responseId;
+    private List<Object> values = new ArrayList<>();
+    private Date responseDate;
 
     public AssessmentResponse() {
     }
 
-    public String getResponseId() {
-        return getString("responseId");
-    }
-
     public void setResponseId(String responseId) {
-        put("responseId", responseId);
+        this.responseId = responseId;
     }
 
-    public List<Object> getValues() {
-        return getList("values");
+    public String getResponseId() {
+        return responseId;
     }
 
     public void setValues(List<Object> values) {
-        remove("values");
-        if (values != null) {
-            addAll("values", values);
-        } else {
-            put("values", JSONObject.NULL);
-        }
+        this.values = values;
+    }
+
+    public List<Object> getValues() {
+        return values;
     }
 
     public void addValue(Object value) {
-        add("values", value);
+        this.values.add(value);
     }
 
-    public String getResponseDate() {
-        return getString("responseDate");
+    public void setResponseDate(Date responseDate) {
+        this.responseDate = responseDate;
     }
 
-    public void setResponseDate(String responseDate) {
-        if (responseDate != null) {
-            put("responseDate", responseDate);
-        } else {
-            put("responseDate", JSONObject.NULL);
-        }
+    public Date getResponseDate() {
+        return responseDate;
     }
 
     public boolean isEmpty() {

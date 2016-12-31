@@ -20,15 +20,25 @@ import com.askonthego.alarm.SurveyVibrator;
 import com.askonthego.alarm.TimeoutEvent;
 import com.askonthego.alarm.WakeLocker;
 import com.askonthego.domain.Assessment;
+import com.askonthego.domain.AssessmentResponse;
 import com.askonthego.domain.AssessmentSaveOptions;
+import com.askonthego.domain.Participant;
 import com.askonthego.service.AssessmentParser;
 import com.askonthego.service.AssessmentService;
 import com.askonthego.service.AudioPlayerService;
+import com.askonthego.service.ParticipantService;
 import com.askonthego.service.StudyParser;
 import com.askonthego.service.SurveyActivityService;
 import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -58,6 +68,7 @@ public class SurveyActivity extends FragmentActivity {
     @Inject AudioPlayerService audioPlayerService;
     @Inject AssessmentHolder assessmentHolder;
     @Inject StudyParser studyParser;
+    @Inject ParticipantService participantService;
 
     private boolean onCreateCalled;
     private SurveyActivityService surveyActivityService;
@@ -66,7 +77,7 @@ public class SurveyActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Sheath.inject(this);
-        this.surveyActivityService = new SurveyActivityService(new AssessmentParser(this), studyParser, assessmentHolder);
+        this.surveyActivityService = new SurveyActivityService(new AssessmentParser(this), studyParser, assessmentHolder, participantService);
 
         String surveyName = getIntent().getStringExtra("surveyName");
         LogUtils.d(getClass(), "In onCreate(), surveyName = " + surveyName);

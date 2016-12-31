@@ -37,6 +37,7 @@ android {
         // Exclude file to avoid
         // Error: Duplicate files during packaging of APK
         exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude 'META-INF/LICENSE'
     }
 }
 
@@ -59,4 +60,7 @@ dependencies {
     provided 'pl.mg6.hrisey:hrisey:0.3.1'
     compile project(':DiscreteSeekBar')
     compile project(':ambience')
+    compile 'com.couchbase.lite:couchbase-lite-android:1.3.1'
+    compile 'com.facebook.stetho:stetho:1.4.1'
+    compile 'com.robotpajamas.stetho:stetho-couchbase:0.2.0'
 }

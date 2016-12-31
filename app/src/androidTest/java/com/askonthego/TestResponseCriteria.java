@@ -17,7 +17,7 @@ public class TestResponseCriteria extends AndroidTestCase {
   @Override
   protected void setUp() throws Exception {
     criteria = new ResponseCriteria();
-    SurveyApplication.registerParseClasses();
+    //SurveyApplication.registerParseClasses();
   }
 
   public void test_EqualsCondition_SingleValueMatch() {
