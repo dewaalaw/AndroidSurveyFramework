@@ -6,11 +6,9 @@ import com.askonthego.alarm.AssessmentTimeoutTask;
 import com.askonthego.alarm.SurveyAlarmScheduler;
 import com.askonthego.alarm.SurveyVibrator;
 import com.askonthego.alarm.WakeLocker;
-import com.askonthego.domain.Participant;
-import com.askonthego.service.AssessmentConverter;
-import com.askonthego.service.AssessmentService;
+import com.askonthego.service.AssessmentDAO;
+import com.askonthego.service.AssessmentUploader;
 import com.askonthego.service.AudioPlayerService;
-import com.askonthego.service.DomainSerializationService;
 import com.askonthego.service.LocalRegistrationService;
 import com.askonthego.service.OnlineRegistrationService;
 import com.askonthego.service.ParticipantService;
@@ -24,17 +22,10 @@ import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.android.AndroidContext;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 
 import javax.inject.Singleton;
 
@@ -77,8 +68,13 @@ class SurveyModule {
     }
 
     @Provides
-    public AssessmentService getAssessmentService(Preferences preferences, RestAssessmentService restAssessmentService, Database database) {
-        return new AssessmentService(preferences, restAssessmentService, database);
+    public AssessmentDAO getAssessmentDAO(Database database) {
+        return new AssessmentDAO(database);
+    }
+
+    @Provides
+    public AssessmentUploader getAssessmentUploader(Preferences preferences, RestAssessmentService restAssessmentService, AssessmentDAO assessmentDAO) {
+        return new AssessmentUploader(preferences, restAssessmentService, assessmentDAO);
     }
 
     @Singleton
@@ -133,39 +129,21 @@ class SurveyModule {
     }
 
     @Provides
-    public RestAssessmentService getRetrofitAssessmentService(Gson gson) {
-        RestAdapter restAdapter = getAssessmentServiceRestAdapter(gson);
-        return restAdapter.create(RestAssessmentService.class);
+    public RestAssessmentService getRestAssessmentService(Gson gson) {
+        return getRestAdapter(gson).create(RestAssessmentService.class);
     }
 
-//    class ParticipantSerializer implements JsonSerializer<Participant> {
-//        @Override
-//        public JsonElement serialize(Participant participant, Type typeOfSrc, JsonSerializationContext context) {
-//            JsonObject obj = new JsonObject();
-//            obj.addProperty("participantId", participant.getId());
-//            return obj;
-//        }
-//    }
-
-    private RestAdapter getAssessmentServiceRestAdapter(Gson gson) {
-//        DomainSerializationService domainSerializationService = new DomainSerializationService();
-//        AssessmentConverter assessmentConverter = new AssessmentConverter(domainSerializationService);
-        return getBaseRestAdapterBuilder(gson)
-            //.setConverter(assessmentConverter)
-            .build();
-    }
-
-    private RestAdapter.Builder getBaseRestAdapterBuilder(Gson gson) {
+    private RestAdapter getRestAdapter(Gson gson) {
         return new RestAdapter.Builder()
             .setLogLevel(RestAdapter.LogLevel.FULL)
             .setEndpoint(ServiceConstants.API_BASE_URL)
-            .setConverter(new GsonConverter(gson));
+            .setConverter(new GsonConverter(gson))
+            .build();
     }
 
     @Provides
-    public RestUserService getUserService(Gson gson) {
-        RestAdapter restAdapter = getBaseRestAdapterBuilder(gson).build();
-        return restAdapter.create(RestUserService.class);
+    public RestUserService getRestUserService(Gson gson) {
+        return getRestAdapter(gson).create(RestUserService.class);
     }
 
     @Provides
