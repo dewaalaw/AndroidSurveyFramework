@@ -9,10 +9,12 @@ import android.widget.Toast;
 
 import com.askonthego.domain.Participant;
 import com.askonthego.service.Credentials;
+import com.askonthego.service.Error;
 import com.askonthego.service.LocalRegistrationService;
 import com.askonthego.service.OnlineRegistrationService;
 import com.askonthego.service.ParticipantService;
 import com.askonthego.service.Preferences;
+import com.askonthego.service.RestError;
 import com.askonthego.service.Token;
 import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -73,7 +75,14 @@ public class RegisterActivity extends FragmentActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(RegisterActivity.this, getString(R.string.registration_error), Toast.LENGTH_LONG).show();
+                RestError restError = (RestError) error.getBodyAs(RestError.class);
+                if (restError.getValidation() != null && !restError.getValidation().getErrors().isEmpty()) {
+                    Error validationError = restError.getValidation().getErrors().get(0);
+                    Toast.makeText(RegisterActivity.this, validationError.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(RegisterActivity.this, getString(R.string.registration_error), Toast.LENGTH_LONG).show();
+                }
+
                 LogUtils.e(getClass(), "Registration error", error);
                 passwordTextBox.setText("");
                 actionButton.setEnabled(true);

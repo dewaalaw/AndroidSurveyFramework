@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -20,24 +21,20 @@ import com.askonthego.alarm.SurveyVibrator;
 import com.askonthego.alarm.TimeoutEvent;
 import com.askonthego.alarm.WakeLocker;
 import com.askonthego.domain.Assessment;
-import com.askonthego.domain.AssessmentResponse;
 import com.askonthego.domain.AssessmentSaveOptions;
-import com.askonthego.domain.Participant;
+import com.askonthego.service.AssessmentDAO;
 import com.askonthego.service.AssessmentParser;
-import com.askonthego.service.AssessmentService;
+import com.askonthego.service.AssessmentUploader;
 import com.askonthego.service.AudioPlayerService;
 import com.askonthego.service.ParticipantService;
+import com.askonthego.service.StorageException;
 import com.askonthego.service.StudyParser;
 import com.askonthego.service.SurveyActivityService;
 import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -62,7 +59,8 @@ public class SurveyActivity extends FragmentActivity {
     @BindView(R.id.progressView) View progressView;
     @BindView(R.id.surveyContentLayout) ViewGroup surveyContentLayout;
 
-    @Inject AssessmentService assessmentService;
+    @Inject AssessmentDAO assessmentDAO;
+    @Inject AssessmentUploader assessmentUploader;
     @Inject SurveyVibrator surveyVibrator;
     @Inject WakeLocker wakeLocker;
     @Inject AudioPlayerService audioPlayerService;
@@ -146,39 +144,49 @@ public class SurveyActivity extends FragmentActivity {
         setAssessmentState(AssessmentState.Ending);
 
         final Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions());
-        assessmentService.save(currentAssessment, new Callback<Void>() {
-            @Override
-            public void success(Void aVoid, Response response) {
-                LogUtils.d(AssessmentService.class, "Saved assessment successfully: " + response.getBody());
-                Toast.makeText(SurveyActivity.this, "Data upload success!", Toast.LENGTH_LONG).show();
-                startSurvey(alarmEvent.surveyName);
-                soundAlarm();
-            }
+        try {
+            assessmentDAO.save(currentAssessment);
+            assessmentUploader.uploadAssessments(Arrays.asList(currentAssessment), new Callback<Void>() {
+                @Override
+                public void success(Void aVoid, Response response) {
+                    LogUtils.d(SurveyActivity.class, "Saved assessment successfully: " + response.getBody());
+                    Toast.makeText(SurveyActivity.this, "Data upload success!", Toast.LENGTH_LONG).show();
+                    startSurvey(alarmEvent.surveyName);
+                    soundAlarm();
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                LogUtils.e(AssessmentService.class, "Error posting assessment", error);
-                Toast.makeText(SurveyActivity.this, "Data upload failed when ending assessment for alarm: " + error, Toast.LENGTH_LONG).show();
-                startSurvey(alarmEvent.surveyName);
-                soundAlarm();
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    LogUtils.e(SurveyActivity.class, "Error posting assessment", error);
+                    Toast.makeText(SurveyActivity.this, "Data upload failed when ending assessment for alarm: " + error, Toast.LENGTH_LONG).show();
+                    startSurvey(alarmEvent.surveyName);
+                    soundAlarm();
+                }
+            });
+        } catch (StorageException e) {
+            e.printStackTrace();
+        }
     }
 
     private void startSurvey(String surveyName) {
         LogUtils.d(getClass(), "In startSurvey(), surveyName = " + surveyName);
 
-        assessmentService.uploadUnsyncedAssessments(new Callback<Void>() {
-            @Override
-            public void success(Void aVoid, Response response) {
-                onAssessmentSaveSuccess(response);
-            }
+        try {
+            List<Assessment> unsyncedAssessments = assessmentDAO.getUnsyncedAssessments();
+            assessmentUploader.uploadAssessments(unsyncedAssessments, new Callback<Void>() {
+                @Override
+                public void success(Void aVoid, Response response) {
+                    onAssessmentSaveSuccess(response);
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                onAssessmentSaveFailure(error);
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    onAssessmentSaveFailure(error);
+                }
+            });
+        } catch (StorageException e) {
+            Log.e(getClass().getName(), "Error uploading unsynced assessments", e);
+        }
 
         surveyActivityService.startSurvey(surveyName, assessmentHolder.getStudyModel(), this);
         setCurrentScreen(surveyActivityService.getStartScreenId());
@@ -317,19 +325,24 @@ public class SurveyActivity extends FragmentActivity {
     }
 
     private void saveAssessment(Assessment currentAssessment) {
-        assessmentService.save(currentAssessment, new Callback<Void>() {
-            @Override
-            public void success(Void aVoid, Response response) {
-                onAssessmentSaveSuccess(response);
-                finish();
-            }
+        try {
+            assessmentDAO.save(currentAssessment);
+            assessmentUploader.uploadAssessments(Arrays.asList(currentAssessment), new Callback<Void>() {
+                @Override
+                public void success(Void aVoid, Response response) {
+                    onAssessmentSaveSuccess(response);
+                    finish();
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                onAssessmentSaveFailure(error);
-                finish();
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    onAssessmentSaveFailure(error);
+                    finish();
+                }
+            });
+        } catch (StorageException e) {
+            e.printStackTrace();
+        }
     }
 
     private void onAssessmentSaveSuccess(Response response) {
