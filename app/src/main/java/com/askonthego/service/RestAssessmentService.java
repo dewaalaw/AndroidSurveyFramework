@@ -10,5 +10,5 @@ import retrofit.http.POST;
 public interface RestAssessmentService {
 
     @POST("/assessments")
-    void postAssessment(@Header("x-access-token") String apiToken, @Body Assessment assessment, Callback<Void> callback);
+    void postAssessment(@Header("Authorization") String apiToken, @Body Assessment assessment, Callback<Void> callback);
 }
