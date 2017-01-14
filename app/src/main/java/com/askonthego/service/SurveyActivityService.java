@@ -32,13 +32,13 @@ public class SurveyActivityService {
     private StudyParser studyParser;
     private AssessmentHolder assessmentHolder;
 
-    private ParticipantService participantService;
+    private ParticipantDAO participantDAO;
 
-    public SurveyActivityService(AssessmentParser assessmentParser, StudyParser studyParser, AssessmentHolder assessmentHolder, ParticipantService participantService) {
+    public SurveyActivityService(AssessmentParser assessmentParser, StudyParser studyParser, AssessmentHolder assessmentHolder, ParticipantDAO participantDAO) {
         this.assessmentParser = assessmentParser;
         this.studyParser = studyParser;
         this.assessmentHolder = assessmentHolder;
-        this.participantService = participantService;
+        this.participantDAO = participantDAO;
     }
 
     public void initStudyModel(InputStream surveyInputStream) {
@@ -108,7 +108,7 @@ public class SurveyActivityService {
         Assessment assessment = new Assessment();
         assessment.setSynced(false);
         assessment.setSurveyName(surveyName);
-        assessment.setParticipant(participantService.getActiveParticipant());
+        assessment.setParticipant(participantDAO.getActiveParticipant());
         this.currentAssessment = assessment;
 
         SurveyModel surveyModel = getSurveyModel(surveyName, studyModel);

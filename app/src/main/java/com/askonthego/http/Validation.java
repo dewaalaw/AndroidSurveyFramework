@@ -1,4 +1,6 @@
-package com.askonthego.service;
+package com.askonthego.http;
+
+import com.askonthego.http.Error;
 
 import java.util.ArrayList;
 import java.util.List;

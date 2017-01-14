@@ -1,4 +1,4 @@
-package com.askonthego.service;
+package com.askonthego.http;
 
 public class Error {
 

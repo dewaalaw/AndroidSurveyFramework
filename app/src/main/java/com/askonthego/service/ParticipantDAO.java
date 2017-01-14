@@ -27,13 +27,13 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class ParticipantService {
+public class ParticipantDAO {
 
     private static final String ACTIVE_PARTICIPANT_KEY = "active_participant";
     private ObjectMapper objectMapper = new ObjectMapper();
     private SharedPreferences sharedPreferences;
 
-    public ParticipantService(Context context) {
+    public ParticipantDAO(Context context) {
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }

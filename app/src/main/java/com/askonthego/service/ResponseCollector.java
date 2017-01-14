@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ResponseCollectorService {
+public class ResponseCollector {
 
     public List<AssessmentResponse> collectResponses(List<ISurveyComponent> surveyComponents) {
         List<AssessmentResponse> responses = new ArrayList<>();

@@ -26,7 +26,7 @@ import com.askonthego.service.AssessmentDAO;
 import com.askonthego.service.AssessmentParser;
 import com.askonthego.service.AssessmentUploader;
 import com.askonthego.service.AudioPlayerService;
-import com.askonthego.service.ParticipantService;
+import com.askonthego.service.ParticipantDAO;
 import com.askonthego.service.StorageException;
 import com.askonthego.service.StudyParser;
 import com.askonthego.service.SurveyActivityService;
@@ -66,7 +66,7 @@ public class SurveyActivity extends FragmentActivity {
     @Inject AudioPlayerService audioPlayerService;
     @Inject AssessmentHolder assessmentHolder;
     @Inject StudyParser studyParser;
-    @Inject ParticipantService participantService;
+    @Inject ParticipantDAO participantDAO;
 
     private boolean onCreateCalled;
     private SurveyActivityService surveyActivityService;
@@ -75,7 +75,7 @@ public class SurveyActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Sheath.inject(this);
-        this.surveyActivityService = new SurveyActivityService(new AssessmentParser(this), studyParser, assessmentHolder, participantService);
+        this.surveyActivityService = new SurveyActivityService(new AssessmentParser(this), studyParser, assessmentHolder, participantDAO);
 
         String surveyName = getIntent().getStringExtra("surveyName");
         LogUtils.d(getClass(), "In onCreate(), surveyName = " + surveyName);
