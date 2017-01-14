@@ -16,7 +16,6 @@ import com.askonthego.service.Preferences;
 import com.askonthego.service.ResponseCollectorService;
 import com.askonthego.service.RestAssessmentService;
 import com.askonthego.service.RestUserService;
-import com.askonthego.service.ServiceConstants;
 import com.askonthego.service.StudyParser;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
@@ -136,7 +135,7 @@ class SurveyModule {
     private RestAdapter getRestAdapter(Gson gson) {
         return new RestAdapter.Builder()
             .setLogLevel(RestAdapter.LogLevel.FULL)
-            .setEndpoint(ServiceConstants.API_BASE_URL)
+            .setEndpoint(BuildConfig.API_BASE_URL)
             .setConverter(new GsonConverter(gson))
             .build();
     }
