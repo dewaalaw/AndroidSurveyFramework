@@ -9,12 +9,11 @@ import android.widget.Toast;
 
 import com.askonthego.domain.Participant;
 import com.askonthego.service.Credentials;
-import com.askonthego.service.Error;
-import com.askonthego.service.LocalRegistrationService;
-import com.askonthego.service.OnlineRegistrationService;
-import com.askonthego.service.ParticipantService;
+import com.askonthego.http.Error;
+import com.askonthego.service.RegistrationService;
+import com.askonthego.service.ParticipantDAO;
 import com.askonthego.service.Preferences;
-import com.askonthego.service.RestError;
+import com.askonthego.http.RestError;
 import com.askonthego.service.Token;
 import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -34,12 +33,9 @@ public class RegisterActivity extends FragmentActivity {
     @BindView(R.id.participantIdTextBox) EditText participantIdTextBox;
     @BindView(R.id.passwordTextBox) EditText passwordTextBox;
 
-    @Inject OnlineRegistrationService onlineRegistrationService;
-    @Inject LocalRegistrationService localRegistrationService;
-    @Inject ParticipantService participantService;
+    @Inject RegistrationService registrationService;
+    @Inject ParticipantDAO participantDAO;
     @Inject Preferences preferences;
-
-    private static final boolean requiresOnlineRegistration = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +49,14 @@ public class RegisterActivity extends FragmentActivity {
             public void onClick(View v) {
                 String participantId = participantIdTextBox.getText().toString();
                 String password = passwordTextBox.getText().toString();
-
-                if (requiresOnlineRegistration) {
-                    registerOnline(participantId, password);
-                } else {
-                    registerLocally(participantId, password);
-                }
+                register(participantId, password);
             }
         });
     }
 
-    private void registerOnline(String participantId, String password) {
+    private void register(String participantId, String password) {
         actionButton.setEnabled(false);
-        onlineRegistrationService.register(new Credentials(participantId, password), new Callback<Token>() {
+        registrationService.register(new Credentials(participantId, password), new Callback<Token>() {
             @Override
             public void success(Token token, Response response) {
                 preferences.saveApiToken(token.getToken());
@@ -90,18 +81,6 @@ public class RegisterActivity extends FragmentActivity {
         });
     }
 
-    private void registerLocally(String participantId, String password) {
-        actionButton.setEnabled(false);
-        if (localRegistrationService.register(participantId, password)) {
-            openSurveys();
-            actionButton.setEnabled(true);
-        } else {
-            passwordTextBox.setText("");
-            Toast.makeText(RegisterActivity.this, getString(R.string.registration_error_invalid_password), Toast.LENGTH_LONG).show();
-            actionButton.setEnabled(true);
-        }
-    }
-
     private void openSurveys() {
         Intent surveyIntent = new Intent(this, WelcomeActivity.class)
             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -123,7 +102,7 @@ public class RegisterActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Participant participant = participantService.getActiveParticipant();
+        Participant participant = participantDAO.getActiveParticipant();
         if (participant != null) {
             openSurveys();
         }

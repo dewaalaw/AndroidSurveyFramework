@@ -9,11 +9,10 @@ import com.askonthego.alarm.WakeLocker;
 import com.askonthego.service.AssessmentDAO;
 import com.askonthego.service.AssessmentUploader;
 import com.askonthego.service.AudioPlayerService;
-import com.askonthego.service.LocalRegistrationService;
-import com.askonthego.service.OnlineRegistrationService;
-import com.askonthego.service.ParticipantService;
+import com.askonthego.service.RegistrationService;
+import com.askonthego.service.ParticipantDAO;
 import com.askonthego.service.Preferences;
-import com.askonthego.service.ResponseCollectorService;
+import com.askonthego.service.ResponseCollector;
 import com.askonthego.service.RestAssessmentService;
 import com.askonthego.service.RestUserService;
 import com.askonthego.service.StudyParser;
@@ -62,8 +61,8 @@ class SurveyModule {
     }
 
     @Provides
-    public ParticipantService getParticipantService() {
-        return new ParticipantService(this.context);
+    public ParticipantDAO getParticipantService() {
+        return new ParticipantDAO(this.context);
     }
 
     @Provides
@@ -78,8 +77,8 @@ class SurveyModule {
 
     @Singleton
     @Provides
-    public ResponseCollectorService getResponseCollectorService() {
-        return new ResponseCollectorService();
+    public ResponseCollector getResponseCollectorService() {
+        return new ResponseCollector();
     }
 
     @Provides
@@ -113,13 +112,8 @@ class SurveyModule {
     }
 
     @Provides
-    public LocalRegistrationService getLocalRegistrationService(ParticipantService participantService) {
-        return new LocalRegistrationService(participantService);
-    }
-
-    @Provides
-    public OnlineRegistrationService getOnlineRegistrationService(RestUserService restUserService, ParticipantService participantService) {
-        return new OnlineRegistrationService(restUserService, participantService);
+    public RegistrationService getRegistrationService(RestUserService restUserService, ParticipantDAO participantDAO) {
+        return new RegistrationService(restUserService, participantDAO);
     }
 
     @Provides

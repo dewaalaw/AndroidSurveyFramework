@@ -6,14 +6,14 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class OnlineRegistrationService {
+public class RegistrationService {
 
     private RestUserService restUserService;
-    private ParticipantService participantService;
+    private ParticipantDAO participantDAO;
 
-    public OnlineRegistrationService(RestUserService restUserService, ParticipantService participantService) {
+    public RegistrationService(RestUserService restUserService, ParticipantDAO participantDAO) {
         this.restUserService = restUserService;
-        this.participantService = participantService;
+        this.participantDAO = participantDAO;
     }
 
     public void register(final Credentials credentials, final Callback<Token> callback) {
@@ -36,7 +36,7 @@ public class OnlineRegistrationService {
             public void success(Token token, Response response) {
                 Participant participant = new Participant();
                 participant.setId(credentials.getUsername());
-                participantService.setActiveParticipant(participant);
+                participantDAO.setActiveParticipant(participant);
                 callback.success(token, response);
             }
 

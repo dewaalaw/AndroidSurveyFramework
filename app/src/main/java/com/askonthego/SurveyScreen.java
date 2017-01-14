@@ -8,7 +8,7 @@ import com.askonthego.actions.Action;
 import com.askonthego.domain.AssessmentResponse;
 import com.askonthego.parser.NavigationButtonModel;
 import com.askonthego.response.ResponseCriteria;
-import com.askonthego.service.ResponseCollectorService;
+import com.askonthego.service.ResponseCollector;
 import com.askonthego.ui.ISurveyComponent;
 
 import java.util.ArrayList;
@@ -34,7 +34,8 @@ public class SurveyScreen extends LinearLayout {
     @Getter @Setter private String mainText;
     @Getter @Setter private NavigationButtonModel previousButtonModel;
     @Getter @Setter private NavigationButtonModel nextButtonModel;
-    @Inject ResponseCollectorService responseCollectorService;
+    @Inject
+    ResponseCollector responseCollector;
 
     public SurveyScreen(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -48,7 +49,7 @@ public class SurveyScreen extends LinearLayout {
     }
 
     public List<AssessmentResponse> collectResponses() {
-        return responseCollectorService.collectResponses(surveyComponents);
+        return responseCollector.collectResponses(surveyComponents);
     }
 
     /**
