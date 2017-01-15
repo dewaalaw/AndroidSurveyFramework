@@ -1,78 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="AskOnTheGo™ Surveys"
-        android:textSize="20dp"
-        android:textColor="#FFFFFF"
-        android:padding="10dp"
-        android:gravity="center"
-        android:background="#3399FF"/>
+        android:id="@+id/screen_header"
+        style="@style/LoginScreenHeader" />
 
     <LinearLayout
+        android:id="@+id/formContainer"
+        android:layout_centerVertical="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp">
 
         <TextView
-            android:id="@+id/actionTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Log In"
-            android:textStyle="bold"
-            android:textSize="22dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18dp"
-            android:layout_marginBottom="2dp"
-            android:text="Participant Id:"/>
+            style="@style/LoginLabel"
+            android:text="@string/participant_id_header"/>
 
         <com.beardedhen.androidbootstrap.BootstrapEditText
             android:id="@+id/participantIdTextBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter username"
-            android:textSize="20dp"
-            android:gravity="center_vertical"
-            android:singleLine="true"/>
+            style="@style/LoginEditText"
+            android:hint="@string/participant_id_hint" />
 
         <TextView
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18dp"
-            android:layout_marginBottom="2dp"
-            android:gravity="center_vertical"
-            android:text="Password:"/>
+            style="@style/LoginLabel"
+            android:text="@string/password_header"/>
 
         <com.beardedhen.androidbootstrap.BootstrapEditText
             android:id="@+id/passwordTextBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter password"
-            android:textSize="20dp"
-            android:password="true"
-            android:singleLine="true"/>
+            style="@style/LoginEditText"
+            android:hint="@string/password_hint"
+            android:password="true" />
+
+        <TextView
+            style="@style/LoginLabel"
+            android:text="@string/password_confirm_header"/>
+
+        <com.beardedhen.androidbootstrap.BootstrapEditText
+            android:id="@+id/passwordConfirmTextBox"
+            style="@style/LoginEditText"
+            android:hint="@string/password_hint"
+            android:password="true" />
 
         <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/actionButton"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            bootstrap:bb_roundedCorners="true"
+            android:id="@+id/registerButton"
+            style="@style/LoginSubmitButton"
             bootstrap:bb_type="success"
-            android:textSize="20dp"
-            android:text="Log In"/>
+            bootstrap:bb_roundedCorners="true"
+            android:text="@string/register"/>
+
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

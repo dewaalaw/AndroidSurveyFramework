@@ -36,6 +36,7 @@ import retrofit.converter.GsonConverter;
     AssessmentTimeoutTask.class,
     SurveyActivity.class,
     SurveyScreen.class,
+    LoginActivity.class,
     RegisterActivity.class,
     WelcomeActivity.class
 })
