@@ -30,7 +30,7 @@ public class RegistrationService {
         });
     }
 
-    private void authenticate(final Credentials credentials, final Callback<Token> callback) {
+    public void authenticate(final Credentials credentials, final Callback<Token> callback) {
         restUserService.authenticate(credentials, new Callback<Token>() {
             @Override
             public void success(Token token, Response response) {

@@ -5,6 +5,19 @@
     <string name="action_settings">Settings</string>
     <string name="registration_error_invalid_password">The password is incorrect. Please try again.</string>
     <string name="uploading_data">Saving data...</string>
+    <string name="login_error">Login failed. Make sure your credentials are correct and then please try again.</string>
     <string name="registration_error">Registration failed. Please try again.</string>
+    <string name="service_unavailable">Unable to connect to the server. Please try again later.</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="password_hint">Enter password</string>
+    <string name="participant_id_header">Participant Id:</string>
+    <string name="participant_id_hint">Enter participant id</string>
+    <string name="password_header">Password:</string>
+    <string name="password_confirm_header">Password Confirm:</string>
+    <string name="password_empty_error">Please enter a password</string>
+    <string name="password_match_error">The passwords do not match</string>
+    <string name="registration_success">Your account was created successfully</string>
+    <string name="login_app_name_header">Ask On The Go™ Surveys</string>
 
 </resources>
