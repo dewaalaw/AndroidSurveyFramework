@@ -1,6 +1,6 @@
 package com.askonthego.service;
 
-import android.app.Activity;
+import android.content.Context;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -46,12 +46,12 @@ import java.util.List;
 
 public class AssessmentParser {
 
-    private Activity activity;
+    private Context context;
     private LayoutInflater layoutInflater;
 
-    public AssessmentParser(Activity activity) {
-        this.activity = activity;
-        this.layoutInflater = LayoutInflater.from(activity);
+    public AssessmentParser(Context context) {
+        this.context= context;
+        this.layoutInflater = LayoutInflater.from(context);
     }
 
     public List<SurveyScreen> getScreens(SurveyModel surveyModel) {
@@ -60,8 +60,8 @@ public class AssessmentParser {
             SurveyScreen surveyScreen = (SurveyScreen) layoutInflater.inflate(R.layout.survey_content, null);
             surveyScreen.setScreenId(surveyScreenModel.getId());
             surveyScreen.setMainText(surveyScreenModel.getMainText());
-            surveyScreen.setPreviousButtonModel(getButtonModel(surveyScreenModel.getPrevious(), true, "Previous"));
-            surveyScreen.setNextButtonModel(getButtonModel(surveyScreenModel.getNext(), true, "Next"));
+            surveyScreen.setPreviousButtonModel(getButtonModel(surveyScreenModel.getPrevious(), true, this.context.getString(R.string.previous_button_text)));
+            surveyScreen.setNextButtonModel(getButtonModel(surveyScreenModel.getNext(), true, this.context.getString(R.string.next_button_text)));
 
             for (ComponentModel componentModel : surveyScreenModel.getComponents()) {
                 surveyScreen.addSurveyComponent(buildComponent(componentModel));
@@ -214,7 +214,7 @@ public class AssessmentParser {
 
     private ISurveyComponent buildSpacerComponent(SpacerModel model) {
         SpacerComponent spacerComponent = (SpacerComponent) layoutInflater.inflate(R.layout.spacer, null);
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, model.getHeight(), this.activity.getResources().getDisplayMetrics());
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, model.getHeight(), this.context.getResources().getDisplayMetrics());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
         spacerComponent.setLayoutParams(params);
         return spacerComponent;

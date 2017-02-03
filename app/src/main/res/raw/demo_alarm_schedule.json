@@ -134,9 +134,9 @@
         },
 
         {
-            "scheduleExpression": "40 8 * * FRI",
+            "scheduleExpression": "31 11 * * FRI",
             "surveyName": "Beeped",
-            "minuteRandomness": 2
+            "minuteRandomness": 0
         },
         {
             "scheduleExpression": "55 10 * * FRI",

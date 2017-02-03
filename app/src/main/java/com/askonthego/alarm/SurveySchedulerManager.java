@@ -30,9 +30,8 @@ import java.util.Map;
 import java.util.Random;
 
 public class SurveySchedulerManager {
-    protected static final String BUZZBOX_SCHEDULER = "buzzbox-scheduler";
-    public static final String INTENT_TASK_START_PREFIX = "buzzbox.start.";
-    public static final String INTENT_TASK_END_PREFIX = "buzzbox.end.";
+
+    private static final String TAG = SurveySchedulerManager.class.getName();
     private static Random random = new Random();
     private static final String STATUS_DISABLED = "DISABLED";
     private static final String STATUS_PAUSED = "PAUSED";
@@ -40,7 +39,7 @@ public class SurveySchedulerManager {
     private static final String RANDOMNESS_PREFERENCE_KEY = "buzzbox.scheduler.randomness";
     private static final String TASKS_STATUS_PREFERENCE_KEY_PREFIX = "buzzbox.scheduler.tasks.status.";
     public static final int SCHEDULER_CONFIG_REQ_CODE = 919817235;
-    static SurveySchedulerManager instance = null;
+    private static SurveySchedulerManager instance = null;
 
     private SurveySchedulerManager() {
     }
@@ -64,22 +63,6 @@ public class SurveySchedulerManager {
             }
         }
         return false;
-    }
-
-    public static Map<String, Boolean> getNotificationTypeStatus(Context ctx) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        Map<String, Boolean> res = new HashMap();
-
-        String notificationTypesString = MetaDataUtils.getString(ctx, "SchedulerPreferenceActivity.notificationTypes", null);
-        if ((notificationTypesString != null) && (!"".equals(notificationTypesString.trim()))) {
-            String[] notificationTypes = notificationTypesString.split(",");
-            for (int i = 0; i < notificationTypes.length; i++) {
-                String defaultSettingsString = MetaDataUtils.getString(ctx, "SchedulerPreferenceActivity.notificationTypes.defaultSettings." + notificationTypes[i], "statusBar=enabled,vibrate=disabled,led=disabled,sound=disabled");
-                Map<String, String> settingsMap = StringUtils.optionsInteger2map(",", '=', defaultSettingsString);
-                res.put(notificationTypes[i], Boolean.valueOf(prefs.getBoolean("cron.statusBar." + notificationTypes[i], "enabled".equals(settingsMap.get("statusBar")))));
-            }
-        }
-        return res;
     }
 
     public void saveTask(Context context, String cron, Class<? extends Task> taskClass) {
@@ -126,7 +109,7 @@ public class SurveySchedulerManager {
             edit.putBoolean("manifest.permissions.checked", true);
             if (!MetaDataUtils.checkSchedulerPermission(context)) {
                 manifestRequirementsOk = false;
-                Log.e("buzzbox-scheduler", "<task not saved!>");
+                Log.e(TAG, "<task not saved!>");
             }
         }
         boolean servicesChecked = prefs.getBoolean("manifest.services.checked", false);
@@ -134,7 +117,7 @@ public class SurveySchedulerManager {
             edit.putBoolean("manifest.services.checked", true);
             if (!MetaDataUtils.checkSchedulerServices(context)) {
                 manifestRequirementsOk = false;
-                Log.e("buzzbox-scheduler", "<task not saved!>");
+                Log.e(TAG, "<task not saved!>");
             }
         }
         boolean receiversChecked = prefs.getBoolean("manifest.receivers.checked", false);
@@ -142,7 +125,7 @@ public class SurveySchedulerManager {
             edit.putBoolean("manifest.receivers.checked", true);
             if (!MetaDataUtils.checkSchedulerReceivers(context)) {
                 manifestRequirementsOk = false;
-                Log.e("buzzbox-scheduler", "<task not saved!>");
+                Log.e(TAG, "<task not saved!>");
             }
         }
         edit.commit();
@@ -174,7 +157,7 @@ public class SurveySchedulerManager {
         serialized.append("@");
         serialized.append(autoPauseHours);
 
-        Log.d("buzzbox-scheduler", serialized.toString());
+        Log.d(TAG, serialized.toString());
         edit.putString("buzzbox.scheduler.tasks", serialized.toString());
         edit.commit();
     }
@@ -185,7 +168,7 @@ public class SurveySchedulerManager {
                 return saved;
             }
         }
-        Log.e("buzzbox-scheduler", "Class " + taskClassName + " has never been saved. Use SchdulerManager.getInstance().saveTask(...)");
+        Log.e(TAG, "Class " + taskClassName + " has never been saved. Use SchdulerManager.getInstance().saveTask(...)");
         return null;
     }
 
@@ -207,15 +190,15 @@ public class SurveySchedulerManager {
                     saved.setAutoPauseHours(h);
                 }
                 String status = getStatus(context, elements[0]);
-                if (status.startsWith("DISABLED")) {
+                if (status.startsWith(STATUS_DISABLED)) {
                     saved.setEnabled(false);
                 }
-                if (status.equals("PAUSED")) {
+                if (status.equals(STATUS_PAUSED)) {
                     saved.paused = true;
                 }
                 tasks.add(saved);
             } catch (Exception e) {
-                Log.e("buzzbox-scheduler", "can't parse task [" + oneTask + "]");
+                Log.e(TAG, "can't parse task [" + oneTask + "]");
             }
         }
         return tasks;
@@ -235,7 +218,10 @@ public class SurveySchedulerManager {
     }
 
     private void scheduleAlarm(int type, long triggerAtMillis, PendingIntent pendingIntent, AlarmManager alarmManager) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // setAlarmClock will wake the device up even if it is in an idle state.
+            alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(triggerAtMillis, pendingIntent), pendingIntent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             alarmManager.setExact(type, triggerAtMillis, pendingIntent);
         } else {
             alarmManager.set(type, triggerAtMillis, pendingIntent);
@@ -252,9 +238,9 @@ public class SurveySchedulerManager {
         i.putExtra("retryCount", retryCount);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        scheduleAlarm(2, SystemClock.elapsedRealtime() + inMillisDelay, pi, mgr);
-
         long now = System.currentTimeMillis();
+        scheduleAlarm(AlarmManager.RTC_WAKEUP, now + inMillisDelay, pi, mgr);
+
         try {
             Class<?> taskClass = Class.forName(className);
             String taskId = ((Task) taskClass.newInstance()).getId();
@@ -262,8 +248,7 @@ public class SurveySchedulerManager {
         } catch (Exception e) {
             Logger.log(context, e.getMessage(), now, now, 0, retryCount);
         }
-        Log.i("buzzbox-scheduler",
-            "Alarm Set for Retry Task [" + className + "] in [" + inMillisDelay / 60000L + "] minutes");
+        Log.i(TAG, "Alarm Set for Retry Task [" + className + "] in [" + inMillisDelay / 60000L + "] minutes");
     }
 
     public void restart(Context context, Class<?> taskClass) {
@@ -295,9 +280,8 @@ public class SurveySchedulerManager {
         i.putExtra("taskClass", taskClassName);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         mgr.cancel(pi);
-        setStatus(context, taskClassName, "DISABLED", System.currentTimeMillis());
-        Log.i("buzzbox-scheduler",
-            "Canceled Alarm for Task [" + taskClassName + "]");
+        setStatus(context, taskClassName, STATUS_DISABLED, System.currentTimeMillis());
+        Log.i(TAG, "Canceled Alarm for Task [" + taskClassName + "]");
         long now = System.currentTimeMillis();
         try {
             String taskId = ((Task) taskClass.newInstance()).getId();
@@ -322,7 +306,7 @@ public class SurveySchedulerManager {
                 Class<?> taskClass = Class.forName(task.taskClassName);
                 String taskId = ((Task) taskClass.newInstance()).getId();
                 Logger.log(context, taskId + "-paused", now, now, 0, 0);
-                setStatus(context, task.taskClassName, "PAUSED", now);
+                setStatus(context, task.taskClassName, STATUS_PAUSED, now);
             } catch (Exception e) {
                 e.printStackTrace();
                 Logger.log(context, e.getMessage(), now, now, 0, 0);
@@ -348,27 +332,10 @@ public class SurveySchedulerManager {
             Log.i(getClass().getName(), "Added randomness millis " + addingMillis + " to schedule " + task.cron);
         }
 
-        scheduleAlarm(0, matchingTime, pi, mgr);
+        scheduleAlarm(AlarmManager.RTC_WAKEUP, matchingTime, pi, mgr);
 
         LogUtils.d(getClass(),
             "Alarm Set for Task [" + task.taskClassName + "] with Schedule [" + task.cron + "] at date " + new Date(matchingTime));
-    }
-
-    protected boolean reScheduleNetworkTasks(Context context) {
-        boolean tasksRescheduled = false;
-        for (ScheduledTask task : loadTasks(context)) {
-            if (task.deliverAsapOnDelay) {
-                String s = getStatus(context, task.taskClassName);
-                Log.i("scheduler-manager", "STATUS " + task.taskClassName + " = " + s);
-                if ((s != null) && (s.startsWith("ERR"))) {
-                    scheduleRetry(context, task.taskClassName, task.cron,
-                        (60 + random.nextInt(12) * 10) * 1000,
-                        0);
-                    tasksRescheduled = true;
-                }
-            }
-        }
-        return tasksRescheduled;
     }
 
     protected String getStatus(Context context, String taskClass) {
@@ -381,17 +348,6 @@ public class SurveySchedulerManager {
         SharedPreferences.Editor edit = prefs.edit();
         edit.putString("buzzbox.scheduler.tasks.status." + taskClass, status + "@" + ts);
         edit.commit();
-    }
-
-    protected void notifyError(Context context, String taskClass, long ts) {
-        setStatus(context, taskClass, "ERR", ts);
-    }
-
-    protected void notifyOk(Context context, String taskClass, long ts) {
-        String status = getStatus(context, taskClass);
-        if ("ERR".equals(status)) {
-            setStatus(context, taskClass, "OK", ts);
-        }
     }
 
     public boolean restartAll(Context context) {
