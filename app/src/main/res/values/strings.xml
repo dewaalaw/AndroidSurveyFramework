@@ -19,5 +19,10 @@
     <string name="password_match_error">The passwords do not match</string>
     <string name="registration_success">Your account was created successfully</string>
     <string name="login_app_name_header">Ask On The Go™ Surveys</string>
+    <string name="skip_question_message">Would you like to skip this question?</string>
+    <string name="skip_question_title">Skip Question?</string>
+    <string name="skip_question_negative_button">No</string>
+    <string name="skip_question_positive_button">Yes</string>
+    <string name="timeout_occurred">Timeout occurred!</string>
 
 </resources>

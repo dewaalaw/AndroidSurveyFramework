@@ -1,11 +1,11 @@
 {
     "welcomeScreen": {
-        "text": "<b>Welcome to ESCAPE!</b>",
+        "text": "<b>Demo Surveys</b>",
         "links": [
             {
                 "surveyName": "Waking",
                 "label": "Waking",
-                "transitionText": "If you would like to take the waking survey, please tap the next button.  If not, please tap the go back button.",
+                "transitionText": "If you would like to take the waking survey, please tap the next button. If not, please tap the go back button.",
                 "icon": "fa-sun-o",
                 "buttonType": "primary",
                 "previousLabel": "Go Back"
@@ -13,7 +13,7 @@
             {
                 "surveyName": "Bedtime",
                 "label": "Bedtime",
-                "transitionText": "If you would like to take the bedtime survey, please tap the next button.  If not, please tap the go back button.",
+                "transitionText": "If you would like to take the bedtime survey, please tap the next button. If not, please tap the go back button.",
                 "icon": "fa-moon-o",
                 "buttonType": "info",
                 "previousLabel": "Go Back"
@@ -21,7 +21,7 @@
             {
                 "surveyName": "Beeped",
                 "label": "Beeped",
-                "transitionText": "If you would like to take the beeped survey, please tap the next button.  If not, please tap the go back button.",
+                "transitionText": "If you would like to take the beeped survey, please tap the next button. If not, please tap the go back button.",
                 "icon": "fa-bell",
                 "buttonType": "success",
                 "previousLabel": "Go Back"
