@@ -45,8 +45,12 @@ public class RegisterActivity extends FragmentActivity {
             String participantId = participantIdTextBox.getText().toString();
             String password = passwordTextBox.getText().toString();
             String passwordConfirm = passwordConfirmTextBox.getText().toString();
-            if (password.isEmpty() && passwordConfirm.isEmpty()) {
+            if (participantId.trim().isEmpty()) {
+                Toast.makeText(RegisterActivity.this, getString(R.string.participant_id_empty_error), Toast.LENGTH_LONG).show();
+            } else if (password.trim().isEmpty()) {
                 Toast.makeText(RegisterActivity.this, getString(R.string.password_empty_error), Toast.LENGTH_LONG).show();
+            } else if (passwordConfirm.trim().isEmpty()) {
+                Toast.makeText(RegisterActivity.this, getString(R.string.password_confirm_empty_error), Toast.LENGTH_LONG).show();
             } else if (!password.equals(passwordConfirm)) {
                 Toast.makeText(RegisterActivity.this, getString(R.string.password_match_error), Toast.LENGTH_LONG).show();
             } else {

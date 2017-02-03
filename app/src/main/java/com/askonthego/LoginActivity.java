@@ -44,7 +44,14 @@ public class LoginActivity extends FragmentActivity {
         public void onClick(View view) {
             String participantId = participantIdTextBox.getText().toString();
             String password = passwordTextBox.getText().toString();
-            authenticate(participantId, password);
+
+            if (participantId.trim().isEmpty()) {
+                Toast.makeText(LoginActivity.this, getString(R.string.participant_id_empty_error), Toast.LENGTH_LONG).show();
+            } else if (password.trim().isEmpty()) {
+                Toast.makeText(LoginActivity.this, getString(R.string.password_empty_error), Toast.LENGTH_LONG).show();
+            } else {
+                authenticate(participantId, password);
+            }
         }
     };
 
