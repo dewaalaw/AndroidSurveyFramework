@@ -85,7 +85,7 @@ public class SurveyActivity extends FragmentActivity {
         ButterKnife.bind(this);
 
         this.progressBar.setIndeterminateDrawable(new ChromeFloatingCirclesDrawable.Builder(this).build());
-        this.surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.coop_city));
+        this.surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.demo_surveys));
         this.onCreateCalled = true;
 
         TimeoutEvent timeoutEvent = EventBus.getDefault().getStickyEvent(TimeoutEvent.class);
@@ -117,7 +117,7 @@ public class SurveyActivity extends FragmentActivity {
 
             wakeLocker.acquirePartial(this);
             LogUtils.d(getClass(), "In TimeoutEvent handler.");
-            Toast.makeText(this, "Timeout occurred!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.timeout_occurred), Toast.LENGTH_LONG).show();
             onTimeout();
         } else if (alarmEvent != null) {
             EventBus.getDefault().removeStickyEvent(alarmEvent);
@@ -225,10 +225,10 @@ public class SurveyActivity extends FragmentActivity {
 
     private void showSkipDialog(final DirectContentTransition directContentTransition) {
         new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
-            .setTitleText("Skip Question?")
-            .setContentText("Would you like to skip this question?")
-            .setCancelText("No")
-            .setConfirmText("Yes")
+            .setTitleText(getString(R.string.skip_question_title))
+            .setContentText(getString(R.string.skip_question_message))
+            .setCancelText(getString(R.string.skip_question_negative_button))
+            .setConfirmText(getString(R.string.skip_question_positive_button))
             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {

@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,27 +12,13 @@ import android.widget.TextView;
 
 import com.askonthego.alarm.SurveyAlarmScheduler;
 import com.askonthego.alarm.TimeoutEvent;
-import com.askonthego.domain.Assessment;
-import com.askonthego.domain.AssessmentResponse;
-import com.askonthego.domain.Participant;
 import com.askonthego.parser.StudyModel;
 import com.askonthego.parser.WelcomeLinkModel;
 import com.askonthego.parser.WelcomeModel;
 import com.askonthego.service.StudyParser;
 import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
@@ -73,7 +58,7 @@ public class WelcomeActivity extends FragmentActivity {
         Task.callInBackground(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                surveyAlarmScheduler.scheduleAll(WelcomeActivity.this, getResources().openRawResource(R.raw.coop_alarm_schedule));
+                surveyAlarmScheduler.scheduleAll(WelcomeActivity.this, getResources().openRawResource(R.raw.demo_alarm_schedule));
                 return null;
             }
         });
@@ -98,7 +83,7 @@ public class WelcomeActivity extends FragmentActivity {
         welcomeTextView.setTypeface(typeface);
 
         // Initialize the StudyModel.
-        StudyModel studyModel = studyParser.getStudy(getResources().openRawResource(R.raw.coop_city));
+        StudyModel studyModel = studyParser.getStudy(getResources().openRawResource(R.raw.demo_surveys));
         assessmentHolder.setStudyModel(studyModel);
 
         WelcomeModel welcomeModel = assessmentHolder.getStudyModel().getWelcomeScreen();
