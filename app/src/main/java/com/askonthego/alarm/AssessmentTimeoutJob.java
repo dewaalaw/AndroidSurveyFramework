@@ -1,14 +1,14 @@
 package com.askonthego.alarm;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.askonthego.AssessmentHolder;
 import com.askonthego.LoginActivity;
-import com.askonthego.R;
+import com.askonthego.SurveyApplication;
+import com.askonthego.service.ResourceService;
 import com.evernote.android.job.Job;
 
 import java.util.concurrent.Callable;
@@ -39,10 +39,10 @@ public class AssessmentTimeoutJob extends Job {
                 ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 if (params.getExtras() != null) {
-                    String surveyName = (String) params.getExtras().get("surveyName");
+                    String surveyName = (String) params.getExtras().get(SurveyApplication.SURVEY_NAME_KEY);
                     Log.d(getClass().getName(), "On onRunJob() for " + getClass().getSimpleName() + ", surveyName = " + surveyName);
-                    intent.putExtra("surveyName", surveyName);
-                    intent.putExtra("timeoutEvent", new TimeoutEvent(surveyName));
+                    intent.putExtra(SurveyApplication.SURVEY_NAME_KEY, surveyName);
+                    intent.putExtra(SurveyApplication.TIMEOUT_EVENT_KEY, new TimeoutEvent(surveyName));
                 }
 
                 getContext().getApplicationContext().startActivity(intent);

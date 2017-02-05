@@ -101,11 +101,11 @@ public class RegisterActivity extends FragmentActivity {
             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             .putExtras(getIntent());
 
-        if (!getIntent().hasExtra("timeoutEvent") && !getIntent().hasExtra("alarmEvent")) {
+        if (!getIntent().hasExtra(SurveyApplication.TIMEOUT_EVENT_KEY) && !getIntent().hasExtra(SurveyApplication.ALARM_EVENT_KEY)) {
             surveyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
 
-        Log.d(getClass().getName(), "In openSurveys(), surveyName = " + getIntent().getStringExtra("surveyName"));
+        Log.d(getClass().getName(), "In openSurveys(), surveyName = " + getIntent().getStringExtra(SurveyApplication.SURVEY_NAME_KEY));
 
         startActivity(surveyIntent);
         finish();

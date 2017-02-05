@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.askonthego.LoginActivity;
+import com.askonthego.SurveyApplication;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
 
@@ -23,19 +24,19 @@ public class LaunchSurveyJob extends Job {
         wakeLocker.acquireFull(getContext());
 
         if (params.getExtras() != null) {
-            String surveyName = (String) params.getExtras().get("surveyName");
+            String surveyName = (String) params.getExtras().get(SurveyApplication.SURVEY_NAME_KEY);
             if (surveyName != null) {
                 try {
                     // Cancel existing timeout alarm just in case the user is currently in a survey. We
                     // don't want the existing timeout to conflict with the alarmed survey timeout.
-                    JobManager.instance().cancelAllForTag("timeout");
+                    JobManager.instance().cancelAllForTag(SurveyApplication.TIMEOUT_JOB_KEY);
 
                     Log.d(getClass().getName(), "In onRunJob(), surveyName to launch = " + surveyName);
 
                     Intent surveyIntent = new Intent(getContext(), LoginActivity.class)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            .putExtra("surveyName", surveyName)
-                            .putExtra("alarmEvent", new AlarmEvent(surveyName));
+                            .putExtra(SurveyApplication.SURVEY_NAME_KEY, surveyName)
+                            .putExtra(SurveyApplication.ALARM_EVENT_KEY, new AlarmEvent(surveyName));
                     getContext().startActivity(surveyIntent);
                 } catch (Exception e) {
                     Log.d(getClass().getName(), "In onRunJob(), exception occurred: " + e);

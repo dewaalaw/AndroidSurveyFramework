@@ -3,6 +3,7 @@ package com.askonthego.service;
 import android.content.Context;
 
 import com.askonthego.AssessmentHolder;
+import com.askonthego.SurveyApplication;
 import com.askonthego.SurveyScreen;
 import com.askonthego.actions.Action;
 import com.askonthego.domain.Assessment;
@@ -137,10 +138,10 @@ public class SurveyActivityService {
 
     private void scheduleAssessmentTimeout(int timeoutMinutes, String surveyName) {
         PersistableBundleCompat persistableBundleCompat = new PersistableBundleCompat();
-        persistableBundleCompat.putString("surveyName", surveyName);
+        persistableBundleCompat.putString(SurveyApplication.SURVEY_NAME_KEY, surveyName);
         long timeoutMillis = timeoutMinutes * 60 * 1000;
 
-        new JobRequest.Builder("timeout")
+        new JobRequest.Builder(SurveyApplication.TIMEOUT_JOB_KEY)
                 .setExact(timeoutMillis)
                 .setUpdateCurrent(true)
                 .setExtras(persistableBundleCompat)

@@ -11,6 +11,11 @@ import io.pristine.sheath.Sheath;
 
 public class SurveyApplication extends Application {
 
+    public static final String TIMEOUT_EVENT_KEY = "timeoutEvent";
+    public static final String ALARM_EVENT_KEY = "alarmEvent";
+    public static final String SURVEY_NAME_KEY = "surveyName";
+    public static final String TIMEOUT_JOB_KEY = "timeout";
+
     @Override
     public void onCreate() {
         super.onCreate();

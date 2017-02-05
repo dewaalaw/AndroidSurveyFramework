@@ -2,6 +2,7 @@ package com.askonthego.alarm;
 
 import android.util.Log;
 
+import com.askonthego.SurveyApplication;
 import com.askonthego.parser.alarm.AlarmModel;
 import com.askonthego.parser.alarm.ScheduleModel;
 import com.buzzbox.mob.android.scheduler.cron.Predictor;
@@ -28,7 +29,7 @@ public class SurveyAlarmScheduler {
 
         Set<JobRequest> jobRequestSet = JobManager.instance().getAllJobRequests();
         for(JobRequest jobRequest : jobRequestSet) {
-            if (!"timeout".equals(jobRequest.getTag())) {
+            if (!SurveyApplication.TIMEOUT_JOB_KEY.equals(jobRequest.getTag())) {
                 // Cancel all survey alarms so that redundant alarms are not scheduled.
                 JobManager.instance().cancel(jobRequest.getJobId());
             }
@@ -45,7 +46,7 @@ public class SurveyAlarmScheduler {
             alarmTimeMillis = alarmTimeMillis - now;
 
             PersistableBundleCompat persistableBundleCompat = new PersistableBundleCompat();
-            persistableBundleCompat.putString("surveyName", alarmModel.getSurveyName());
+            persistableBundleCompat.putString(SurveyApplication.SURVEY_NAME_KEY, alarmModel.getSurveyName());
 
             new JobRequest.Builder(alarmModel.getSurveyName())
                     .setExact(alarmTimeMillis)
@@ -60,7 +61,7 @@ public class SurveyAlarmScheduler {
 
 //    private void scheduleMockAlarms() {
 //        PersistableBundleCompat persistableBundleCompat = new PersistableBundleCompat();
-//        persistableBundleCompat.putString("surveyName", "Beeped");
+//        persistableBundleCompat.putString(SurveyApplication.SURVEY_NAME_KEY, "Beeped");
 //
 //        new JobRequest.Builder("Beeped")
 //                .setExact(20000)

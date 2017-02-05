@@ -75,7 +75,7 @@ public class SurveyActivity extends FragmentActivity {
         Sheath.inject(this);
         this.surveyActivityService = new SurveyActivityService(new AssessmentParser(this), studyParser, assessmentHolder, participantDAO);
 
-        String surveyName = getIntent().getStringExtra("surveyName");
+        String surveyName = getIntent().getStringExtra(SurveyApplication.SURVEY_NAME_KEY);
         Log.d(getClass().getName(), "In onCreate(), surveyName = " + surveyName);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
@@ -86,8 +86,8 @@ public class SurveyActivity extends FragmentActivity {
         this.surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.demo_surveys));
 
         TimeoutEvent timeoutEvent = null;
-        if (getIntent().hasExtra("timeoutEvent")) {
-            timeoutEvent = (TimeoutEvent) getIntent().getSerializableExtra("timeoutEvent");
+        if (getIntent().hasExtra(SurveyApplication.TIMEOUT_EVENT_KEY)) {
+            timeoutEvent = (TimeoutEvent) getIntent().getSerializableExtra(SurveyApplication.TIMEOUT_EVENT_KEY);
         }
 
         if (timeoutEvent != null && !assessmentHolder.isAssessmentInProgress()) {
@@ -117,28 +117,28 @@ public class SurveyActivity extends FragmentActivity {
         super.onResume();
 
         TimeoutEvent timeoutEvent = null;
-        if (getIntent().hasExtra("timeoutEvent")) {
-            timeoutEvent = (TimeoutEvent) getIntent().getSerializableExtra("timeoutEvent");
+        if (getIntent().hasExtra(SurveyApplication.TIMEOUT_EVENT_KEY)) {
+            timeoutEvent = (TimeoutEvent) getIntent().getSerializableExtra(SurveyApplication.TIMEOUT_EVENT_KEY);
         }
 
         AlarmEvent alarmEvent = null;
-        if (getIntent().hasExtra("alarmEvent")) {
-            alarmEvent = (AlarmEvent) getIntent().getSerializableExtra("alarmEvent");
+        if (getIntent().hasExtra(SurveyApplication.ALARM_EVENT_KEY)) {
+            alarmEvent = (AlarmEvent) getIntent().getSerializableExtra(SurveyApplication.ALARM_EVENT_KEY);
         }
 
         if (timeoutEvent != null) {
             wakeLocker.acquirePartial(this);
             Log.d(getClass().getName(), "In TimeoutEvent handler.");
             Toast.makeText(this, getString(R.string.timeout_occurred), Toast.LENGTH_LONG).show();
-            getIntent().removeExtra("timeoutEvent");
-            getIntent().removeExtra("alarmEvent");
+            getIntent().removeExtra(SurveyApplication.TIMEOUT_EVENT_KEY);
+            getIntent().removeExtra(SurveyApplication.ALARM_EVENT_KEY);
             onTimeout();
         } else if (alarmEvent != null) {
             wakeLocker.acquireFull(this);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             Log.d(getClass().getName(), "In AlarmEvent handler, surveyName = " + alarmEvent.surveyName);
-            getIntent().removeExtra("timeoutEvent");
-            getIntent().removeExtra("alarmEvent");
+            getIntent().removeExtra(SurveyApplication.TIMEOUT_EVENT_KEY);
+            getIntent().removeExtra(SurveyApplication.ALARM_EVENT_KEY);
             if (assessmentHolder.isAssessmentInProgress()) {
                 onAlarmForExistingActivity(alarmEvent);
             } else {
@@ -382,7 +382,7 @@ public class SurveyActivity extends FragmentActivity {
     }
 
     private void soundAlarm() {
-        Log.d(getClass().getName(), "In soundAlarm(), surveyName = " + getIntent().getStringExtra("surveyName"));
+        Log.d(getClass().getName(), "In soundAlarm(), surveyName = " + getIntent().getStringExtra(SurveyApplication.SURVEY_NAME_KEY));
         // The audio/vibration are not guaranteed to playback unless the UI is fully visible, and posting a
         // runnable seems to be a reliable way to ensure this.
         surveyContentLayout.post(new Runnable() {

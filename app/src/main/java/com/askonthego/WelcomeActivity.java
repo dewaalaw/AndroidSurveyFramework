@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.askonthego.alarm.ResourceService;
+import com.askonthego.service.ResourceService;
 import com.askonthego.alarm.SurveyAlarmScheduler;
 import com.askonthego.alarm.TimeoutEvent;
 import com.askonthego.parser.StudyModel;
@@ -46,13 +46,13 @@ public class WelcomeActivity extends FragmentActivity {
         Sheath.inject(this);
 
         TimeoutEvent timeoutEvent = null;
-        if (getIntent().hasExtra("timeoutEvent")) {
-            timeoutEvent = (TimeoutEvent) getIntent().getSerializableExtra("timeoutEvent");
+        if (getIntent().hasExtra(SurveyApplication.TIMEOUT_EVENT_KEY)) {
+            timeoutEvent = (TimeoutEvent) getIntent().getSerializableExtra(SurveyApplication.TIMEOUT_EVENT_KEY);
         }
 
         scheduleAlarms(this);
-        if (assessmentHolder.isAssessmentInProgress() || getIntent().getStringExtra("surveyName") != null || timeoutEvent != null) {
-            Log.d(getClass().getName(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName") + ", timeoutEvent = " + timeoutEvent);
+        if (assessmentHolder.isAssessmentInProgress() || getIntent().getStringExtra(SurveyApplication.SURVEY_NAME_KEY) != null || timeoutEvent != null) {
+            Log.d(getClass().getName(), "In onCreate(), surveyName = " + getIntent().getStringExtra(SurveyApplication.SURVEY_NAME_KEY) + ", timeoutEvent = " + timeoutEvent);
             startSurveyActivity();
         } else {
             initWelcomeScreen();
@@ -74,7 +74,7 @@ public class WelcomeActivity extends FragmentActivity {
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .putExtras(getIntent());
 
-        if (!getIntent().hasExtra("timeoutEvent") && !getIntent().hasExtra("alarmEvent")) {
+        if (!getIntent().hasExtra(SurveyApplication.TIMEOUT_EVENT_KEY) && !getIntent().hasExtra(SurveyApplication.ALARM_EVENT_KEY)) {
             surveyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
 
@@ -85,7 +85,7 @@ public class WelcomeActivity extends FragmentActivity {
     private void startSurveyActivity(String surveyName) {
         Intent surveyIntent = new Intent(this, SurveyActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                .putExtra("surveyName", surveyName);
+                .putExtra(SurveyApplication.SURVEY_NAME_KEY, surveyName);
         startActivity(surveyIntent);
         finish();
     }
@@ -154,7 +154,7 @@ public class WelcomeActivity extends FragmentActivity {
         super.onNewIntent(intent);
         setIntent(intent);
 
-        String surveyName = intent.getStringExtra("surveyName");
+        String surveyName = intent.getStringExtra(SurveyApplication.SURVEY_NAME_KEY);
         Log.d(getClass().getName(), "In WelcomeActivity.onNewIntent(), surveyName = " + surveyName);
 
         startSurveyActivity();

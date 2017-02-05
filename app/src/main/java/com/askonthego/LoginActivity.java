@@ -114,16 +114,16 @@ public class LoginActivity extends FragmentActivity {
                 .putExtras(getIntent());
 
         if (wasLaunchedFromRecents()) {
-            surveyIntent.removeExtra("timeoutEvent");
-            surveyIntent.removeExtra("alarmEvent");
-            surveyIntent.removeExtra("surveyName");
+            surveyIntent.removeExtra(SurveyApplication.TIMEOUT_EVENT_KEY);
+            surveyIntent.removeExtra(SurveyApplication.ALARM_EVENT_KEY);
+            surveyIntent.removeExtra(SurveyApplication.SURVEY_NAME_KEY);
         }
 
-        if (!surveyIntent.hasExtra("timeoutEvent") && !surveyIntent.hasExtra("alarmEvent")) {
+        if (!surveyIntent.hasExtra(SurveyApplication.TIMEOUT_EVENT_KEY) && !surveyIntent.hasExtra(SurveyApplication.ALARM_EVENT_KEY)) {
             surveyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
 
-        Log.d(getClass().getName(), "In openSurveys(), surveyName = " + getIntent().getStringExtra("surveyName"));
+        Log.d(getClass().getName(), "In openSurveys(), surveyName = " + getIntent().getStringExtra(SurveyApplication.SURVEY_NAME_KEY));
 
         startActivity(surveyIntent);
         finish();

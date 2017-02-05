@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.askonthego.alarm.AssessmentTimeoutJob;
 import com.askonthego.alarm.LaunchSurveyJob;
-import com.askonthego.alarm.ResourceService;
+import com.askonthego.service.ResourceService;
 import com.askonthego.alarm.SurveyAlarmScheduler;
 import com.askonthego.alarm.SurveyVibrator;
 import com.askonthego.alarm.WakeLocker;

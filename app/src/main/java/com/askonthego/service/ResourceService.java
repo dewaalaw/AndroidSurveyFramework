@@ -1,4 +1,4 @@
-package com.askonthego.alarm;
+package com.askonthego.service;
 
 import android.content.Context;
 
