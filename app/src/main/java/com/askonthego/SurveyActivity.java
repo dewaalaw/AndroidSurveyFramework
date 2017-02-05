@@ -31,7 +31,6 @@ import com.askonthego.service.ParticipantDAO;
 import com.askonthego.service.StorageException;
 import com.askonthego.service.StudyParser;
 import com.askonthego.service.SurveyActivityService;
-import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawable;
 
@@ -77,7 +76,7 @@ public class SurveyActivity extends FragmentActivity {
         this.surveyActivityService = new SurveyActivityService(new AssessmentParser(this), studyParser, assessmentHolder, participantDAO);
 
         String surveyName = getIntent().getStringExtra("surveyName");
-        LogUtils.d(getClass(), "In onCreate(), surveyName = " + surveyName);
+        Log.d(getClass().getName(), "In onCreate(), surveyName = " + surveyName);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         setContentView(R.layout.activity_survey);
@@ -94,10 +93,10 @@ public class SurveyActivity extends FragmentActivity {
         if (timeoutEvent != null && !assessmentHolder.isAssessmentInProgress()) {
             // If this activity was started as a result of a timeout event, then the user already finished a survey and this was never unscheduled,
             // or the user explicitly killed the app during a survey. Otherwise, this activity would still be on the back stack.
-            LogUtils.d(getClass(), "In onCreate() about to finish early in isTimeout block: surveyName == " + surveyName);
+            Log.d(getClass().getName(), "In onCreate() about to finish early in isTimeout block: surveyName == " + surveyName);
             finish();
         } else if (surveyName == null) {
-            LogUtils.d(getClass(), "In onCreate() about to finish early in surveyName == null block");
+            Log.d(getClass().getName(), "In onCreate() about to finish early in surveyName == null block");
             finish();
         } else {
             if (!assessmentHolder.isAssessmentInProgress()) {
@@ -129,7 +128,7 @@ public class SurveyActivity extends FragmentActivity {
 
         if (timeoutEvent != null) {
             wakeLocker.acquirePartial(this);
-            LogUtils.d(getClass(), "In TimeoutEvent handler.");
+            Log.d(getClass().getName(), "In TimeoutEvent handler.");
             Toast.makeText(this, getString(R.string.timeout_occurred), Toast.LENGTH_LONG).show();
             getIntent().removeExtra("timeoutEvent");
             getIntent().removeExtra("alarmEvent");
@@ -137,7 +136,7 @@ public class SurveyActivity extends FragmentActivity {
         } else if (alarmEvent != null) {
             wakeLocker.acquireFull(this);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            LogUtils.d(getClass(), "In AlarmEvent handler, surveyName = " + alarmEvent.surveyName);
+            Log.d(getClass().getName(), "In AlarmEvent handler, surveyName = " + alarmEvent.surveyName);
             getIntent().removeExtra("timeoutEvent");
             getIntent().removeExtra("alarmEvent");
             if (assessmentHolder.isAssessmentInProgress()) {
@@ -166,7 +165,7 @@ public class SurveyActivity extends FragmentActivity {
             assessmentUploader.uploadAssessments(Arrays.asList(currentAssessment), new Callback<Void>() {
                 @Override
                 public void success(Void aVoid, Response response) {
-                    LogUtils.d(SurveyActivity.class, "Saved assessment successfully: " + response.getBody());
+                    Log.d(SurveyActivity.class.getName(), "Saved assessment successfully: " + response.getBody());
                     Toast.makeText(SurveyActivity.this, "Data upload success!", Toast.LENGTH_LONG).show();
                     startSurvey(alarmEvent.surveyName);
                     soundAlarm();
@@ -174,7 +173,7 @@ public class SurveyActivity extends FragmentActivity {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    LogUtils.e(SurveyActivity.class, "Error posting assessment", error);
+                    Log.e(SurveyActivity.class.getName(), "Error posting assessment", error);
                     Toast.makeText(SurveyActivity.this, "Data upload failed when ending assessment for alarm: " + error, Toast.LENGTH_LONG).show();
                     startSurvey(alarmEvent.surveyName);
                     soundAlarm();
@@ -186,7 +185,7 @@ public class SurveyActivity extends FragmentActivity {
     }
 
     private void startSurvey(String surveyName) {
-        LogUtils.d(getClass(), "In startSurvey(), surveyName = " + surveyName);
+        Log.d(getClass().getName(), "In startSurvey(), surveyName = " + surveyName);
 
         try {
             List<Assessment> unsyncedAssessments = assessmentDAO.getUnsyncedAssessments();
@@ -334,7 +333,7 @@ public class SurveyActivity extends FragmentActivity {
     }
 
     private void onTimeout() {
-        LogUtils.d(getClass(), "In onTimeout()");
+        Log.d(getClass().getName(), "In onTimeout()");
 
         setAssessmentState(AssessmentState.Ending);
         Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions().setTimeout(true));
@@ -363,19 +362,19 @@ public class SurveyActivity extends FragmentActivity {
     }
 
     private void onAssessmentSaveSuccess(Response response) {
-        LogUtils.d(getClass(), "Saved assessment successfully: " + response.getBody());
+        Log.d(getClass().getName(), "Saved assessment successfully: " + response.getBody());
         Toast.makeText(this, "Synced data successfully: " + response.getBody(), Toast.LENGTH_LONG).show();
         assessmentHolder.setAssessmentInProgress(false);
     }
 
     private void onAssessmentSaveFailure(RetrofitError error) {
-        LogUtils.e(getClass(), "Error posting assessment: ", error);
+        Log.e(getClass().getName(), "Error posting assessment: ", error);
         Toast.makeText(SurveyActivity.this, "Data sync failed: " + error, Toast.LENGTH_LONG).show();
         assessmentHolder.setAssessmentInProgress(false);
     }
 
     private void endAssessment() {
-        LogUtils.d(getClass(), "In endAssessment(), about to save data.");
+        Log.d(getClass().getName(), "In endAssessment(), about to save data.");
 
         setAssessmentState(AssessmentState.Ending);
         Assessment currentAssessment = surveyActivityService.collectAssessment(new AssessmentSaveOptions());
@@ -383,7 +382,7 @@ public class SurveyActivity extends FragmentActivity {
     }
 
     private void soundAlarm() {
-        LogUtils.d(getClass(), "In soundAlarm(), surveyName = " + getIntent().getStringExtra("surveyName"));
+        Log.d(getClass().getName(), "In soundAlarm(), surveyName = " + getIntent().getStringExtra("surveyName"));
         // The audio/vibration are not guaranteed to playback unless the UI is fully visible, and posting a
         // runnable seems to be a reliable way to ensure this.
         surveyContentLayout.post(new Runnable() {
@@ -398,7 +397,7 @@ public class SurveyActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        LogUtils.d(getClass(), "In onPause()");
+        Log.d(getClass().getName(), "In onPause()");
         wakeLocker.release();
         stopAlarm();
     }

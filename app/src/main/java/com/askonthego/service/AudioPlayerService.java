@@ -2,8 +2,7 @@ package com.askonthego.service;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-
-import com.askonthego.util.LogUtils;
+import android.util.Log;
 
 public class AudioPlayerService {
 
@@ -20,7 +19,7 @@ public class AudioPlayerService {
                 mediaPlayer.start();
             }
         } catch (Exception e) {
-            LogUtils.e(getClass(), "Error playing audio", e);
+            Log.e(getClass().getName(), "Error playing audio", e);
         }
     }
 
@@ -29,7 +28,7 @@ public class AudioPlayerService {
             try {
                 mediaPlayer.stop();
             } catch (Exception e) {
-                LogUtils.e(getClass(), "Error stopping the media player", e);
+                Log.e(getClass().getName(), "Error stopping the media player", e);
             }
         }
     }

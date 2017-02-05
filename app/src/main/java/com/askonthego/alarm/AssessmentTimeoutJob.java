@@ -9,10 +9,6 @@ import android.util.Log;
 import com.askonthego.AssessmentHolder;
 import com.askonthego.LoginActivity;
 import com.askonthego.R;
-import com.askonthego.RegisterActivity;
-import com.askonthego.SurveyActivity;
-import com.askonthego.WelcomeActivity;
-import com.askonthego.util.LogUtils;
 import com.evernote.android.job.Job;
 
 import java.util.concurrent.Callable;
@@ -34,9 +30,9 @@ public class AssessmentTimeoutJob extends Job {
         try {
             Sheath.inject(this);
 
-            LogUtils.d(getClass(), "In onRunJob()...");
+            Log.d(getClass().getName(), "In onRunJob()...");
             if (assessmentHolder.isAssessmentInProgress()) {
-                LogUtils.d(getClass(), "In onRunJob(), assessmentInProgress block.");
+                Log.d(getClass().getName(), "In onRunJob(), assessmentInProgress block.");
                 Intent intent = new Intent(
                     getContext().getApplicationContext(),
                     LoginActivity.class
@@ -55,10 +51,10 @@ public class AssessmentTimeoutJob extends Job {
                 // one alarm expression in the alarm schedule list, since the only other place that rescheduling happens is
                 // when the app starts up.
                 scheduleAlarms(getContext().getApplicationContext());
-                LogUtils.d(getClass(), "No assessment is currently in progress so the timeout task is not notifying the SurveyActivity.");
+                Log.d(getClass().getName(), "No assessment is currently in progress so the timeout task is not notifying the SurveyActivity.");
             }
         } catch (Exception e) {
-            LogUtils.d(getClass(), "In onRunJob(), exception occurred: " + e);
+            Log.d(getClass().getName(), "In onRunJob(), exception occurred: " + e);
         }
         return null;
     }

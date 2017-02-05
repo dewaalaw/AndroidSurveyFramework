@@ -2,9 +2,9 @@ package com.askonthego.alarm;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.askonthego.LoginActivity;
-import com.askonthego.util.LogUtils;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
 
@@ -30,7 +30,7 @@ public class LaunchSurveyJob extends Job {
                     // don't want the existing timeout to conflict with the alarmed survey timeout.
                     JobManager.instance().cancelAllForTag("timeout");
 
-                    LogUtils.d(getClass(), "In onRunJob(), surveyName to launch = " + surveyName);
+                    Log.d(getClass().getName(), "In onRunJob(), surveyName to launch = " + surveyName);
 
                     Intent surveyIntent = new Intent(getContext(), LoginActivity.class)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -38,7 +38,7 @@ public class LaunchSurveyJob extends Job {
                             .putExtra("alarmEvent", new AlarmEvent(surveyName));
                     getContext().startActivity(surveyIntent);
                 } catch (Exception e) {
-                    LogUtils.d(getClass(), "In onRunJob(), exception occurred: " + e);
+                    Log.d(getClass().getName(), "In onRunJob(), exception occurred: " + e);
                 }
             }
         }

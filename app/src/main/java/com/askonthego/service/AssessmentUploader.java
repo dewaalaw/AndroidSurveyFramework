@@ -1,7 +1,8 @@
 package com.askonthego.service;
 
+import android.util.Log;
+
 import com.askonthego.domain.Assessment;
-import com.askonthego.util.LogUtils;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +34,7 @@ public class AssessmentUploader {
     }
 
     private synchronized void postAssessment(final Assessment assessment, final Callback<Void> callback) {
-        LogUtils.d(getClass(), "Syncing assessment for participant " + assessment.getParticipant().getId() + ", survey " + assessment.getSurveyName() + ", startDate " + assessment.getStartDate());
+        Log.d(getClass().getName(), "Syncing assessment for participant " + assessment.getParticipant().getId() + ", survey " + assessment.getSurveyName() + ", startDate " + assessment.getStartDate());
         restAssessmentService.postAssessment(preferences.getApiToken(), assessment, new Callback<Void>() {
             @Override
             public void success(Void aVoid, Response response) {

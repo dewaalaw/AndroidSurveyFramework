@@ -3,6 +3,7 @@ package com.askonthego;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,7 +16,6 @@ import com.askonthego.service.ParticipantDAO;
 import com.askonthego.service.Preferences;
 import com.askonthego.http.RestError;
 import com.askonthego.service.Token;
-import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 
 import javax.inject.Inject;
@@ -105,7 +105,7 @@ public class RegisterActivity extends FragmentActivity {
             surveyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
 
-        LogUtils.d(getClass(), "In openSurveys(), surveyName = " + getIntent().getStringExtra("surveyName"));
+        Log.d(getClass().getName(), "In openSurveys(), surveyName = " + getIntent().getStringExtra("surveyName"));
 
         startActivity(surveyIntent);
         finish();
@@ -114,7 +114,7 @@ public class RegisterActivity extends FragmentActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        LogUtils.d(getClass(), "In onNewIntent().");
+        Log.d(getClass().getName(), "In onNewIntent().");
         setIntent(intent);
     }
 

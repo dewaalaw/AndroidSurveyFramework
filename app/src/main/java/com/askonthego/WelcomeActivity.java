@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import com.askonthego.parser.StudyModel;
 import com.askonthego.parser.WelcomeLinkModel;
 import com.askonthego.parser.WelcomeModel;
 import com.askonthego.service.StudyParser;
-import com.askonthego.util.LogUtils;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 
 import java.util.concurrent.Callable;
@@ -52,7 +52,7 @@ public class WelcomeActivity extends FragmentActivity {
 
         scheduleAlarms(this);
         if (assessmentHolder.isAssessmentInProgress() || getIntent().getStringExtra("surveyName") != null || timeoutEvent != null) {
-            LogUtils.d(getClass(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName") + ", timeoutEvent = " + timeoutEvent);
+            Log.d(getClass().getName(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName") + ", timeoutEvent = " + timeoutEvent);
             startSurveyActivity();
         } else {
             initWelcomeScreen();
@@ -155,7 +155,7 @@ public class WelcomeActivity extends FragmentActivity {
         setIntent(intent);
 
         String surveyName = intent.getStringExtra("surveyName");
-        LogUtils.d(getClass(), "In WelcomeActivity.onNewIntent(), surveyName = " + surveyName);
+        Log.d(getClass().getName(), "In WelcomeActivity.onNewIntent(), surveyName = " + surveyName);
 
         startSurveyActivity();
     }
