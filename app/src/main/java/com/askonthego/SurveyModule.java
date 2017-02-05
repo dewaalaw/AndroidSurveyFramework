@@ -2,7 +2,9 @@ package com.askonthego;
 
 import android.content.Context;
 
-import com.askonthego.alarm.AssessmentTimeoutTask;
+import com.askonthego.alarm.AssessmentTimeoutJob;
+import com.askonthego.alarm.LaunchSurveyJob;
+import com.askonthego.alarm.ResourceService;
 import com.askonthego.alarm.SurveyAlarmScheduler;
 import com.askonthego.alarm.SurveyVibrator;
 import com.askonthego.alarm.WakeLocker;
@@ -33,7 +35,8 @@ import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
 @Module(injects = {
-    AssessmentTimeoutTask.class,
+    AssessmentTimeoutJob.class,
+    LaunchSurveyJob.class,
     SurveyActivity.class,
     SurveyScreen.class,
     LoginActivity.class,
@@ -149,5 +152,10 @@ class SurveyModule {
     @Provides
     public StudyParser getStudyParser() {
         return new StudyParser();
+    }
+
+    @Provides
+    public ResourceService getResourceService() {
+        return new ResourceService();
     }
 }

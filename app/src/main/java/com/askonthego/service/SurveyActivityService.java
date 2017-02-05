@@ -5,13 +5,13 @@ import android.content.Context;
 import com.askonthego.AssessmentHolder;
 import com.askonthego.SurveyScreen;
 import com.askonthego.actions.Action;
-import com.askonthego.alarm.AssessmentTimeoutTask;
-import com.askonthego.alarm.SurveySchedulerManager;
 import com.askonthego.domain.Assessment;
 import com.askonthego.domain.AssessmentResponse;
 import com.askonthego.domain.AssessmentSaveOptions;
 import com.askonthego.parser.StudyModel;
 import com.askonthego.parser.SurveyModel;
+import com.evernote.android.job.JobRequest;
+import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -127,7 +127,7 @@ public class SurveyActivityService {
         currentAssessment.setStartDate(new Date());
 
         if (surveyModel.getTimeoutMinutes() > 0) {
-            scheduleAssessmentTimeout(context, surveyModel.getTimeoutMinutes());
+            scheduleAssessmentTimeout(surveyModel.getTimeoutMinutes(), surveyName);
         }
     }
 
@@ -135,11 +135,17 @@ public class SurveyActivityService {
         return surveyScreens.keySet().iterator().next();
     }
 
-    private void scheduleAssessmentTimeout(Context context, int timeoutMinutes) {
-        SurveySchedulerManager.getInstance().stop(context, AssessmentTimeoutTask.class);
-        // Need to save the timeout task with a valid cron expression, even though the task will be scheduled as a "one shot".
-        SurveySchedulerManager.getInstance().saveTask(context, "0 0 1 1 *", AssessmentTimeoutTask.class);
-        SurveySchedulerManager.getInstance().runNow(context, AssessmentTimeoutTask.class, timeoutMinutes * 60 * 1000);
+    private void scheduleAssessmentTimeout(int timeoutMinutes, String surveyName) {
+        PersistableBundleCompat persistableBundleCompat = new PersistableBundleCompat();
+        persistableBundleCompat.putString("surveyName", surveyName);
+        long timeoutMillis = timeoutMinutes * 60 * 1000;
+
+        new JobRequest.Builder("timeout")
+                .setExact(timeoutMillis)
+                .setUpdateCurrent(true)
+                .setExtras(persistableBundleCompat)
+                .build()
+                .schedule();
     }
 
     public SurveyScreen getCurrentScreen() {

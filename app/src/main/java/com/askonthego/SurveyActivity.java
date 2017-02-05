@@ -1,5 +1,6 @@
 package com.askonthego;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
@@ -43,7 +44,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import de.greenrobot.event.EventBus;
 import io.pristine.sheath.Sheath;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -68,7 +68,6 @@ public class SurveyActivity extends FragmentActivity {
     @Inject StudyParser studyParser;
     @Inject ParticipantDAO participantDAO;
 
-    private boolean onCreateCalled;
     private SurveyActivityService surveyActivityService;
 
     @Override
@@ -86,11 +85,13 @@ public class SurveyActivity extends FragmentActivity {
 
         this.progressBar.setIndeterminateDrawable(new ChromeFloatingCirclesDrawable.Builder(this).build());
         this.surveyActivityService.initStudyModel(getResources().openRawResource(R.raw.demo_surveys));
-        this.onCreateCalled = true;
 
-        TimeoutEvent timeoutEvent = EventBus.getDefault().getStickyEvent(TimeoutEvent.class);
+        TimeoutEvent timeoutEvent = null;
+        if (getIntent().hasExtra("timeoutEvent")) {
+            timeoutEvent = (TimeoutEvent) getIntent().getSerializableExtra("timeoutEvent");
+        }
+
         if (timeoutEvent != null && !assessmentHolder.isAssessmentInProgress()) {
-            EventBus.getDefault().removeStickyEvent(timeoutEvent);
             // If this activity was started as a result of a timeout event, then the user already finished a survey and this was never unscheduled,
             // or the user explicitly killed the app during a survey. Otherwise, this activity would still be on the back stack.
             LogUtils.d(getClass(), "In onCreate() about to finish early in isTimeout block: surveyName == " + surveyName);
@@ -102,35 +103,51 @@ public class SurveyActivity extends FragmentActivity {
             if (!assessmentHolder.isAssessmentInProgress()) {
                 startSurvey(surveyName);
             }
-            assessmentHolder.setAssessmentInProgress(true);
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        Log.d(getClass().getName(), "onNewIntent()");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        TimeoutEvent timeoutEvent = EventBus.getDefault().getStickyEvent(TimeoutEvent.class);
-        AlarmEvent alarmEvent = EventBus.getDefault().getStickyEvent(AlarmEvent.class);
+
+        TimeoutEvent timeoutEvent = null;
+        if (getIntent().hasExtra("timeoutEvent")) {
+            timeoutEvent = (TimeoutEvent) getIntent().getSerializableExtra("timeoutEvent");
+        }
+
+        AlarmEvent alarmEvent = null;
+        if (getIntent().hasExtra("alarmEvent")) {
+            alarmEvent = (AlarmEvent) getIntent().getSerializableExtra("alarmEvent");
+        }
 
         if (timeoutEvent != null) {
-            EventBus.getDefault().removeStickyEvent(timeoutEvent);
-
             wakeLocker.acquirePartial(this);
             LogUtils.d(getClass(), "In TimeoutEvent handler.");
             Toast.makeText(this, getString(R.string.timeout_occurred), Toast.LENGTH_LONG).show();
+            getIntent().removeExtra("timeoutEvent");
+            getIntent().removeExtra("alarmEvent");
             onTimeout();
         } else if (alarmEvent != null) {
-            EventBus.getDefault().removeStickyEvent(alarmEvent);
-
             wakeLocker.acquireFull(this);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            LogUtils.d(getClass(), "In AlarmEvent handler, onCreateCalled = " + onCreateCalled + ", surveyName = " + alarmEvent.surveyName);
-            if (onCreateCalled) {
-                onAlarmForNewActivity(alarmEvent);
-            } else {
+            LogUtils.d(getClass(), "In AlarmEvent handler, surveyName = " + alarmEvent.surveyName);
+            getIntent().removeExtra("timeoutEvent");
+            getIntent().removeExtra("alarmEvent");
+            if (assessmentHolder.isAssessmentInProgress()) {
                 onAlarmForExistingActivity(alarmEvent);
+            } else {
+                onAlarmForNewActivity(alarmEvent);
             }
         }
+
+        assessmentHolder.setAssessmentInProgress(true);
     }
 
     private void onAlarmForNewActivity(AlarmEvent alarmEvent) {
@@ -384,9 +401,6 @@ public class SurveyActivity extends FragmentActivity {
         LogUtils.d(getClass(), "In onPause()");
         wakeLocker.release();
         stopAlarm();
-        if (isFinishing()) {
-            this.onCreateCalled = false;
-        }
     }
 
     private void stopAlarm() {

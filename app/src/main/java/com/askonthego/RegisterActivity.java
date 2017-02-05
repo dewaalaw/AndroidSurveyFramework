@@ -98,8 +98,12 @@ public class RegisterActivity extends FragmentActivity {
 
     private void openSurveys() {
         Intent surveyIntent = new Intent(this, WelcomeActivity.class)
-            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             .putExtras(getIntent());
+
+        if (!getIntent().hasExtra("timeoutEvent") && !getIntent().hasExtra("alarmEvent")) {
+            surveyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
 
         LogUtils.d(getClass(), "In openSurveys(), surveyName = " + getIntent().getStringExtra("surveyName"));
 

@@ -2,6 +2,8 @@ package com.askonthego;
 
 import android.app.Application;
 
+import com.askonthego.alarm.SurveyJobCreator;
+import com.evernote.android.job.JobManager;
 import com.facebook.stetho.Stetho;
 import com.robotpajamas.stetho.couchbase.CouchbaseInspectorModulesProvider;
 
@@ -13,6 +15,7 @@ public class SurveyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Sheath.holster(new SurveyModule(this));
+        JobManager.create(this).addJobCreator(new SurveyJobCreator());
 
         if (BuildConfig.DEBUG) {
             Stetho.initialize(Stetho.newInitializerBuilder(this)

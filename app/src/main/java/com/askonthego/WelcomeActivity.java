@@ -1,5 +1,6 @@
 package com.askonthego;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.askonthego.alarm.ResourceService;
 import com.askonthego.alarm.SurveyAlarmScheduler;
 import com.askonthego.alarm.TimeoutEvent;
 import com.askonthego.parser.StudyModel;
@@ -26,7 +28,6 @@ import javax.inject.Inject;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 import io.pristine.sheath.Sheath;
 
 public class WelcomeActivity extends FragmentActivity {
@@ -37,41 +38,56 @@ public class WelcomeActivity extends FragmentActivity {
     @Inject SurveyAlarmScheduler surveyAlarmScheduler;
     @Inject AssessmentHolder assessmentHolder;
     @Inject StudyParser studyParser;
+    @Inject ResourceService resourceService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Sheath.inject(this);
 
-        TimeoutEvent timeoutEvent = EventBus.getDefault().getStickyEvent(TimeoutEvent.class);
+        TimeoutEvent timeoutEvent = null;
+        if (getIntent().hasExtra("timeoutEvent")) {
+            timeoutEvent = (TimeoutEvent) getIntent().getSerializableExtra("timeoutEvent");
+        }
+
+        scheduleAlarms(this);
         if (assessmentHolder.isAssessmentInProgress() || getIntent().getStringExtra("surveyName") != null || timeoutEvent != null) {
             LogUtils.d(getClass(), "In onCreate(), surveyName = " + getIntent().getStringExtra("surveyName") + ", timeoutEvent = " + timeoutEvent);
-            startSurveyActivity(getIntent());
-            finish();
+            startSurveyActivity();
         } else {
             initWelcomeScreen();
-            scheduleAlarms();
         }
     }
 
-    private void scheduleAlarms() {
+    private void scheduleAlarms(final Context context) {
         Task.callInBackground(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                surveyAlarmScheduler.scheduleAll(WelcomeActivity.this, getResources().openRawResource(R.raw.demo_alarm_schedule));
+                surveyAlarmScheduler.scheduleAll(resourceService.getAlarmInputStream(context));
                 return null;
             }
         });
     }
 
-    private void startSurveyActivity(Intent surveyLaunchIntent) {
-        startActivity(new Intent(this, SurveyActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            .putExtras(surveyLaunchIntent));
+    private void startSurveyActivity() {
+        Intent surveyIntent = new Intent(this, SurveyActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .putExtras(getIntent());
+
+        if (!getIntent().hasExtra("timeoutEvent") && !getIntent().hasExtra("alarmEvent")) {
+            surveyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+
+        startActivity(surveyIntent);
+        finish();
     }
 
     private void startSurveyActivity(String surveyName) {
-        startActivity(new Intent(this, SurveyActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            .putExtra("surveyName", surveyName));
+        Intent surveyIntent = new Intent(this, SurveyActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .putExtra("surveyName", surveyName);
+        startActivity(surveyIntent);
+        finish();
     }
 
     private void initWelcomeScreen() {
@@ -129,7 +145,6 @@ public class WelcomeActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 startSurveyActivity(welcomeLinkModel.getSurveyName());
-                finish();
             }
         });
     }
@@ -142,7 +157,6 @@ public class WelcomeActivity extends FragmentActivity {
         String surveyName = intent.getStringExtra("surveyName");
         LogUtils.d(getClass(), "In WelcomeActivity.onNewIntent(), surveyName = " + surveyName);
 
-        startSurveyActivity(intent);
-        finish();
+        startSurveyActivity();
     }
 }

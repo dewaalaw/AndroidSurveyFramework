@@ -1,6 +1,8 @@
 package com.askonthego.alarm;
 
-public class AlarmEvent {
+import java.io.Serializable;
+
+public class AlarmEvent implements Serializable {
 
     public final String surveyName;
 

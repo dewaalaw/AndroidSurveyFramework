@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.askonthego.alarm.TimeoutEvent;
 import com.askonthego.domain.Participant;
 import com.askonthego.http.Error;
 import com.askonthego.http.RestError;
@@ -109,13 +110,27 @@ public class LoginActivity extends FragmentActivity {
 
     private void openSurveys() {
         Intent surveyIntent = new Intent(this, WelcomeActivity.class)
-            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            .putExtras(getIntent());
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .putExtras(getIntent());
+
+        if (wasLaunchedFromRecents()) {
+            surveyIntent.removeExtra("timeoutEvent");
+            surveyIntent.removeExtra("alarmEvent");
+            surveyIntent.removeExtra("surveyName");
+        }
+
+        if (!surveyIntent.hasExtra("timeoutEvent") && !surveyIntent.hasExtra("alarmEvent")) {
+            surveyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
 
         LogUtils.d(getClass(), "In openSurveys(), surveyName = " + getIntent().getStringExtra("surveyName"));
 
         startActivity(surveyIntent);
         finish();
+    }
+
+    private boolean wasLaunchedFromRecents() {
+        return (getIntent().getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
     }
 
     @Override
